@@ -1,5 +1,4 @@
 // the main screen
-import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { TouchableOpacity, StyleSheet, Text, View } from 'react-native';
 
@@ -18,7 +17,7 @@ const Main = ({navigation}) => {
             <View> 
                 <Text> Main Screen </Text> 
             </View>
-            <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Mood')}>
+            <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('MoodStack')}>
                 <Text> Mood </Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Shop')}>
@@ -27,7 +26,7 @@ const Main = ({navigation}) => {
             <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Support')}>
                 <Text> Support </Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Helplines')}>
+            <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Help Centre')}>
                 <Text> Helplines </Text>
             </TouchableOpacity>
         </View>
