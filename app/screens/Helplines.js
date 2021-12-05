@@ -1,34 +1,42 @@
 import React from 'react';
-import { StyleSheet, Text, SafeAreaView, Linking } from 'react-native';
+import { ImageBackground, TouchableOpacity, Image, StyleSheet, Text, SafeAreaView, Linking } from 'react-native';
 
 /**
  * To do:
- * 1) Change to actual proper helplines, complete with logos. No need to specify the phone number to user
- * 2) Background images
- * 3) Maybe change to pressable "boxes" instead
+ * 1) Change to actual proper helplines, complete with logos.
  */
 
+const icons = require('../icons/icons.js');
+
+// find more suitable image
+const image = { uri: "https://reactjs.org/logo-og.png" };
 
 // contains all the numbers
-const numbers = () => {
+const makeCallableIcon = (number, image) => {
   // add more numbers here!
   return (
-    <SafeAreaView style={styles.center}>
-      <Text style={styles.text}> UHC1: <Text style={styles.phoneNumber} onPress={() => Linking.openURL('tel: +6512345678')}>Removable --> +65 1234 5678</Text> </Text>
-      <Text style={styles.text}> UHC2: <Text style={styles.phoneNumber} onPress={() => Linking.openURL('tel: +6512345678')}>+65 1234 5678</Text> </Text>
-      <Text style={styles.text}> UHC3: <Text style={styles.phoneNumber} onPress={() => Linking.openURL('tel: +6512345678')}>+65 1234 5678</Text> </Text>
-      <Text style={styles.text}> UHC4: <Text style={styles.phoneNumber} onPress={() => Linking.openURL('tel: +6512345678')}>+65 1234 5678</Text> </Text>
-      <Text style={styles.text}> UHC5: <Text style={styles.phoneNumber} onPress={() => Linking.openURL('tel: +6512345678')}>+65 1234 5678</Text> </Text>
-    </SafeAreaView>
+    <TouchableOpacity onPress={() => Linking.openURL(`tel: ${number}`)}>
+      <Image style={styles.image} source={image}/>
+    </TouchableOpacity>
   );
 }
 
 
 const Helplines = () => {
     return (
-        <SafeAreaView style={styles.container}>
-          <Text style={styles.header}>Helplines screen</Text>
-          { numbers() }
+        <SafeAreaView>
+          <ImageBackground style={{ width: '100%', height: '100%' }} source={image}>
+              <SafeAreaView style={styles.container}>
+                <SafeAreaView style={styles.bundle}>
+                  { makeCallableIcon("+6512345678", icons['placeholder']) }
+                  { makeCallableIcon("+6512345678", icons['placeholder']) }
+                </SafeAreaView>
+                <SafeAreaView style={styles.bundle}>
+                  { makeCallableIcon("+6512345678", icons['placeholder']) }
+                  { makeCallableIcon("+6512345678", icons['placeholder']) }
+                </SafeAreaView>
+              </SafeAreaView>
+          </ImageBackground>
         </SafeAreaView>
       );
 }
@@ -36,30 +44,25 @@ const Helplines = () => {
 const styles = StyleSheet.create({
     container: {
       flex: 1,
+      marginBottom: 'auto', 
+      justifyContent: 'center', 
       alignItems: 'center',
-      justifyContent: 'center',
     },
-    phoneNumber: {
-      fontSize: 24,
-      fontWeight: 'bold',
-      textDecorationLine: 'underline',
-      alignItems: 'center',
-      justifyContent: 'center',
+
+    image: {
+      marginTop: 25,
+      width: 125,
+      height: 125,
+      marginLeft: 15, 
+      marginRight: 15
     },
-    text: {
-      fontSize: 24,
-      alignItems: 'center',
+
+    bundle: {
+      flexDirection: 'row',
       justifyContent: 'center',
-    },
-    header: {
-      textAlignVertical: 'top',
-      fontSize: 24,
-    },
-    center: {
-      flex: 1,
-      alignItems: 'center',
-      justifyContent: 'center',
+      alignContent: 'center',
     }
+    
   });
   
 
