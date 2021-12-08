@@ -1,25 +1,18 @@
-// the main screen
+// the Dashboard screen
 import React from 'react';
 import { ImageBackground, TouchableOpacity, StyleSheet, Text, View } from 'react-native';
 
-// main screen, needs to navigate to all the other screens
-/*
-Screens:
-Mood
-Shop
-Support
-Helplines
-*/
+// Dashboard screen
 
 // image is just a placeholder for now
 const image = { uri: "https://reactjs.org/logo-og.png" };
 
-const Main = ({navigation}) => {
+const Dashboard = ({navigation}) => {
     return( 
         <View style={styles.container}>
             <ImageBackground source={image} style={styles.image}>
                 <View> 
-                    <Text> Main Screen </Text> 
+                    <Text> Dashboard Screen </Text> 
                 </View>
                 <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('MoodStack')}>
                     <Text> Mood </Text>
@@ -29,9 +22,6 @@ const Main = ({navigation}) => {
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Support')}>
                     <Text> Support </Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Help Centre')}>
-                    <Text> Helplines </Text>
                 </TouchableOpacity>
             </ImageBackground>
         </View>
@@ -57,4 +47,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default Main;
+export default Dashboard;

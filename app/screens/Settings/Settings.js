@@ -1,11 +1,10 @@
-import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
-const Support = () => {
+const Settings = () => {
     return (
         <View style={styles.container}>
-          <Text>Support screen</Text>
+          <Text>Settings screen</Text>
         </View>
       );
 }
@@ -20,4 +19,4 @@ const styles = StyleSheet.create({
   });
   
 
-export default Support;
+export default Settings;

@@ -1,12 +1,14 @@
 import React from 'react';
-import { ImageBackground, TouchableOpacity, Image, StyleSheet, Text, SafeAreaView, Linking } from 'react-native';
+import { ImageBackground, TouchableOpacity, Image, StyleSheet, SafeAreaView, Linking } from 'react-native';
+
+// Services will link to this
 
 /**
  * To do:
  * 1) Change to actual proper helplines, complete with logos.
  */
 
-const icons = require('../icons/icons.js');
+const icons = require('../../icons/icons.js');
 
 // find more suitable image
 const image = { uri: "https://reactjs.org/logo-og.png" };

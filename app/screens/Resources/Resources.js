@@ -1,11 +1,10 @@
-import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
-const Shop = () => {
+const Resources = () => {
     return (
         <View style={styles.container}>
-          <Text>Shop screen</Text>
+          <Text>Resources</Text>
         </View>
       );
 }
@@ -20,4 +19,4 @@ const styles = StyleSheet.create({
   });
   
 
-export default Shop;
+export default Resources;
