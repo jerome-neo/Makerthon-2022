@@ -44,3 +44,36 @@ Hidden Screens:
 - Questionnaire screen is pretty much done. Left UI/UX updates
   --> Form fillup
   --> Still needs to link to each different screen (Resources, PFA, Counsellor, Psych)
+
+<------------------------------------------------------------ ADDITIONAL STUFF ------------------------------------------------------------>
+Screens navigation layout:
+MoodTracker -> Questionnaire -> Resources
+
+So probably something like:
+
+FullMoodStack = () => {
+return (
+<NavigationContainer>
+<MoodStack />
+<QuestionnaireStack />
+<ResourcesStack />
+</NavigationContainer>
+);
+}
+
+BottomTabs = () => {
+
+}
+
+App = () => {
+return (
+<NavigationContainer>
+(BottomTabs)
+<ResourcesStack/>
+<FullMoodStack/>
+<Dashboard default/>
+<ServicesStack/>
+<SettingsStack/>
+</NavigationContainer>
+)
+}
