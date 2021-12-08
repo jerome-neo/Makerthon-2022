@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
-import { StyleSheet, Text, ScrollView, Image, View} from 'react-native';
-import { CheckBox } from 'react-native-elements';
+import React from 'react';
+import { StyleSheet, Text, View } from 'react-native';
+import { CheckBox, Button } from 'react-native-elements';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { UPDATE_ANSWER } from '../redux/questionnaire/questionnaireReducer';
+import { UPDATE_ANSWER, RESET} from '../redux/questionnaire/questionnaireReducer';
 
 // we can turn this into a reusable component and pass down a variable called questionName in order to specify a question
 
@@ -13,6 +13,7 @@ const QuestionnaireBox = (props) => {
     const answers = useSelector(state => state[num]);
     const dispatch = useDispatch();
     const updateAnswer = (answerIndex) => dispatch({ type: UPDATE_ANSWER, payload: { answerIndex, num }});
+    const reset = () => dispatch({ type: RESET, payload: {}});
     return (
         <View>
             <Text style={{fontSize: 15, fontWeight: 'bold', marginBottom: 10, marginTop: 20}}> {num+1}) {props.question} </Text>
@@ -27,7 +28,7 @@ const QuestionnaireBox = (props) => {
                 uncheckedIcon=""
                 checked={answer[2]}
                 containerStyle={answer[2] === true ? styles.containerChosen : styles.containerNotChosen }
-                onPress={() => { updateAnswer(index);}}    
+                onPress={() => { updateAnswer(index) }}     
             />
         ))}
       </View>
@@ -35,24 +36,11 @@ const QuestionnaireBox = (props) => {
   );
 }
 
+// UX improvements:
 // Implement a Quick jump to Question. We'll need to use React's Route for this
 // Need a persistent bottom tab to go to questions.
-/*const QuestionList = ["Hello", "How", "Are", "You", "?"];
-const QuestionnaireBoxList = QuestionList.map((questions) => {
-  return (
-    <QuestionnaireBoxThing question={questions}/>
-  )
-})
 
-// provide questions as an array of questions
-const QuestionnaireBox = (questions) => {
-  return (
-    <ScrollView>
-      {QuestionnaireBoxList}
-    </ScrollView>
-  );
-}
-*/
+
 const styles = StyleSheet.create({
   containerChosen: {
     alignItems: 'center',

@@ -1,12 +1,13 @@
+// IMPORTANT:
+// Remember to use from here! Reflect all changes from QuestionnaireBoxTest to here, if any.
 import React from 'react';
-import { ScrollView, Button, StyleSheet } from 'react-native';
+import { ScrollView, Button, StyleSheet, SliderComponent} from 'react-native';
 import { Provider } from 'react-redux';
 import { useNavigation } from '@react-navigation/native';
 
 // local imports
 import { QuestionnaireBox } from '../../CustomComponents';
 import store from '../../redux/questionnaire/store';
-
 
 // [question, question number]. K10 scale. Note, this is reusable so we can change this to GHQ-12 as well.
 const questions = [
@@ -61,9 +62,13 @@ const referToPsych = () => {
     alert("Referring to psych...");
 }
 
+const getNavigator = () => {
+    return useNavigation();
+}
 
-// because navigation hook is failing..
+// because navigation hook is failing. Although code is less clean, no serious repurcussions
 let navigator = "";
+
 // i is the number of questions
 const handleSubmit = (list) => {
     let break_flag = false;
@@ -94,7 +99,7 @@ const handleSubmit = (list) => {
             navigator = "Counsel";
         } else {
             // score > 40
-            getConsent();
+            getConsent(); // needs them to fill up a form first
             referToPsych();
             navigator = "Psych";
         }
@@ -103,8 +108,8 @@ const handleSubmit = (list) => {
     score = 0; // reset!!
 }
 
-// also need error handling
-const QuestionnaireBoxTest = ({navigation}) => {
+// no need to reset after submitting because the states are not saved on app restart.
+const Questionnaire = () => {
     return (
         <ScrollView>
             {qnsList}
@@ -146,4 +151,4 @@ const styles=  StyleSheet.create({
     }
 })
 
-export default QuestionnaireBoxTest
+export default Questionnaire;

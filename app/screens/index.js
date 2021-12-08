@@ -6,6 +6,8 @@ export { default as Helplines } from './Services/Helplines';
 export { default as Resources } from './Resources/Resources';
 export { default as Settings } from './Settings/Settings';
 
+// the hidden screens
+export { default as Questionnaire } from './hidden/Questionnaire'; 
 
 // remove next time after all testing is done
 export { default as TestingScreen } from './TestingScreens/TestingScreen';

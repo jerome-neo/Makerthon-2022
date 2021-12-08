@@ -109,7 +109,7 @@ const questionnaireReducer = (state = initialState, action) => {
             }
             return {...state, UPDATE_ANSWER: action.payload};
         default:
-            console.log("Default triggered.");
+            console.log("Default");
             return state;
     }
 }

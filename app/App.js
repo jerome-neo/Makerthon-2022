@@ -8,7 +8,9 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Provider } from 'react-redux';
-import store from './redux/mood/store'
+
+// local imports
+import moodStore from './redux/mood/store'
 
 const Stack = createNativeStackNavigator();
 const BottomTabs = createBottomTabNavigator();
@@ -27,7 +29,7 @@ const TestingStack = () => {
 // contains the mood stuff
 const MoodStack = () => {
   return (
-    <Provider store={store}>
+    <Provider store={moodStore}>
       <Stack.Navigator>
         <Stack.Screen component={Mood} name="Mood" options={{headerShown: false}}/>
         <Stack.Screen component={MoodSelector} name="MoodSelector" options={{headerShown: false}}/>
