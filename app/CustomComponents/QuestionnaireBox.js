@@ -9,18 +9,19 @@ import { UPDATE_ANSWER } from '../redux/questionnaire/questionnaireReducer';
 
 const QuestionnaireBox = (props) => {
     const num = props.qNum;
+    const key = props.key;
     const answers = useSelector(state => state[num]);
     const dispatch = useDispatch();
     const updateAnswer = (answerIndex) => dispatch({ type: UPDATE_ANSWER, payload: { answerIndex, num }});
     return (
         <View>
-            <Text style={{fontSize: 24, fontWeight: 'bold', marginBottom: 20}}> Question: {props.question} </Text>
+            <Text style={{fontSize: 15, fontWeight: 'bold', marginBottom: 10, marginTop: 20}}> {num+1}) {props.question} </Text>
             <View style={{justifyContent: 'center', alignItems: 'center'}}>
             {
               answers.answers.map((answer, index) => (
               <CheckBox
                 center
-                key={answer[0]}
+                key={key}
                 title={answer[0]}
                 checkedIcon=""
                 uncheckedIcon=""

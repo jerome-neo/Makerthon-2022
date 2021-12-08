@@ -19,7 +19,7 @@ const TestingStack = () => {
   return (
     <Stack.Navigator>
       <Stack.Screen component={TestingScreen} name="TestingScreen"/>
-      <Stack.Screen component={QuestionnaireBoxTest} name="QuestionnaireBoxTest"/>
+      <Stack.Screen component={QuestionnaireBoxTest} name="QuestionnaireBoxTest" options={{headerShown: false}}/>
     </Stack.Navigator>
   );
 }

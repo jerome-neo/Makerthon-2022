@@ -1,16 +1,5 @@
 // action
 export const UPDATE_ANSWER = 'UPDATE_ANSWER';
-// const initialState = {
-//     currScore: 0,
-//     answers: [
-//         ["None of the time", 1, false], 
-//         ["A little of the time", 2, false], 
-//         ["Some of the time", 3, false], 
-//         ["Most of the time", 4, false], 
-//         ["All of the time", 5, false]
-//     ]
-// }
-
 
 // answers = ["Text", scoreValue, checked]
 // unfortunate but we need 1 for each question unless there is a better way to do it...

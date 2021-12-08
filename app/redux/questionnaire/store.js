@@ -1,6 +1,6 @@
 import { createStore } from 'redux';
-import questionnaireReducer from './questionnaireReducer'; // we create a store from this
+import reducer from './questionnaireReducer'; // we create a store from this
 
-const store = createStore(questionnaireReducer);
+const store = createStore(reducer);
 
 export default store;
