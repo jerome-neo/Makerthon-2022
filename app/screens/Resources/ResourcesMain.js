@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
-const Resources = () => {
+const ResourcesMain = () => {
     return (
         <View style={styles.container}>
           <Text>Resources</Text>
@@ -19,4 +19,4 @@ const styles = StyleSheet.create({
   });
   
 
-export default Resources;
+export default ResourcesMain;

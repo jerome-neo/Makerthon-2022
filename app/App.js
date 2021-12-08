@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import { Dashboard, Mood, MoodSelector, Resources, Services, Settings, Helplines } from './screens';
+import { Dashboard, Mood, MoodSelector, ResourcesMain, Services, Settings, Helplines, Questionnaire } from './screens';
 
 import { TestingScreen, QuestionnaireBoxTest, } from './screens'; // this entire line will be used for testing components and other functionalities
 
@@ -27,7 +27,7 @@ const TestingStack = () => {
 }
 
 // contains the mood stuff
-const MoodStack = () => {
+const SubMoodStack = () => {
   return (
     <Provider store={moodStore}>
       <Stack.Navigator>
@@ -38,11 +38,23 @@ const MoodStack = () => {
   )
 }
 
-// contains all the resources stuff
-const ResourcesStack = () => {
+// SubMoodStack needs access to Questionnaire
+// Questionnaire needs access to Resources
+const FullMoodStack = () => {
   return (
     <Stack.Navigator>
-      <Stack.Screen component={Resources} name="ResourcesScreen" options={{headerShown: false}}/>
+      <Stack.Screen component={SubMoodStack} name="SubMoodStack" options={{headerShown: false}}/>
+      <Stack.Screen component={Questionnaire} name="Questionnaire" options={{headerShown: false}}/>
+      <Stack.Screen component={Resources} name="Resources" options={{headerShown: false}}/>
+    </Stack.Navigator>
+  )
+}
+
+// contains all the resources stuff
+const Resources = () => {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen component={ResourcesMain} name="ResourcesMain" options={{headerShown: false}}/>
     </Stack.Navigator>
   )
 }
@@ -66,12 +78,14 @@ const SettingsStack = () => {
   )
 }
 
+// **Remember to change dailyReset when the time comes :)
+// Probably also need to rename the names of each screen eventually
 const App = () => {
   return (
       <NavigationContainer>
-        <BottomTabs.Navigator initialRouteName={ dailyReset === true ? "MoodStack" : "Dashboard"}>
-          <BottomTabs.Screen component={ResourcesStack} name="Resources"/>
-          <BottomTabs.Screen component={MoodStack} name="MoodStack"/>
+        <BottomTabs.Navigator initialRouteName={ dailyReset === true ? "FullMoodStack" : "Dashboard"}>
+          <BottomTabs.Screen component={Resources} name="Resources"/>
+          <BottomTabs.Screen component={FullMoodStack} name="MoodStack"/>
           <BottomTabs.Screen component={Dashboard} name="Dashboard"/>
           <BottomTabs.Screen component={ServicesStack} name="Services"/>
           <BottomTabs.Screen component={SettingsStack} name="Settings"/>
