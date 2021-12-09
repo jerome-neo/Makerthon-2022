@@ -1,10 +1,12 @@
 This is a list of to-dos, in order of priority
 Functionalities:
 
-1. Calendar-like function. To integrate with the colouring, so we have a proper coloured mood tracker
-2. Questionnaire feature & screen <-- remember, needs to assign scoring to each quiz. We store this as a hidden value into
+1. Calendar-like function. To integrate with the colouring, so we have a proper coloured mood tracker (J will do this. I will help out as well.)
+2. Questionnaire feature & screen <-- remember, needs to assign scoring to each quiz. (Done)
+   We store this as a hidden value into
    the calendar feature as well, and keep track of how many days a person is below/edging the threshold.
-3. Curate list of resources
+
+3. Curate list of resources (S will do this. After S is done, simply add in to the screens)
 
 - Breathing exercises
 - Face massage
@@ -27,7 +29,10 @@ Functionalities:
 - AsyncStorage?
 - Need to save and get back those states. This will be done as soon as mood tracking is done.
 
-UI 2) Update positioning of buttons on main screen 3) Background pictures for screens
+7. UI/UX
+
+- Background pictures for screens
+- Icons stuff
 
 MISC
 ... Saving overall app state, and loading on startup
@@ -46,37 +51,6 @@ Hidden Screens:
   --> Still needs to link to each different screen (Resources, PFA, Counsellor, Psych)
 
 <------------------------------------------------------------ ADDITIONAL STUFF ------------------------------------------------------------>
-Screens navigation layout:
-MoodTracker -> Questionnaire -> Resources
-
-So probably something like:
-
-FullMoodStack = () => {
-return (
-<NavigationContainer>
-<MoodStack />
-<QuestionnaireStack />
-<ResourcesStack />
-</NavigationContainer>
-);
-}
-
-BottomTabs = () => {
-
-}
-
-App = () => {
-return (
-<NavigationContainer>
-(BottomTabs)
-<ResourcesStack/>
-<FullMoodStack/>
-<Dashboard default/>
-<ServicesStack/>
-<SettingsStack/>
-</NavigationContainer>
-)
-}
 
 <---------------------------------------------------------------- POSSIBLE REFACTORING ------------------------------------------------------------------------------>
 

@@ -5,11 +5,11 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { UPDATE_ANSWER } from '../redux/questionnaire/questionnaireReducer';
 
-// we can turn this into a reusable component and pass down a variable called questionName in order to specify a question
+// how to get key to be unique?
 
+// we can turn this into a reusable component and pass down a variable called questionName in order to specify a question
 const QuestionnaireBox = (props) => {
     const num = props.qNum;
-    console.log(props.id);
     const answers = useSelector(state => state[num]);
     const dispatch = useDispatch();
     const updateAnswer = (answerIndex) => dispatch({ type: UPDATE_ANSWER, payload: { answerIndex, num }});

@@ -89,7 +89,7 @@ const handleSubmit = (list) => {
         if (score <= 24) {
             giveResources();
             navigator = "Resources";
-        } else if (score > 25 && score <= 30) {
+        } else if (score >= 25 && score <= 30) {
             referToPFA();
             navigator = "PFA";
         } else if (score > 30 && score <= 40) {

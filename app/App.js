@@ -1,21 +1,33 @@
+// Normal stuff
 import React from 'react';
 import { StyleSheet } from 'react-native';
-import { Dashboard, Mood, MoodSelector, ResourcesMain, Services, Settings, Helplines, Questionnaire } from './screens';
 
+// To be removed
 import { TestingScreen, QuestionnaireBoxTest, } from './screens'; // this entire line will be used for testing components and other functionalities
 
+// Navigation stuff
 import { NavigationContainer, getFocusedRouteNameFromRoute } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+
+// Redux stuff
 import { Provider } from 'react-redux';
+
+// Expo stuff for push notifications. Will use next time...
+import { Notifications } from 'expo';
+import * as Permissions from 'expo-permissions';
 
 // local imports
 import moodStore from './redux/mood/store'
+import { Dashboard, Mood, MoodSelector, ResourcesMain, Services, Settings, Helplines, Questionnaire } from './screens';
 
 
+
+
+// Function that takes a route and returns a screen name
 const setNameFromRouteName = (route) => {
   const routeName = getFocusedRouteNameFromRoute(route);
-
+  // Takes a route name and returns a different name
   switch (routeName) {
     case 'Resources':
       return 'Resources';
@@ -26,7 +38,7 @@ const setNameFromRouteName = (route) => {
   }
 }
 
-
+// we make all the Navigation Screens in App for easy referencing
 const Stack = createNativeStackNavigator();
 const BottomTabs = createBottomTabNavigator();
 const dailyReset = false; // change to redux state later on
@@ -119,6 +131,7 @@ const Bottoms = () => {
   </BottomTabs.Navigator>);
 }
 
+// The main thing
 const App = () => {
   return (
     <NavigationContainer>
