@@ -1,25 +1,23 @@
 // the Dashboard screen
 import React, { useState } from 'react';
-import { ImageBackground, TouchableOpacity, StyleSheet, Text, SafeAreaView, Button,} from 'react-native';
+import { ImageBackground, StyleSheet, Text, SafeAreaView } from 'react-native';
 
 // Dashboard screen
 
 // image is just a placeholder for now
 const image = { uri: "https://reactjs.org/logo-og.png" };
 
-
+// navigation may be used later so we keep it here for now.
 const Dashboard = ({navigation}) => {
-  const [number, increaseNumber] = useState(0);
-
-    return( 
-        <SafeAreaView>
-            <ImageBackground source={image} style={styles.image}>
-                <SafeAreaView style={{ alignItems: 'center', justifyContent: 'center', flex: 0.2}}> 
-                    <Text style={{ fontSize: 24, color: 'white'}}> Dashboard Screen </Text>
-                </SafeAreaView>
-            </ImageBackground>
-        </SafeAreaView>
-    );
+  return( 
+      <SafeAreaView>
+          <ImageBackground source={image} style={styles.image}>
+              <SafeAreaView style={{ alignItems: 'center', justifyContent: 'center', flex: 0.2}}> 
+                  <Text style={{ fontSize: 24, color: 'white'}}> Dashboard Screen </Text>
+              </SafeAreaView>
+          </ImageBackground>
+      </SafeAreaView>
+  );
 }
 
 const styles = StyleSheet.create({

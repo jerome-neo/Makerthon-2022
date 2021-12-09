@@ -3,7 +3,6 @@
 import React, { useEffect } from 'react';
 import { ScrollView, Button, StyleSheet, BackHandler } from 'react-native';
 import { Provider } from 'react-redux';
-import { useNavigation } from '@react-navigation/native';
 
 // local imports
 import { QuestionnaireBox } from '../../CustomComponents';
@@ -26,7 +25,7 @@ const questions = [
 const qnsList = questions.map((qns) => {
     return (
         <Provider store={store}>
-            <QuestionnaireBox question={qns[0]} qNum={qns[1]} />
+            <QuestionnaireBox question={qns[0]} qNum={qns[1]} key={qns[1]} />
         </Provider>
     );
 })

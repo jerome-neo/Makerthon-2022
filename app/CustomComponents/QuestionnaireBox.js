@@ -21,7 +21,7 @@ const QuestionnaireBox = (props) => {
               answers.answers.map((answer, index) => (
               <CheckBox
                 center
-                key={num}
+                key={props.key}
                 title={answer[0]}
                 checkedIcon=""
                 uncheckedIcon=""
