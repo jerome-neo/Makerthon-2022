@@ -77,3 +77,7 @@ return (
 </NavigationContainer>
 )
 }
+
+<---------------------------------------------------------------- POSSIBLE REFACTORING ------------------------------------------------------------------------------>
+
+- Pass Questions and Answers as a prop into QuestionnaireBox

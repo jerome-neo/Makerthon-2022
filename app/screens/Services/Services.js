@@ -1,15 +1,15 @@
 import React from 'react';
-import { TouchableOpacity, StyleSheet, Text, View } from 'react-native';
+import { TouchableOpacity, StyleSheet, Text, SafeAreaView } from 'react-native';
 
 // Services screen should navigate to other screens related to services
 const Services = ({navigation}) => {
     return (
-        <View style={styles.container}>
+        <SafeAreaView style={styles.container}>
             <Text>Services screen</Text>
             <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Helplines')}>
                 <Text> Helplines </Text>
             </TouchableOpacity>
-        </View>
+        </SafeAreaView>
       );
 }
 

@@ -1,7 +1,7 @@
 // IMPORTANT:
 // Remember to use from here! Reflect all changes from QuestionnaireBoxTest to here, if any.
-import React from 'react';
-import { ScrollView, Button, StyleSheet, SliderComponent} from 'react-native';
+import React, { useEffect } from 'react';
+import { ScrollView, Button, StyleSheet, BackHandler } from 'react-native';
 import { Provider } from 'react-redux';
 import { useNavigation } from '@react-navigation/native';
 
@@ -26,7 +26,7 @@ const questions = [
 const qnsList = questions.map((qns) => {
     return (
         <Provider store={store}>
-            <QuestionnaireBox question={qns[0]} key={qns[1]} qNum={qns[1]} />
+            <QuestionnaireBox question={qns[0]} qNum={qns[1]} />
         </Provider>
     );
 })
@@ -62,14 +62,12 @@ const referToPsych = () => {
     alert("Referring to psych...");
 }
 
-const getNavigator = () => {
-    return useNavigation();
-}
 
 // because navigation hook is failing. Although code is less clean, no serious repurcussions
 let navigator = "";
 
 // i is the number of questions
+// handles the submit button
 const handleSubmit = (list) => {
     let break_flag = false;
     for (let i = 0; i < questions.length; i++) {
@@ -109,7 +107,12 @@ const handleSubmit = (list) => {
 }
 
 // no need to reset after submitting because the states are not saved on app restart.
-const Questionnaire = () => {
+const Questionnaire = ({ navigation }) => {
+    useEffect(() => {
+        const backHandler = BackHandler.addEventListener('hardwareBackPress', () => true)
+        return () => backHandler.remove()
+    }, []);
+
     return (
         <ScrollView>
             {qnsList}

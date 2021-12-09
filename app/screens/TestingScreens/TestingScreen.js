@@ -1,6 +1,6 @@
 // the TestingScreen screen
 import React from 'react';
-import { ImageBackground, TouchableOpacity, StyleSheet, Text, View } from 'react-native';
+import { ImageBackground, TouchableOpacity, StyleSheet, Text, SafeAreaView } from 'react-native';
 
 // TestingScreen screen
 
@@ -9,16 +9,16 @@ const image = { uri: "https://reactjs.org/logo-og.png" };
 
 const TestingScreen = ({navigation}) => {
     return( 
-        <View style={styles.container}>
+        <SafeAreaView style={styles.container}>
             <ImageBackground source={image} style={styles.image}>
-                <View> 
+                <SafeAreaView> 
                     <Text> Testing Screen </Text> 
-                </View>
+                </SafeAreaView>
                 <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('QuestionnaireBoxTest')}>
                     <Text> Questionnaire CheckBox </Text>
                 </TouchableOpacity>
             </ImageBackground>
-        </View>
+        </SafeAreaView>
     );
 }
 

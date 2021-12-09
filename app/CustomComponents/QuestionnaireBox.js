@@ -1,28 +1,27 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import { CheckBox, Button } from 'react-native-elements';
+import { StyleSheet, Text, SafeAreaView } from 'react-native';
+import { CheckBox } from 'react-native-elements';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { UPDATE_ANSWER, RESET} from '../redux/questionnaire/questionnaireReducer';
+import { UPDATE_ANSWER } from '../redux/questionnaire/questionnaireReducer';
 
 // we can turn this into a reusable component and pass down a variable called questionName in order to specify a question
 
 const QuestionnaireBox = (props) => {
     const num = props.qNum;
-    const key = props.key;
+    console.log(props.id);
     const answers = useSelector(state => state[num]);
     const dispatch = useDispatch();
     const updateAnswer = (answerIndex) => dispatch({ type: UPDATE_ANSWER, payload: { answerIndex, num }});
-    const reset = () => dispatch({ type: RESET, payload: {}});
     return (
-        <View>
+        <SafeAreaView>
             <Text style={{fontSize: 15, fontWeight: 'bold', marginBottom: 10, marginTop: 20}}> {num+1}) {props.question} </Text>
-            <View style={{justifyContent: 'center', alignItems: 'center'}}>
+            <SafeAreaView style={{justifyContent: 'center', alignItems: 'center'}}>
             {
               answers.answers.map((answer, index) => (
               <CheckBox
                 center
-                key={key}
+                key={num}
                 title={answer[0]}
                 checkedIcon=""
                 uncheckedIcon=""
@@ -31,8 +30,8 @@ const QuestionnaireBox = (props) => {
                 onPress={() => { updateAnswer(index) }}     
             />
         ))}
-      </View>
-    </View>
+      </SafeAreaView>
+    </SafeAreaView>
   );
 }
 

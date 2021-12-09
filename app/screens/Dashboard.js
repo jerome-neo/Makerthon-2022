@@ -1,6 +1,6 @@
 // the Dashboard screen
 import React from 'react';
-import { ImageBackground, TouchableOpacity, StyleSheet, Text, View } from 'react-native';
+import { ImageBackground, TouchableOpacity, StyleSheet, Text, SafeAreaView } from 'react-native';
 
 // Dashboard screen
 
@@ -9,22 +9,13 @@ const image = { uri: "https://reactjs.org/logo-og.png" };
 
 const Dashboard = ({navigation}) => {
     return( 
-        <View style={styles.container}>
+        <SafeAreaView>
             <ImageBackground source={image} style={styles.image}>
-                <View> 
-                    <Text> Dashboard Screen </Text> 
-                </View>
-                <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('MoodStack')}>
-                    <Text> Mood </Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Shop')}>
-                    <Text> Shop </Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Support')}>
-                    <Text> Support </Text>
-                </TouchableOpacity>
+                <SafeAreaView style={{ alignItems: 'center', justifyContent: 'center', flex: 0.2}}> 
+                    <Text style={{ fontSize: 24, color: 'white'}}> Dashboard Screen </Text> 
+                </SafeAreaView>
             </ImageBackground>
-        </View>
+        </SafeAreaView>
     );
 }
 

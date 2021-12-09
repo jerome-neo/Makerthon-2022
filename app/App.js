@@ -1,16 +1,31 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { Dashboard, Mood, MoodSelector, ResourcesMain, Services, Settings, Helplines, Questionnaire } from './screens';
 
 import { TestingScreen, QuestionnaireBoxTest, } from './screens'; // this entire line will be used for testing components and other functionalities
 
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, getFocusedRouteNameFromRoute } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Provider } from 'react-redux';
 
 // local imports
 import moodStore from './redux/mood/store'
+
+
+const setNameFromRouteName = (route) => {
+  const routeName = getFocusedRouteNameFromRoute(route);
+
+  switch (routeName) {
+    case 'Resources':
+      return 'Resources';
+    case 'Dashboard':
+      return 'Dashboard';
+    case 'SettingsStack':
+      return 'Settings';
+  }
+}
+
 
 const Stack = createNativeStackNavigator();
 const BottomTabs = createBottomTabNavigator();
@@ -31,10 +46,24 @@ const SubMoodStack = () => {
   return (
     <Provider store={moodStore}>
       <Stack.Navigator>
-        <Stack.Screen component={Mood} name="Mood" options={{headerShown: false}}/>
-        <Stack.Screen component={MoodSelector} name="MoodSelector" options={{headerShown: false}}/>
+        <Stack.Screen component={Mood} name="Mood" options={{title: 'Mood Journal'}}/>
+        <Stack.Screen component={MoodSelector} name="MoodSelector" options={{title: 'Select mood'}}/>
       </Stack.Navigator>
     </Provider>
+  )
+}
+
+// Questionnaire needs to be aware of:
+// 1) Resources
+// 2) PFA
+// 3) Counsel
+// 4) Form + Psych
+const QuestionnaireStack = () => {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen component={Questionnaire} name="Questionnaire" options={{headerShown: false}}/>
+      <Stack.Screen component={Resources} name="Resources" options={{headerShown: false}}/>
+    </Stack.Navigator>
   )
 }
 
@@ -44,13 +73,12 @@ const FullMoodStack = () => {
   return (
     <Stack.Navigator>
       <Stack.Screen component={SubMoodStack} name="SubMoodStack" options={{headerShown: false}}/>
-      <Stack.Screen component={Questionnaire} name="Questionnaire" options={{headerShown: false}}/>
-      <Stack.Screen component={Resources} name="Resources" options={{headerShown: false}}/>
+      <Stack.Screen component={QuestionnaireStack} name="QuestionnaireStack" options={{headerShown: false}}/>
     </Stack.Navigator>
   )
 }
 
-// contains all the resources stuff
+// contains all the resources stuff. Add exercises, face massage, etc...
 const Resources = () => {
   return (
     <Stack.Navigator>
@@ -62,8 +90,8 @@ const Resources = () => {
 // contains all the Services stuff
 const ServicesStack = () => {
   return (
-    <Stack.Navigator>
-      <Stack.Screen component={Services} name="ServicesScreen" options={{headerShown: false}}/>
+    <Stack.Navigator initialRouteName="ServicesScreen">
+      <Stack.Screen component={Services} name="Services"/>
       <Stack.Screen component={Helplines} name="Helplines"/>
     </Stack.Navigator>
   )
@@ -73,26 +101,36 @@ const ServicesStack = () => {
 const SettingsStack = () => {
   return (
     <Stack.Navigator>
-      <Stack.Screen component={Settings} name="SettingsScreen"/>
+      <Stack.Screen component={Settings} name="SettingsScreen" options={{headerShown: false}}/>
     </Stack.Navigator>
   )
 }
 
 // **Remember to change dailyReset when the time comes :)
-// Probably also need to rename the names of each screen eventually
+const Bottoms = () => {
+  return (
+  <BottomTabs.Navigator initialRouteName={ dailyReset === true ? "FullMoodStack" : "Dashboard"}>
+    <BottomTabs.Screen component={Resources} name="Resources"/>
+    <BottomTabs.Screen component={SubMoodStack} name="SubMoodStack" options={{headerShown: false}}/>
+    <BottomTabs.Screen component={Dashboard} name="Dashboard"/>
+    <BottomTabs.Screen component={ServicesStack} name="ServicesStack" options={{headerShown: false}}/>
+    <BottomTabs.Screen component={SettingsStack} name="Settings"/>
+    <BottomTabs.Screen component={TestingStack} name="TestingStack" options={{headerShown: false}}/>
+  </BottomTabs.Navigator>);
+}
+
 const App = () => {
   return (
-      <NavigationContainer>
-        <BottomTabs.Navigator initialRouteName={ dailyReset === true ? "FullMoodStack" : "Dashboard"}>
-          <BottomTabs.Screen component={Resources} name="Resources"/>
-          <BottomTabs.Screen component={FullMoodStack} name="MoodStack"/>
-          <BottomTabs.Screen component={Dashboard} name="Dashboard"/>
-          <BottomTabs.Screen component={ServicesStack} name="Services"/>
-          <BottomTabs.Screen component={SettingsStack} name="Settings"/>
-          <BottomTabs.Screen component={TestingStack} name="TestingStack" options={{headerShown: false}}/>
-        </BottomTabs.Navigator>
-      </NavigationContainer>
-  );
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen component={Bottoms} name="Bottoms" options={({ route }) => ({
+          title: setNameFromRouteName(route),
+          headerShown: false
+        })}/>
+        <Stack.Screen component={QuestionnaireStack} name="QuestionnaireStack" options={{headerShown: true}} /*  Set to false later */ />
+      </Stack.Navigator>
+    </NavigationContainer>
+  )
 }
 
 

@@ -1,7 +1,6 @@
 import React from 'react';
 import { ScrollView, Button, StyleSheet } from 'react-native';
 import { Provider } from 'react-redux';
-import { useNavigation } from '@react-navigation/native';
 
 // local imports
 import { QuestionnaireBox } from '../../CustomComponents';
@@ -22,6 +21,7 @@ const questions = [
     ["Did you feel worthless?", 9],
 ];
 
+
 const qnsList = questions.map((qns) => {
     return (
         <Provider store={store}>
@@ -41,7 +41,7 @@ let score = 0;
 
 // we'll need navigation screens here as well :)
 const giveResources = () => {
-    alert("Pop up resources");
+    alert("Popup resources");
 }
 
 const referToPFA = () => {
@@ -64,7 +64,9 @@ const referToPsych = () => {
 
 // because navigation hook is failing..
 let navigator = "";
-// i is the number of questions
+// should popup a prompt and and tell them what their score means
+// then navigate them to the correct page
+// need to get consent for everything besides resources
 const handleSubmit = (list) => {
     let break_flag = false;
     for (let i = 0; i < questions.length; i++) {
@@ -111,6 +113,7 @@ const QuestionnaireBoxTest = ({navigation}) => {
             <Button 
                 title="Submit"
                 onPress={() => {
+                    console.log(qnsList);
                     handleSubmit(qnsList); 
                     switch (navigator) {
                         case "Resources":
@@ -130,11 +133,11 @@ const QuestionnaireBoxTest = ({navigation}) => {
                             navigation.goBack();
                             break;
                         default:
-                            console.log(navigator);
-                            navigation.goBack();
+                            break;
                     }
                 }}
             />
+            <Button title="AddditionalButton" onPress={() => console.log(qnsList)}/>
         </ScrollView>
     )
 }

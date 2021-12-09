@@ -2,6 +2,7 @@
 export const UPDATE_ANSWER = 'UPDATE_ANSWER';
 
 // answers = ["Text", scoreValue, checked]
+
 // unfortunate but we need 1 for each question unless there is a better way to do it...
 const initialState = [
     { 
