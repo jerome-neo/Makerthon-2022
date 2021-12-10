@@ -1,9 +1,7 @@
-import { StatusBar } from 'expo-status-bar';
 import React, { useState, useEffect } from 'react';
-import { TouchableOpacity, StyleSheet, Text, View, Button } from 'react-native';
+import { TouchableOpacity, StyleSheet, Text, View, Picker } from 'react-native';
 import * as Notifications from 'expo-notifications'; // REQUIRED. Need this for all things related to Notifications from Expo
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import DateTimePicker from '@react-native-community/datetimepicker'; // time picker
 
 // Settings for notifications
 Notifications.setNotificationHandler({
@@ -23,15 +21,14 @@ export default function App() {
   const [mode, setMode] = useState('date');
   const [show, setShow] = useState(false);
 
+  const curr_hr = date.getHours() < 10 ? "0" + date.getHours() : date.getHours()
+  const curr_min = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes()
+  const curr_time = curr_hr + ":" + curr_min;
+
   const onChange = (event, selectedDate) => {
     const currentDate = selectedDate || date;
     setShow(Platform.OS === 'ios');
     setDate(currentDate);
-    const curr_hr = date.getHours() < 10 ? "0" + date.getHours() : date.getHours()
-    const curr_min = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes()
-    const curr_time = curr_hr + ":" + curr_min;
-    handleSubmit(curr_time);
-    console.log(data);
   };
 
   const showMode = (currentMode) => {
@@ -85,26 +82,37 @@ export default function App() {
     saveData();
   }, [data]);
 
-
+  // to set to new time, and to save that data locally
   const handleSubmit = (time) => {
     setData(time);
     saveData();
   }
+
+  const [selectedValue, setSelectedValue] = useState("Test");
+  let arr = [];
+  for (let i = 0; i < 24; i++) {
+    arr = [...arr, i];
+  }
+
+  console.log(arr);
 
   return (
     <View style={styles.container}>
       <Text>Testing Push Notifications With Local Storage</Text>
       <Text> The time selected is: {data} </Text>
       <Text> Current chosen time: {data} </Text>
-      <Button title="Show time picker" onPress={() => showTimepicker()}/>
-        {show && <DateTimePicker
-          testID="dateTimePicker"
-          value={date}
-          mode={mode}
-          is24Hour={true}
-          display="default"
-          onChange={onChange}
-        />}
+      <View style={{ borderWidth: 1, borderColor: 'red', borderRadius: 4 }}>
+      <Picker         
+        selectedValue={selectedValue}
+        style={{ height: 50, width: 150, color: 'red'}}
+        itemStyle={{ backgroundColor: "grey", color: "blue", fontFamily:"Ebrima", fontSize:17 }}
+        onValueChange={(itemValue, itemIndex) => setSelectedValue(itemValue)}>
+        { arr.map(item => {
+          let val = JSON.stringify(item);
+          return <Picker.Item label={val} value={val} key={val}/>
+        })}
+      </Picker>
+      </View>
     </View>
   );
 }
