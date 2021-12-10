@@ -13,21 +13,6 @@ Notifications.setNotificationHandler({
   }),
 });
 
-// to cancel all:
-/*
-Notifications.cancelAllScheduledNotificationsAsync();
-*/
-
-// to make a repeat call:
-/*
-Notifications.scheduleNotificationAsync({
-    content: {
-      title: 'Hey!',
-    },
-    trigger: { seconds: 5, repeats: true },
-  });
-*/
-
 const TIME_KEY = "@time_key";
 const PREV_REMINDER_KEY = "@prev_reminder";
 // First, we test AsyncStorage
@@ -63,7 +48,7 @@ export default function App() {
 
 
   // Storing of time
-  const savetime = async () => {
+  const saveTime = async () => {
     try {
       await AsyncStorage.setItem(TIME_KEY, JSON.stringify(time));
     } catch (e) {
@@ -72,7 +57,7 @@ export default function App() {
   }
 
   // Retrieving time
-  const readtime = async () => {
+  const readTime = async () => {
     try {
       const getState = await AsyncStorage.getItem(TIME_KEY);
       if (getState != null) {
@@ -96,12 +81,12 @@ export default function App() {
 
   // call this to read time when component mounts
   useEffect(() => {
-    readtime();
+    readTime();
   }, [])
 
   // call this to ensure that time is saved properly on first click
   useEffect(() => {
-    savetime();
+    saveTime();
   }, [time]);
 
   const split_time = time.split(':'); // split by ':', because the hour and minute are separated that way
