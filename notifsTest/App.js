@@ -32,8 +32,8 @@ const TIME_KEY = "@time_key";
 const PREV_REMINDER_KEY = "@prev_reminder";
 // First, we test AsyncStorage
 export default function App() {
-  // Define your data with hooks
-  const [data, setData] = useState("12:34");
+  // Define your time with hooks
+  const [time, setTime] = useState("12:34");
 
   // stuff for DateTimePicker
   const [date, setDate] = useState(new Date(1598051730000));
@@ -48,7 +48,7 @@ export default function App() {
     const curr_hr = selectedDate.getHours() < 10 ? "0" + selectedDate.getHours() : selectedDate.getHours()
     const curr_min = selectedDate.getMinutes() < 10 ? "0" + selectedDate.getMinutes() : selectedDate.getMinutes()
     const curr_time = curr_hr + ":" + curr_min;
-    setData(curr_time);
+    setTime(curr_time);
     cancelBeforeAndSchedule();
   };
 
@@ -62,21 +62,21 @@ export default function App() {
   };
 
 
-  // Storing of data
-  const saveData = async () => {
+  // Storing of time
+  const savetime = async () => {
     try {
-      await AsyncStorage.setItem(TIME_KEY, JSON.stringify(data));
+      await AsyncStorage.setItem(TIME_KEY, JSON.stringify(time));
     } catch (e) {
       console.log(e);
     }
   }
 
-  // Retrieving data
-  const readData = async () => {
+  // Retrieving time
+  const readtime = async () => {
     try {
       const getState = await AsyncStorage.getItem(TIME_KEY);
       if (getState != null) {
-        setData(JSON.parse(getState));
+        setTime(JSON.parse(getState));
       }
     } catch(e) {
       // error reading value
@@ -84,8 +84,8 @@ export default function App() {
     }
   }
 
-  // Clearing all data
-  const clearData = async () => {
+  // Clearing all time
+  const cleartime = async () => {
     try {
       await AsyncStorage.clear();
       alert('Storage cleared successfully');
@@ -94,19 +94,19 @@ export default function App() {
     }
   }
 
-  // call this to read data when component mounts
+  // call this to read time when component mounts
   useEffect(() => {
-    readData();
+    readtime();
   }, [])
 
-  // call this to ensure that data is saved properly on first click
+  // call this to ensure that time is saved properly on first click
   useEffect(() => {
-    saveData();
-  }, [data]);
+    savetime();
+  }, [time]);
 
-  const split_data = data.split(':'); // split by ':', because the hour and minute are separated that way
-  const hrs = Number(split_data[0]);
-  const mins = Number(split_data[1]);
+  const split_time = time.split(':'); // split by ':', because the hour and minute are separated that way
+  const hrs = Number(split_time[0]);
+  const mins = Number(split_time[1]);
 
   // this works, but needs to be done twice for some reason...
   const cancelBeforeAndSchedule = async () => {
@@ -129,7 +129,7 @@ export default function App() {
       <Text>Testing Push Notifications With Local Storage</Text>
       <View style={styles.timeContainer}>
       <TouchableOpacity onPress={showTimepicker}>
-        <Text style={styles.text}> Current reminder: {data} </Text>
+        <Text style={styles.text}> Current reminder: {time} </Text>
       </TouchableOpacity>
       </View>
       <Button title="Schedule" onPress={() => cancelBeforeAndSchedule()}/>
