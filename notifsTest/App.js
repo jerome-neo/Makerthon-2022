@@ -1,9 +1,9 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState, useEffect } from 'react';
-import { TouchableOpacity, StyleSheet, Text, View } from 'react-native';
+import { TouchableOpacity, StyleSheet, Text, View, Button } from 'react-native';
 import * as Notifications from 'expo-notifications'; // REQUIRED. Need this for all things related to Notifications from Expo
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import DateTimePicker from '@react-native-community/datetimepicker'; // time picker
 
 // Settings for notifications
 Notifications.setNotificationHandler({
@@ -17,8 +17,31 @@ Notifications.setNotificationHandler({
 const TIME_KEY = "@time_key";
 // First, we test AsyncStorage
 export default function App() {
-  // Define your data
+  // Define your data with hooks
   const [data, setData] = useState(1200);
+  const [date, setDate] = useState(new Date(1598051730000));
+  const [mode, setMode] = useState('date');
+  const [show, setShow] = useState(false);
+
+  const onChange = (event, selectedDate) => {
+    const currentDate = selectedDate || date;
+    setShow(Platform.OS === 'ios');
+    setDate(currentDate);
+    const curr_hr = date.getHours() < 10 ? "0" + date.getHours() : date.getHours()
+    const curr_min = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes()
+    const curr_time = curr_hr + ":" + curr_min;
+    handleSubmit(curr_time);
+    console.log(data);
+  };
+
+  const showMode = (currentMode) => {
+    setShow(true);
+    setMode(currentMode);
+  };
+
+  const showTimepicker = () => {
+    showMode('time');
+  };
 
   // Storing of data
   const saveData = async () => {
@@ -72,13 +95,16 @@ export default function App() {
     <View style={styles.container}>
       <Text>Testing Push Notifications With Local Storage</Text>
       <Text> The time selected is: {data} </Text>
-      <TouchableOpacity style={styles.button} onPress={() => handleSubmit(1300)}>
-        <Text style={styles.text}> Change time to 1300 </Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.button} onPress={() =>  handleSubmit(1200)}>
-        <Text style={styles.text}> Change time to 1200 </Text>
-      </TouchableOpacity> 
-      <StatusBar style="auto" />
+      <Text> Current chosen time: {data} </Text>
+      <Button title="Show time picker" onPress={() => showTimepicker()}/>
+        {show && <DateTimePicker
+          testID="dateTimePicker"
+          value={date}
+          mode={mode}
+          is24Hour={true}
+          display="default"
+          onChange={onChange}
+        />}
     </View>
   );
 }
