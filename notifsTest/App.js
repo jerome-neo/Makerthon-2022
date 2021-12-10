@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { TouchableOpacity, StyleSheet, Text, View, Picker } from 'react-native';
+import { Button, TouchableOpacity, StyleSheet, Text, View, Picker } from 'react-native';
 import * as Notifications from 'expo-notifications'; // REQUIRED. Need this for all things related to Notifications from Expo
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import DateTimePicker from '@react-native-community/datetimepicker';
 
 // Settings for notifications
 Notifications.setNotificationHandler({
@@ -12,23 +13,43 @@ Notifications.setNotificationHandler({
   }),
 });
 
+// to cancel all:
+/*
+Notifications.cancelAllScheduledNotificationsAsync();
+*/
+
+// to make a repeat call:
+/*
+Notifications.scheduleNotificationAsync({
+    content: {
+      title: 'Hey!',
+    },
+    trigger: { seconds: 5, repeats: true },
+  });
+*/
+
 const TIME_KEY = "@time_key";
+const PREV_REMINDER_KEY = "@prev_reminder";
 // First, we test AsyncStorage
 export default function App() {
   // Define your data with hooks
   const [data, setData] = useState(1200);
+
+  // stuff for DateTimePicker
   const [date, setDate] = useState(new Date(1598051730000));
   const [mode, setMode] = useState('date');
   const [show, setShow] = useState(false);
-
-  const curr_hr = date.getHours() < 10 ? "0" + date.getHours() : date.getHours()
-  const curr_min = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes()
-  const curr_time = curr_hr + ":" + curr_min;
 
   const onChange = (event, selectedDate) => {
     const currentDate = selectedDate || date;
     setShow(Platform.OS === 'ios');
     setDate(currentDate);
+    // getting time and formatting it to the correct string
+    const curr_hr = selectedDate.getHours() < 10 ? "0" + selectedDate.getHours() : selectedDate.getHours()
+    const curr_min = selectedDate.getMinutes() < 10 ? "0" + selectedDate.getMinutes() : selectedDate.getMinutes()
+    const curr_time = curr_hr + ":" + curr_min;
+    setData(curr_time);
+    cancelBeforeAndSchedule();
   };
 
   const showMode = (currentMode) => {
@@ -39,6 +60,7 @@ export default function App() {
   const showTimepicker = () => {
     showMode('time');
   };
+
 
   // Storing of data
   const saveData = async () => {
@@ -82,36 +104,61 @@ export default function App() {
     saveData();
   }, [data]);
 
-  // to set to new time, and to save that data locally
-  const handleSubmit = (time) => {
-    setData(time);
-    saveData();
-  }
+  // data retrieval from asyncstorage a little wonky?
+  const split_data = data === undefined ? "1:1".split(':') : data.split(':'); // split by ':', because the hour and minute are separated that way
+  const hrs = Number(split_data[0]);
+  const mins = Number(split_data[1]);
 
-  const [selectedValue, setSelectedValue] = useState("Test");
-  let arr = [];
-  for (let i = 0; i < 24; i++) {
-    arr = [...arr, i];
+  // this works, but needs to be done twice for some reason...
+  const cancelBeforeAndSchedule = async () => {
+    await Notifications.cancelAllScheduledNotificationsAsync()
+    await Notifications.scheduleNotificationAsync({
+      content: {
+        title: "Mood Tracking",
+        body: "Reminder to do your mood tracking~"
+      },
+      trigger: { 
+        hour: hrs,
+        minute: mins,
+        repeats: true,
+      }
+    })
   }
-
-  console.log(arr);
 
   return (
     <View style={styles.container}>
       <Text>Testing Push Notifications With Local Storage</Text>
-      <Text> The time selected is: {data} </Text>
-      <Text> Current chosen time: {data} </Text>
-      <View style={{ borderWidth: 1, borderColor: 'red', borderRadius: 4 }}>
-      <Picker         
-        selectedValue={selectedValue}
-        style={{ height: 50, width: 150, color: 'red'}}
-        itemStyle={{ backgroundColor: "grey", color: "blue", fontFamily:"Ebrima", fontSize:17 }}
-        onValueChange={(itemValue, itemIndex) => setSelectedValue(itemValue)}>
-        { arr.map(item => {
-          let val = JSON.stringify(item);
-          return <Picker.Item label={val} value={val} key={val}/>
-        })}
-      </Picker>
+      <View style={styles.timeContainer}>
+      <TouchableOpacity onPress={showTimepicker}>
+        <Text style={styles.text}> Current reminder: {data} </Text>
+      </TouchableOpacity>
+      </View>
+      <Button title="Schedule" onPress={() => {
+        // Notifications.cancelAllScheduledNotificationsAsync()
+        Notifications.scheduleNotificationAsync({
+          content: {
+            title: "Testing",
+            body: "This worked!?"
+          },
+          trigger: { 
+            hour: hrs,
+            minute: mins,
+            repeats: true,
+          }
+        })
+      }}
+      />
+      <View>
+        {show && (
+          <DateTimePicker
+            testID="dateTimePicker"
+            value={date}
+            mode={mode}
+            is24Hour={true}
+            display="default"
+            onChange={onChange}
+          />
+        ) /* Can just ignore this entire thing. It's simply used to help open up the time picker*/}
       </View>
     </View>
   );
@@ -125,17 +172,19 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   
-  button: {
-    marginBottom: 20,
-    marginTop: 20,
-    borderRadius: 2,
-    borderWidth: 1,
-    borderColor: 'red',   
-    backgroundColor: 'black'
+  timeContainer: { 
+    borderWidth: 2, 
+    borderColor: 'black', 
+    borderRadius: 20, 
+    backgroundColor: '#99EDC3', 
+    height: 40, 
+    width: 220, 
+    alignItems: 'center', 
+    justifyContent: 'center'
   },
-
   text: {
-    fontSize: 24,
-    color: 'white'
+    fontSize: 14,
+    color: '#4169e1',
+    fontWeight: 'bold'
   }
 });
