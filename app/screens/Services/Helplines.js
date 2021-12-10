@@ -31,11 +31,11 @@ const Helplines = () => {
               <SafeAreaView style={styles.container}>
                 <SafeAreaView style={styles.bundle}>
                   { makeCallableIcon("+6512345678", icons['placeholder']) }
-                  { makeCallableIcon("+6512345678", icons['placeholder']) }
+                  { makeCallableIcon("+6512345678", icons['pic1']) }
                 </SafeAreaView>
                 <SafeAreaView style={styles.bundle}>
-                  { makeCallableIcon("+6512345678", icons['placeholder']) }
-                  { makeCallableIcon("+6512345678", icons['placeholder']) }
+                  { makeCallableIcon("+6512345678", icons['pic2']) }
+                  { makeCallableIcon("+6512345678", icons['pic3']) }
                 </SafeAreaView>
               </SafeAreaView>
           </ImageBackground>
@@ -53,8 +53,8 @@ const styles = StyleSheet.create({
 
     image: {
       marginTop: 25,
-      width: 125,
-      height: 125,
+      width: 200,
+      height: 200,
       marginLeft: 15, 
       marginRight: 15
     },

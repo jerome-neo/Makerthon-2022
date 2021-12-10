@@ -34,6 +34,10 @@ Functionalities:
 - Background pictures for screens
 - Icons stuff
 
+
+8. Notifications
+- Do this on another app
+
 MISC
 ... Saving overall app state, and loading on startup
 

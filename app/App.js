@@ -13,15 +13,9 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 // Redux stuff
 import { Provider } from 'react-redux';
 
-// Expo stuff for push notifications. Will use next time...
-import { Notifications } from 'expo';
-import * as Permissions from 'expo-permissions';
-
 // local imports
 import moodStore from './redux/mood/store'
 import { Dashboard, Mood, MoodSelector, ResourcesMain, Services, Settings, Helplines, Questionnaire } from './screens';
-
-
 
 
 // Function that takes a route and returns a screen name
@@ -138,7 +132,7 @@ const App = () => {
       <Stack.Navigator>
         <Stack.Screen component={Bottoms} name="Bottoms" options={({ route }) => ({
           title: setNameFromRouteName(route),
-          headerShown: false
+          headerShown: false,
         })}/>
         <Stack.Screen component={QuestionnaireStack} name="QuestionnaireStack" options={{headerShown: true}} /*  Set to false later */ />
       </Stack.Navigator>

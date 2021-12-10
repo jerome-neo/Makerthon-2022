@@ -7,6 +7,19 @@ import { Button } from 'react-native-elements'
 - Send feedback links to an email. Note that this does not work in a simulator, so try on actual device.
 - About Us gives a brief overview of who we are, and what this app is for!
 */
+
+import * as Notifications from 'expo-notifications';
+
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: false,
+    shouldSetBadge: false,
+  }),
+});
+
+// find a way to call notifications daily from here
+
 const Settings = ({ navigation }) => {
     return (
         <SafeAreaView style={styles.container}>
@@ -22,13 +35,13 @@ const Settings = ({ navigation }) => {
 }
 
 const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      backgroundColor: '#fff',
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
-  });
-  
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+});
+
 
 export default Settings;
