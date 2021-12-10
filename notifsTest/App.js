@@ -33,7 +33,7 @@ const PREV_REMINDER_KEY = "@prev_reminder";
 // First, we test AsyncStorage
 export default function App() {
   // Define your data with hooks
-  const [data, setData] = useState(1200);
+  const [data, setData] = useState("12:34");
 
   // stuff for DateTimePicker
   const [date, setDate] = useState(new Date(1598051730000));
@@ -104,8 +104,7 @@ export default function App() {
     saveData();
   }, [data]);
 
-  // data retrieval from asyncstorage a little wonky?
-  const split_data = data === undefined ? "1:1".split(':') : data.split(':'); // split by ':', because the hour and minute are separated that way
+  const split_data = data.split(':'); // split by ':', because the hour and minute are separated that way
   const hrs = Number(split_data[0]);
   const mins = Number(split_data[1]);
 
@@ -133,21 +132,7 @@ export default function App() {
         <Text style={styles.text}> Current reminder: {data} </Text>
       </TouchableOpacity>
       </View>
-      <Button title="Schedule" onPress={() => {
-        // Notifications.cancelAllScheduledNotificationsAsync()
-        Notifications.scheduleNotificationAsync({
-          content: {
-            title: "Testing",
-            body: "This worked!?"
-          },
-          trigger: { 
-            hour: hrs,
-            minute: mins,
-            repeats: true,
-          }
-        })
-      }}
-      />
+      <Button title="Schedule" onPress={() => cancelBeforeAndSchedule()}/>
       <View>
         {show && (
           <DateTimePicker
