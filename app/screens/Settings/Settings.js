@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, SafeAreaView, ScrollView, TouchableOpacity, Linking } from 'react-native';
+import { StyleSheet, Text, SafeAreaView, ScrollView, Switch, Linking, View } from 'react-native';
 import { Button } from 'react-native-elements'
 
 // local imports
@@ -27,7 +27,9 @@ const Settings = ({ navigation }) => {
     return (
         <SafeAreaView style={styles.container}>
             <SetNotifications/>
-            <Button title="Send feedback" onPress={() => { Linking.openURL('mailto:MK15@makerthon2022.com?subject=Feedback')}}/>
+            <View style={{marginBottom: 10,}}>
+              <Button title="Send feedback" onPress={() => { Linking.openURL('mailto:MK15@makerthon2022.com?subject=Feedback')}}/>
+            </View>
             <Button title="About Us" onPress={() => navigation.goBack() /* Leaving it as this for now. Update to another page next time :)*/}/> 
         </SafeAreaView>
       );

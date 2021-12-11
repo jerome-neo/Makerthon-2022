@@ -2,27 +2,22 @@
 // Need to add an option to turn off notifications
 
 import React, { useState, useEffect } from 'react';
-import { Button, TouchableOpacity, StyleSheet, Text, View, Picker } from 'react-native';
+import { TouchableOpacity, StyleSheet, Text, View, Switch } from 'react-native';
 import * as Notifications from 'expo-notifications'; // REQUIRED. Need this for all things related to Notifications from Expo
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
-// Settings for notifications
-Notifications.setNotificationHandler({
-  handleNotification: async () => ({
-    shouldShowAlert: true,
-    shouldPlaySound: false,
-    shouldSetBadge: false,
-  }),
-});
-
 const TIME_KEY = "@time_key";
+const NOTIFS_SWITCH_KEY = "@switch_key";
 // First, we test AsyncStorage
 const SetNotifications = () =>  {
   // Define your time with hooks. We use this as the default time. This is a string used to display time only.
   const [time, setTime] = useState("12:34");
 
-  // stuff for DateTimePicker
+  // Switch's hook
+  const [toggle, setToggle] = useState(false);
+
+  // <------------------------------------ DateTimePicker stuff ------------------------------------->
   const [date, setDate] = useState(new Date(1598051730000));
   const [mode, setMode] = useState('date');
   const [show, setShow] = useState(false);
@@ -49,8 +44,10 @@ const SetNotifications = () =>  {
     showMode('time');
   };
 
+  // <------------------------------------ DateTimePicker stuff end ------------------------------------->
 
-  // Storing of time
+
+  // <------------------------------------ Async Storage Stuff ------------------------------------->
   const saveTime = async () => {
     try {
       await AsyncStorage.setItem(TIME_KEY, JSON.stringify(time));
@@ -62,12 +59,31 @@ const SetNotifications = () =>  {
   // Retrieving time
   const readTime = async () => {
     try {
-      const getState = await AsyncStorage.getItem(TIME_KEY);
-      if (getState != null) {
-        setTime(JSON.parse(getState));
+      const getTime = await AsyncStorage.getItem(TIME_KEY);
+      if (getTime !== null) {
+        setTime(JSON.parse(getTime));
       }
     } catch(e) {
       // error reading value
+      console.log(e);
+    }
+  }
+  
+  const saveToggle = async () => {
+    try {
+      await AsyncStorage.setItem(NOTIFS_SWITCH_KEY, JSON.stringify(toggle));
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  const readToggle = async () => {
+    try {
+      const getToggle = await AsyncStorage.getItem(NOTIFS_SWITCH_KEY);
+      if (getToggle !== null) {
+        setToggle(JSON.parse(getToggle));
+      } 
+    } catch (e) {
       console.log(e);
     }
   }
@@ -82,22 +98,55 @@ const SetNotifications = () =>  {
     }
   }
 
-  // call this to read time when component mounts
+  // <------------------------------------ AsyncStorage stuff end ------------------------------------->
+
+  // <------------------------------------ Toggle stuff ------------------------------------->
+  
+  let displayText = "";
+  if (toggle) {
+    // toggle is TRUE. So it is on
+    displayText = "Current reminder: " + time;
+    // Settings for notifications
+    Notifications.setNotificationHandler({
+      handleNotification: async () => ({
+        shouldShowAlert: true,
+        shouldPlaySound: false,
+        shouldSetBadge: false,
+      }),
+    });
+  } else {
+    displayText = "Notifications are turned off";
+    Notifications.setNotificationHandler({
+      handleNotification: async () => ({
+        shouldShowAlert: false,
+        shouldPlaySound: false,
+        shouldSetBadge: false,
+      }),
+    });
+  }
+  const toggleSwitch = () => {
+    setToggle(prevState => !prevState);
+  }
+
+  // <------------------------------------ Mounting stuff ------------------------------------->
   useEffect(() => {
     readTime();
+    readToggle();
   }, [])
 
   // call this to ensure that time and scheduling is saved properly on first click
   useEffect(() => {
     cancelBeforeAndSchedule();
     saveTime();
-  }, [time]);
+    saveToggle();
+  }, [time, toggle]);
 
+
+  // <------------------------------------ Notifications logic  ------------------------------------->
   const split_time = time.split(':'); // split by ':', because the hour and minute are separated that way
   const AM_PM = split_time[1].split(" ")[1];
   const hrs = Number(split_time[0]);
   const mins = Number(split_time[1].split(" ")[0]);
-  // this works, but needs to be done twice for some reason...
   const cancelBeforeAndSchedule = async () => {
     await Notifications.cancelAllScheduledNotificationsAsync()
     await Notifications.scheduleNotificationAsync({
@@ -112,16 +161,19 @@ const SetNotifications = () =>  {
       }
     })
   }
-
-  console.log(time);
-
+  // remove comment if you want to do some debugging
+  // console.log(time);
   return (
-    <View>
+    <View style={{flexDirection: 'row'}}>
       <View style={styles.timeContainer}>
-      <TouchableOpacity onPress={showTimepicker}>
-        <Text style={styles.text}> Current reminder: {time} </Text>
-      </TouchableOpacity>
+        <TouchableOpacity onPress={showTimepicker}>
+          <Text style={styles.text}> {displayText} </Text>
+        </TouchableOpacity>
       </View>
+      <Switch
+        onValueChange={toggleSwitch}
+        value={toggle}
+      />
       <View>
         {show && (
           <DateTimePicker
