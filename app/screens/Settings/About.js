@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text } from 'react-native';
+import { SafeAreaView, Text, StyleSheet} from 'react-native';
 
 const About = () => { 
     return (
@@ -13,6 +13,7 @@ const styles = StyleSheet.create({
     text: {
         flex: 1,
         justifyContent: 'center',
+        alignItems: 'center',
         fontSize: 24,
         color: 'black',
     }

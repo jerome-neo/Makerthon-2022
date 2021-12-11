@@ -30,7 +30,7 @@ const Settings = ({ navigation }) => {
             <View style={{marginBottom: 10,}}>
               <Button title="Send feedback" onPress={() => { Linking.openURL('mailto:MK15@makerthon2022.com?subject=Feedback')}}/>
             </View>
-            <Button title="About Us" onPress={() => navigation.goBack() /* Leaving it as this for now. Update to another page next time :)*/}/> 
+            <Button title="About Us" onPress={() => navigation.navigate('About')}/> 
         </SafeAreaView>
       );
 }

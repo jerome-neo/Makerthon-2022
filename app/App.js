@@ -15,7 +15,7 @@ import { Provider } from 'react-redux';
 
 // local imports
 import moodStore from './redux/mood/store'
-import { Dashboard, Mood, MoodSelector, ResourcesMain, Services, Settings, Helplines, Questionnaire } from './screens';
+import { About, Dashboard, Mood, MoodSelector, ResourcesMain, Services, Settings, Helplines, Questionnaire } from './screens';
 
 
 // Function that takes a route and returns a screen name
@@ -115,7 +115,7 @@ const SettingsStack = () => {
 // **Remember to change dailyReset when the time comes :)
 const Bottoms = () => {
   return (
-  <BottomTabs.Navigator initialRouteName={ dailyReset === true ? "FullMoodStack" : "Dashboard"}>
+  <BottomTabs.Navigator initialRouteName={ dailyReset === true ? "SubMoodStack" : "Dashboard"}>
     <BottomTabs.Screen component={Resources} name="Resources"/>
     <BottomTabs.Screen component={SubMoodStack} name="SubMoodStack" options={{headerShown: false}}/>
     <BottomTabs.Screen component={Dashboard} name="Dashboard"/>
@@ -135,6 +135,7 @@ const App = () => {
           headerShown: false,
         })}/>
         <Stack.Screen component={QuestionnaireStack} name="QuestionnaireStack" options={{headerShown: true}} /*  Set to false later */ />
+        <Stack.Screen component={About} name="About"/>
       </Stack.Navigator>
     </NavigationContainer>
   )

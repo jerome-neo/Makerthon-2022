@@ -3,9 +3,9 @@ Functionalities:
 
 1. Calendar-like function. To integrate with the colouring, so we have a proper coloured mood tracker (J will do this. I will help out as well.)
 
-2. Thresholds for Questionnaire redirection
+2. Thresholds for Questionnaire redirection (S will provide me with the thresholds. Then I will do the linking to screens)
 
-3. Curate list of resources (S will do this. After S is done, simply add in to the screens)
+3. Curate list of resources (R & S will do this. After S is done, simply add in to the screens)
 
 - Breathing exercises
 - Face massage
