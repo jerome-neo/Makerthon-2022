@@ -14,7 +14,6 @@ Notifications.setNotificationHandler({
 });
 
 const TIME_KEY = "@time_key";
-const PREV_REMINDER_KEY = "@prev_reminder";
 // First, we test AsyncStorage
 export default function App() {
   // Define your time with hooks
@@ -69,8 +68,8 @@ export default function App() {
     }
   }
 
-  // Clearing all time
-  const cleartime = async () => {
+  // Clearing the AsyncStorage. Will be useful for next time when we have to use ONE key to manage an ARRAY OF OBJECTS
+  const clearTime = async () => {
     try {
       await AsyncStorage.clear();
       alert('Storage cleared successfully');
@@ -86,6 +85,7 @@ export default function App() {
 
   // call this to ensure that time is saved properly on first click
   useEffect(() => {
+    cancelBeforeAndSchedule();
     saveTime();
   }, [time]);
 
@@ -117,7 +117,6 @@ export default function App() {
         <Text style={styles.text}> Current reminder: {time} </Text>
       </TouchableOpacity>
       </View>
-      <Button title="Schedule" onPress={() => cancelBeforeAndSchedule()}/>
       <View>
         {show && (
           <DateTimePicker
