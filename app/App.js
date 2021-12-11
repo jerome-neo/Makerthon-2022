@@ -3,7 +3,7 @@ import React from 'react';
 import { StyleSheet } from 'react-native';
 
 // To be removed
-import { TestingScreen, QuestionnaireBoxTest, } from './screens'; // this entire line will be used for testing components and other functionalities
+import { TestingScreen, QuestionnaireBoxTest } from './screens'; // this entire line will be used for testing components and other functionalities
 
 // Navigation stuff
 import { NavigationContainer, getFocusedRouteNameFromRoute } from '@react-navigation/native';

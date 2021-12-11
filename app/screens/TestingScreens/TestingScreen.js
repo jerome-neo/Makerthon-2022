@@ -1,6 +1,6 @@
 // the TestingScreen screen
 import React from 'react';
-import { ImageBackground, TouchableOpacity, StyleSheet, Text, SafeAreaView } from 'react-native';
+import { ImageBackground, TouchableOpacity, StyleSheet, Text, SafeAreaView, Button} from 'react-native';
 
 // TestingScreen screen
 
