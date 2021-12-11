@@ -135,7 +135,7 @@ const App = () => {
           headerShown: false,
         })}/>
         <Stack.Screen component={QuestionnaireStack} name="QuestionnaireStack" options={{headerShown: true}} /*  Set to false later */ />
-        <Stack.Screen component={About} name="About"/>
+        <Stack.Screen component={About} name="About" options={{title: 'About Us'}}/>
       </Stack.Navigator>
     </NavigationContainer>
   )
