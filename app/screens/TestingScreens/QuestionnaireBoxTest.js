@@ -26,7 +26,7 @@ const questions = [
 const qnsList = questions.map((qns) => {
     return (
         <Provider store={store}>
-            <QuestionnaireBox question={qns[0]} key={qns[1]} qNum={qns[1]} />
+            <QuestionnaireBox question={qns[0]} qNum={qns[1]} />
         </Provider>
     );
 })
@@ -134,7 +134,10 @@ const handleSubmit = (list) => {
     score = 0; // reset!!
 }
 
-// also need error handling
+// If both counselling and psych needs a consent form (because we want to set up an actual appointment)
+// Then we'll need to pass down the navigator's value (Counsel/Psych) into FormDetails as a param.
+// The syntax is: navigation.navigate('RouteName', { data })
+// Then use route.data to access the data in FormDetails
 const QuestionnaireBoxTest = ({navigation}) => {
     return (
         <ScrollView>
@@ -148,11 +151,12 @@ const QuestionnaireBoxTest = ({navigation}) => {
                             giveResources(() => navigation.navigate('Resources'));
                             break;
                         case "PFA":
+                            referToPFA(""); // Navigate to private chat app
                             console.log(navigator);
                             navigation.goBack(); // This should link to the private chat app
                             break;
                         case "Counsel":
-                            console.log(navigator);
+                            referToCounsel("", "");
                             navigation.goBack();
                             break;
                         case "Psych":

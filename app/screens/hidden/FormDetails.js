@@ -45,9 +45,9 @@ const FormDetails = ({ navigation }) => {
   }
 
   // Clearing the AsyncStorage. Will be useful for next time when we have to use ONE key to manage an ARRAY OF OBJECTS
-  const clearTime = async () => {
+  const clearDetails = async () => {
     try {
-      await AsyncStorage.clear();
+      await AsyncStorage.removeItem(DETAILS); // removes DETAILS key from storage
       alert('Storage cleared successfully');
     } catch (e) {
       alert('Failed to clear local storage');
@@ -58,9 +58,9 @@ const FormDetails = ({ navigation }) => {
   /* Updates stuff */
   // Need to copy the array, then value of array to be that new array. Otherwise, won't work.
   const updateArray = (index, text) => {
-    let newArr = [...details];
-    newArr[index] = text;
-    console.log(newArr[index]);
+    let newArr = [...details]; // First, copy the array
+    newArr[index] = text; // Set the correct field to the new text value
+    console.log(newArr[index]); // Checking. Can remove this statement
     setDetails(newArr);
   }
 
@@ -92,12 +92,12 @@ const FormDetails = ({ navigation }) => {
         msg,
         [
             {
-                text: "No",
+                text: "Back",
                 onPress: decline,
                 style: "cancel"
             },
             {
-              text: "Yes, I am sure",
+              text: "I do not want help",
               onPress: accept,
               style: "default"
             }
@@ -217,10 +217,10 @@ const FormDetails = ({ navigation }) => {
             // Do the email sending here.
             // What I'm expecting is that, we'll send an email from the server-side to UCS, with the student's details.
             // Only security concern here is that, since we're sending from our server side and not the student's personal email, it is easy for
-            // a malicious actor that's monitoring our traffic to intercept potentially every single student's email's being sent.
+            // a malicious actor that's monitoring our server's traffic to intercept potentially every single student's email's being sent.
             // The upside is that, doing it from server-side ensures that the emails get sent through. If it were from the students' side, they could
             // easily cancel the sending via their own email app. But, we'll assume that this will not happen since they have already pressed "submit".
-            Alert.alert("Placeholder", "Email sent");
+            Alert.alert("Placeholder", "Email sent for tele-medicine appointment.");
             navigation.navigate('Dashboard');
           })}/>
         </SafeAreaView>

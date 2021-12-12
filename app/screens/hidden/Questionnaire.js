@@ -156,7 +156,7 @@ const Questionnaire = ({ navigation }) => {
                             break;
                         case "Counsel":
                             console.log(navigator);
-                            navigation.goBack();
+                            navigation.goBack(); // Not sure what to do with this yet.
                             break;
                         case "Psych":
                             console.log(navigator);
