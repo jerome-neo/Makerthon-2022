@@ -9,6 +9,7 @@ export { default as About } from './Settings/About';
 
 // the hidden screens
 export { default as Questionnaire } from './hidden/Questionnaire'; 
+export { default as FormDetails }from './hidden/FormDetails';
 
 // remove next time after all testing is done
 export { default as TestingScreen } from './TestingScreens/TestingScreen';

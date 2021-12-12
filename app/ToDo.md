@@ -16,9 +16,6 @@ Functionalities:
 - Background pictures for screens
 - Icons stuff
 
-MISC
-... Saving overall app state, and loading on startup
-
 <------------------------------------------------------------ COMPLETED STUFF ------------------------------------------------------------>
 
 1. Colour-based mood changing, mood selection
@@ -30,12 +27,15 @@ MISC
 7. Services
 8. Settings screen is done (except for About Us)
 9. Questionnaire
+10. Forms. Mostly completed, just need to link up to the correct resources eventually (Psychologist, Counsellor?).
+11. Retrieving state from local storage done. Now, we only need to wait for the mood tracking and then save that, and it's fully complete.
 
 Hidden Screens:
 
 - Questionnaire screen is pretty much done. Left UI/UX updates
-  --> Form fillup
-  --> Still needs to link to each different screen (Resources, PFA, Counsellor, Psych)
+
+- Consent Form:
+  --> What to do on submit? How to book an appointment with UCS? For now, use a placeholder
 
 <------------------------------------------------------------ ADDITIONAL STUFF ------------------------------------------------------------>
 

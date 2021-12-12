@@ -2,7 +2,7 @@
 // Need to add an option to turn off notifications
 
 import React, { useState, useEffect } from 'react';
-import { TouchableOpacity, StyleSheet, Text, View, Switch } from 'react-native';
+import { Button, TouchableOpacity, StyleSheet, Text, View, Switch } from 'react-native';
 import * as Notifications from 'expo-notifications'; // REQUIRED. Need this for all things related to Notifications from Expo
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import DateTimePicker from '@react-native-community/datetimepicker';
@@ -208,6 +208,7 @@ const styles = StyleSheet.create({
     alignItems: 'center', 
     justifyContent: 'center'
   },
+
   text: {
     fontSize: 14,
     color: '#4169e1',

@@ -15,7 +15,7 @@ import { Provider } from 'react-redux';
 
 // local imports
 import moodStore from './redux/mood/store'
-import { About, Dashboard, Mood, MoodSelector, ResourcesMain, Services, Settings, Helplines, Questionnaire } from './screens';
+import { About, Dashboard, Mood, MoodSelector, ResourcesMain, Services, Settings, Helplines, Questionnaire, FormDetails } from './screens';
 
 
 // Function that takes a route and returns a screen name
@@ -68,13 +68,11 @@ const QuestionnaireStack = () => {
   return (
     <Stack.Navigator>
       <Stack.Screen component={Questionnaire} name="Questionnaire" options={{headerShown: false}}/>
-      <Stack.Screen component={Resources} name="Resources" options={{headerShown: false}}/>
     </Stack.Navigator>
   )
 }
 
-// SubMoodStack needs access to Questionnaire
-// Questionnaire needs access to Resources
+// Probably not needed anymore. Remove when confirmed.
 const FullMoodStack = () => {
   return (
     <Stack.Navigator>
@@ -103,16 +101,8 @@ const ServicesStack = () => {
   )
 }
 
-// contains the Settings stuff
-const SettingsStack = () => {
-  return (
-    <Stack.Navigator>
-      <Stack.Screen component={Settings} name="SettingsScreen" options={{headerShown: false}}/>
-    </Stack.Navigator>
-  )
-}
-
 // **Remember to change dailyReset when the time comes :)
+// Add whatever should have bottom tabs to here.
 const Bottoms = () => {
   return (
   <BottomTabs.Navigator initialRouteName={ dailyReset === true ? "SubMoodStack" : "Dashboard"}>
@@ -120,12 +110,13 @@ const Bottoms = () => {
     <BottomTabs.Screen component={SubMoodStack} name="SubMoodStack" options={{headerShown: false}}/>
     <BottomTabs.Screen component={Dashboard} name="Dashboard"/>
     <BottomTabs.Screen component={ServicesStack} name="ServicesStack" options={{headerShown: false}}/>
-    <BottomTabs.Screen component={SettingsStack} name="Settings"/>
+    <BottomTabs.Screen component={Settings} name="Settings"/>
     <BottomTabs.Screen component={TestingStack} name="TestingStack" options={{headerShown: false}}/>
   </BottomTabs.Navigator>);
 }
 
-// The main thing
+// Render the entire thing
+// QuestionnaireStack and About should not have bottom tabs. So for anything that should not have bottom tabs, add to here.
 const App = () => {
   return (
     <NavigationContainer>
@@ -134,8 +125,9 @@ const App = () => {
           title: setNameFromRouteName(route),
           headerShown: false,
         })}/>
-        <Stack.Screen component={QuestionnaireStack} name="QuestionnaireStack" options={{headerShown: true}} /*  Set to false later */ />
+        <Stack.Screen component={QuestionnaireStack} name="QuestionnaireStack" options={{headerShown: true}} /*  Set to false later, because users should not be able to go back from this. */ />
         <Stack.Screen component={About} name="About" options={{title: 'About Us'}}/>
+        <Stack.Screen component={FormDetails} name="FormDetails" options={{headerShown: false}}/>
       </Stack.Navigator>
     </NavigationContainer>
   )

@@ -1,7 +1,7 @@
 // IMPORTANT:
 // Remember to use from here! Reflect all changes from QuestionnaireBoxTest to here, if any.
 import React, { useEffect } from 'react';
-import { ScrollView, Button, StyleSheet, BackHandler } from 'react-native';
+import { ScrollView, Button, StyleSheet, BackHandler, Alert } from 'react-native';
 import { Provider } from 'react-redux';
 
 // local imports
@@ -39,34 +39,65 @@ const qnsList = questions.map((qns) => {
 // create store in here, and pass it to the next component, which is our QuestionnaireBox
 let score = 0;
 
-// we'll need navigation screens here as well :)
-const giveResources = () => {
-    alert("Pop up resources");
+// toNav is a function. Pass it in the form of "() => navigation.navigate(...)". Must be lazy, otherwise it'll do the navigation onPress.
+const customAlert = (title, msg, accept, decline) => {
+    Alert.alert(
+        title,
+        msg,
+        [
+            {
+                text: "Decline",
+                onPress: decline,
+                style: "cancel"
+            },
+            {
+              text: "Accept",
+              onPress: accept,
+              style: "default"
+            }
+        ],
+    )
 }
 
-const referToPFA = () => {
+// we'll need navigation screens here as well :)
+const giveResources = () => {
+    alert("Based on the survey, you're just having a bad time these few days. Here's some resources to help you!")
+}
+
+const referToPFA = (accept) => {
     alert("Referring to PFA...");
 }
 
-const referToCounsel = () => {
+const getConsent = (accept, decline) => {
+    customAlert(
+        "Consent", 
+        "By consenting, you agree to allow us to collect and use your details for making an appointment with University Counselling Services", 
+        accept, 
+        decline
+    );
+}
+
+// not sure if this is necessary now.
+const referToCounsel = (accept, decline) => {
     alert("Referring to counselling...");
 }
 
-const getConsent = () => {
-    alert("Getting consent from user");
-    // popup buttons to yes/no
+const referToPsych = (accept, decline) => {
+    getConsent(accept, decline);
 }
 
-const referToPsych = () => {
-    alert("Referring to psych...");
+const declineHandler = (submit) => {
+    Alert.alert(
+        "Declined", // title
+        "We still strongly recommend you to seek help. Meanwhile, here's a list of resources you can use", // message
+        submit // on accept
+    )
 }
-
-
 // because navigation hook is failing. Although code is less clean, no serious repurcussions
 let navigator = "";
 
 // i is the number of questions
-// handles the submit button
+// handles the submit button. Handle navigation/alerts later
 const handleSubmit = (list) => {
     let break_flag = false;
     for (let i = 0; i < questions.length; i++) {
@@ -86,18 +117,13 @@ const handleSubmit = (list) => {
     } else {
         // if score..
         if (score <= 24) {
-            giveResources();
             navigator = "Resources";
         } else if (score >= 25 && score <= 30) {
-            referToPFA();
             navigator = "PFA";
         } else if (score > 30 && score <= 40) {
-            referToCounsel();
             navigator = "Counsel";
         } else {
             // score > 40
-            getConsent(); // needs them to fill up a form first
-            referToPsych();
             navigator = "Psych";
         }
     }
@@ -134,11 +160,13 @@ const Questionnaire = ({ navigation }) => {
                             break;
                         case "Psych":
                             console.log(navigator);
-                            navigation.goBack();
+                            referToPsych(
+                                () => navigation.navigate('FormDetails'), 
+                                () => declineHandler(navigation.navigate('Resources'))
+                            ); // accept, cancel. Will change to other stuff. Most likely, cancel = list of resources
                             break;
                         default:
-                            console.log(navigator);
-                            navigation.goBack();
+                            break;
                     }
                 }}
             />
