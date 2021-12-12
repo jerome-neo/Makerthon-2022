@@ -60,8 +60,9 @@ const customAlert = (title, msg, accept, decline) => {
 }
 
 // we'll need navigation screens here as well :)
-const giveResources = () => {
-    alert("Based on the survey, you're just having a bad time these few days. Here's some resources to help you!")
+const giveResources = (confirm) => {
+    Alert.alert("Results", "Based on the survey, you're probably just having a bad time these few days. Here's some resources to help you!");
+    confirm();
 }
 
 const referToPFA = (accept) => {
@@ -71,7 +72,7 @@ const referToPFA = (accept) => {
 const getConsent = (accept, decline) => {
     customAlert(
         "Consent", 
-        "By consenting, you agree to allow us to collect and use your details for making an appointment with University Counselling Services", 
+        "By consenting, you agree to allow us to use your details for making an appointment with University Counselling Services", 
         accept, 
         decline
     );
@@ -147,12 +148,11 @@ const Questionnaire = ({ navigation }) => {
                     handleSubmit(qnsList); 
                     switch (navigator) {
                         case "Resources":
-                            console.log(navigator);
-                            navigation.goBack();
+                            giveResources(() => navigation.navigate('Resources'))
                             break;
                         case "PFA":
                             console.log(navigator);
-                            navigation.goBack();
+                            navigation.goBack(); // This should link to the chat app
                             break;
                         case "Counsel":
                             console.log(navigator);

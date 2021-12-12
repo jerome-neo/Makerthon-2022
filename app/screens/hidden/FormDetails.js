@@ -188,25 +188,26 @@ const FormDetails = ({ navigation }) => {
       </SafeAreaView>
 
       <SafeAreaView style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-          <Text> Fill in your name: </Text>
-          <TextInput
-            onChangeText={(text) => updateArray(NAME, text)}
-            value={details[0]}
-            style={styles.inputContainer}
-          />
-          <Text> Fill in your student number: </Text>
-          <TextInput
-            onChangeText={(text) => updateArray(NUM, text)}
-            value={details[1]}
-            style={styles.inputContainer}
-          />
-          <Text> Fill in your NUSNET email: </Text>
-          <TextInput
-            onChangeText={(text) => updateArray(EMAIL, text)}
-            value={details[2]}
-            style={styles.inputContainer}
-          />
-        </SafeAreaView>
+        <Text> Fill in your name: </Text>
+        <TextInput
+          onChangeText={(text) => updateArray(NAME, text)}
+          value={details[0]}
+          style={styles.inputContainer}
+        />
+        <Text> Fill in your student number: </Text>
+        <TextInput
+          onChangeText={(text) => updateArray(NUM, text)}
+          value={details[1]}
+          style={styles.inputContainer}
+        />
+        <Text> Fill in your NUSNET email: </Text>
+        <TextInput
+          onChangeText={(text) => updateArray(EMAIL, text)}
+          value={details[2]}
+          style={styles.inputContainer}
+        />
+      </SafeAreaView>
+      
       <SafeAreaView style={{marginBottom: 20, flexDirection: 'row'}}>
         <SafeAreaView style={{marginRight: 90, width: '25%'}}>
           <Button title="Cancel" onPress={() => handleCancel(() => declineHandler(navigation.navigate('Resources')))}/>
