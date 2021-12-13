@@ -28,7 +28,12 @@ const Settings = ({ navigation }) => {
         <SafeAreaView style={styles.container}>
             <SetNotifications/>
             <View style={{marginBottom: 10,}}>
-              <Button title="Send feedback" onPress={() => { Linking.openURL('mailto:MK15@makerthon2022.com?subject=Feedback')}}/>
+              <Button 
+                title="Send feedback" 
+                onPress={() => { 
+                  Linking.openURL('mailto:MK15@makerthon2022.com?subject=Feedback&body=Feedback regarding the app')
+                }}
+              />
             </View>
             <Button title="About Us" onPress={() => navigation.navigate('About')}/> 
         </SafeAreaView>
