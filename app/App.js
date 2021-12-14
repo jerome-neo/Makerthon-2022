@@ -1,6 +1,6 @@
 // Normal stuff
 import React from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Image } from 'react-native';
 
 // To be removed
 import { TestingScreen, QuestionnaireBoxTest } from './screens'; // this entire line will be used for testing components and other functionalities
@@ -17,6 +17,7 @@ import { Provider } from 'react-redux';
 import moodStore from './redux/mood/store'
 import { About, Dashboard, Mood, MoodSelector, ResourcesMain, Services, Settings, Helplines, Questionnaire, FormDetails } from './screens';
 
+const icons = require('./icons/icons.js'); // use icons['name'] to get the icon!
 
 // Function that takes a route and returns a screen name
 const setNameFromRouteName = (route) => {
@@ -106,11 +107,112 @@ const ServicesStack = () => {
 const Bottoms = () => {
   return (
   <BottomTabs.Navigator initialRouteName={ dailyReset === true ? "SubMoodStack" : "Dashboard"}>
-    <BottomTabs.Screen component={Resources} name="Resources"/>
-    <BottomTabs.Screen component={SubMoodStack} name="SubMoodStack" options={{headerShown: false}}/>
-    <BottomTabs.Screen component={Dashboard} name="Dashboard"/>
-    <BottomTabs.Screen component={ServicesStack} name="ServicesStack" options={{headerShown: false}}/>
-    <BottomTabs.Screen component={Settings} name="Settings"/>
+    <BottomTabs.Screen component={Resources} name="Resources" options={{
+      title: 'Resources',
+      tabBarIcon: ({size, focused, color}) => {
+        if (focused) {
+          return (
+            <Image 
+              style={{width: size, height: size}}
+              source={icons['resources_s']}
+            />
+          )
+        } else {
+          return (
+            <Image 
+              style={{width: size, height: size}}
+              source={icons['resources_u']}
+            />
+          )
+        }
+      }
+    }}/>
+    <BottomTabs.Screen component={SubMoodStack} name="SubMoodStack" options={{
+        title: 'Mood Journal',
+        headerShown: false,
+        tabBarIcon: ({size, focused, color}) => {
+          if (focused) {
+            return (
+              <Image 
+                style={{width: size, height: size}}
+                source={icons['moodscreen_s']}
+              />
+            )
+          } else {
+            return (
+              <Image 
+                style={{width: size, height: size}}
+                source={icons['moodscreen_u']}
+              />
+            )
+          }
+        }
+      }}
+    />
+    <BottomTabs.Screen component={Dashboard} name="Dashboard" options={{
+      tabBarIcon: ({size, focused, color}) => {
+        if (focused) {
+          return (
+            <Image 
+              style={{width: size, height: size}}
+              source={icons['dashboard_s']}
+            />
+          )
+        } else {
+          return (
+            <Image 
+              style={{width: size, height: size}}
+              source={icons['dashboard_u']}
+            />
+          )
+        }
+      }
+    }}
+    />
+    <BottomTabs.Screen component={ServicesStack} name="ServicesStack" options={{
+        title: 'Services',
+        headerShown: false,
+        tabBarIcon: ({size, focused, color}) => {
+          if (focused) {
+            return (
+              <Image 
+                style={{width: size, height: size}}
+                source={icons['services_s']}
+              />
+            )
+          } else {
+            return (
+              <Image 
+                style={{width: size, height: size}}
+                source={icons['services_u']}
+              />
+            )
+          }
+        }
+      }}
+    />
+    <BottomTabs.Screen component={Settings} name="Settings" options={{
+        title: 'Settings',
+        headerShown: false,
+        tabBarIcon: ({size, focused, color}) => {
+          if (focused) {
+            return (
+              <Image 
+                style={{width: size, height: size}}
+                source={icons['settings_s']}
+              />
+            )
+          } else {
+            return (
+              <Image 
+                style={{width: size, height: size}}
+                source={icons['settings_u']}
+              />
+            )
+          }
+        }
+      }}
+    />
     <BottomTabs.Screen component={TestingStack} name="TestingStack" options={{headerShown: false}}/>
   </BottomTabs.Navigator>);
 }

@@ -9,6 +9,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 
 const TIME_KEY = "@time_key";
 const NOTIFS_SWITCH_KEY = "@switch_key";
+
 // First, we test AsyncStorage
 const SetNotifications = () =>  {
   // Define your time with hooks. We use this as the default time. This is a string used to display time only.

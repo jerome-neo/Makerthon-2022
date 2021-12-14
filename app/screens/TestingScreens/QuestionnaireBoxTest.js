@@ -135,32 +135,25 @@ const handleSubmit = (list) => {
 }
 
 
-
-const giveOption = (recommended) => {
-    if (recommended === "PFA") {
-        Alert.alert()
-    }
-}
-
 // If both counselling and psych needs a consent form (because we want to set up an actual appointment)
 // Then we'll need to pass down the navigator's value (Counsel/Psych) into FormDetails as a param.
 // The syntax is: navigation.navigate('RouteName', { data })
 // Then use route.data to access the data in FormDetails
 const QuestionnaireBoxTest = ({navigation}) => {
 
-    const three_alert = (title, msg) => {
+    const three_alert = (title, msg, PFA_or_Counsellor) => {
         Alert.alert(
             title,
             msg,
             [
                 {
-                    text: "Talk to a PFA",
-                    onPress: () => {referToPFA(""); navigation.goBack(); }, // navigate to elsewhere eventually
+                    text: "I do not want help",
+                    onPress: () => declineHandler(navigation.navigate('Resources')),
                     style: "cancel"
                 },
                 {
                   text: "Talk to a counsellor",
-                  onPress: () => {referToCounsel("", ""); navigation.goBack(); }, // navigation handled by the 2 arguments. Navigation is only temporarily there.
+                  onPress: () => {PFA_or_Counsellor; navigation.goBack();},
                   style: "default"
                 },
                 {
@@ -173,11 +166,11 @@ const QuestionnaireBoxTest = ({navigation}) => {
     }
     const msg = (recommended) => {
         if (recommended === "PFA") {
-            three_alert("Results", "Based on your results, we recommend talking anonymously to a Psychologically First-Aid trained personnel, but you can choose any.")
+            three_alert("Results", "Based on your results, we recommend talking anonymously to a Counsellor, but you can choose either.", referToPFA(""));
         } else if (recommended === "Counsel") {
-            three_alert("Results", "Based on your results, we recommend talking anonymously to a Counsellor, but you can choose any.")
+            three_alert("Results", "Based on your results, we recommend talking anonymously to a Counsellor, but you can choose either.", referToCounsel("", ""))
         } else {
-            three_alert("Results", "Based on your results, we recommend booking an appointment with USC, but you can choose any.")
+            three_alert("Results", "Based on your results, we recommend booking an appointment with USC, but you can choose either.")
         }
     }
 
@@ -190,18 +183,20 @@ const QuestionnaireBoxTest = ({navigation}) => {
                     handleSubmit(qnsList); 
                     switch (navigator) {
                         case "Resources":
+                            console.log(navigator);
                             giveResources(() => navigation.navigate('Resources'));
                             break;
                         case "PFA":
-                            msg("PFA");
                             console.log(navigator);
+                            msg("PFA");
                             break;
                         case "Counsel":
+                            console.log(navigator);
                             msg("Counsel");
                             break;
                         case "Psych":
-                            msg("Psych");
                             console.log(navigator);
+                            msg("Psych");
                             break;
                         default:
                             break;
