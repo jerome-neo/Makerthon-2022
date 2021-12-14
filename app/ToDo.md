@@ -11,6 +11,9 @@ Functionalities:
 - Face massage
 - Stuff to encourage good mental hygiene
 
+4. Move consent form to the front (?)
+
+
 7. UI/UX
 
 - Background pictures for screens

@@ -119,11 +119,17 @@ const handleSubmit = (list) => {
         // if score..
         if (score <= 24) {
             navigator = "Resources";
-        } else if (score >= 25 && score <= 30) {
+        } 
+        
+        // bunch up the below conditionals and give user a choice
+        else if (score >= 25 && score <= 30) {
+            // chatroom
             navigator = "PFA";
         } else if (score > 30 && score <= 40) {
+            // anonymous call
             navigator = "Counsel";
         } else {
+            // video call
             // score > 40
             navigator = "Psych";
         }
