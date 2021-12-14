@@ -13,8 +13,7 @@ Functionalities:
 
 4. Move consent form to the front (?)
 
-
-7. UI/UX
+5. UI/UX
 
 - Background pictures for screens
 - Icons stuff

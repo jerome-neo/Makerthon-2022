@@ -63,7 +63,7 @@ const customAlert = (title, msg, accept, decline) => {
 // we'll need navigation screens here as well :)
 // confirm is a function. Specifically, it's the navigation function
 const giveResources = (confirm) => {
-    Alert.alert("Results","Based on the survey, you're just having a bad time these few days. Here's some resources to help you!")
+    Alert.alert("Results", "Based on the survey, you're just having a bad time these few days. Here's some resources to help you!")
     confirm();
 }
 
@@ -134,11 +134,53 @@ const handleSubmit = (list) => {
     score = 0; // reset!!
 }
 
+
+
+const giveOption = (recommended) => {
+    if (recommended === "PFA") {
+        Alert.alert()
+    }
+}
+
 // If both counselling and psych needs a consent form (because we want to set up an actual appointment)
 // Then we'll need to pass down the navigator's value (Counsel/Psych) into FormDetails as a param.
 // The syntax is: navigation.navigate('RouteName', { data })
 // Then use route.data to access the data in FormDetails
 const QuestionnaireBoxTest = ({navigation}) => {
+
+    const three_alert = (title, msg) => {
+        Alert.alert(
+            title,
+            msg,
+            [
+                {
+                    text: "Talk to a PFA",
+                    onPress: () => {referToPFA(""); navigation.goBack(); }, // navigate to elsewhere eventually
+                    style: "cancel"
+                },
+                {
+                  text: "Talk to a counsellor",
+                  onPress: () => {referToCounsel("", ""); navigation.goBack(); }, // navigation handled by the 2 arguments. Navigation is only temporarily there.
+                  style: "default"
+                },
+                {
+                    text: "Clinical",
+                    onPress: () => referToPsych(() => navigation.navigate('FormDetails'), () => declineHandler(navigation.navigate('Resources'))), // done.
+                    style: "default"
+                }
+            ],
+        )
+    }
+    const msg = (recommended) => {
+        if (recommended === "PFA") {
+            three_alert("Results", "Based on your results, we recommend talking anonymously to a Psychologically First-Aid trained personnel, but you can choose any.")
+        } else if (recommended === "Counsel") {
+            three_alert("Results", "Based on your results, we recommend talking anonymously to a Counsellor, but you can choose any.")
+        } else {
+            three_alert("Results", "Based on your results, we recommend booking an appointment with USC, but you can choose any.")
+        }
+    }
+
     return (
         <ScrollView>
             {qnsList}
@@ -151,20 +193,15 @@ const QuestionnaireBoxTest = ({navigation}) => {
                             giveResources(() => navigation.navigate('Resources'));
                             break;
                         case "PFA":
-                            referToPFA(""); // Navigate to private chat app
+                            msg("PFA");
                             console.log(navigator);
-                            navigation.goBack(); // This should link to the private chat app
                             break;
                         case "Counsel":
-                            referToCounsel("", "");
-                            navigation.goBack();
+                            msg("Counsel");
                             break;
                         case "Psych":
+                            msg("Psych");
                             console.log(navigator);
-                            referToPsych(
-                                () => navigation.navigate('FormDetails'), 
-                                () => declineHandler(navigation.navigate('Resources'))
-                            ); // accept, cancel. Will change to other stuff. Most likely, cancel = list of resources
                             break;
                         default:
                             break;
