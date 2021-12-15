@@ -3,7 +3,7 @@ import React from 'react';
 import { StyleSheet, Image } from 'react-native';
 
 // To be removed
-import { TestingScreen, QuestionnaireBoxTest } from './screens'; // this entire line will be used for testing components and other functionalities
+import { TestingScreen, QuestionnaireBoxTest, MoodTest } from './screens'; // this entire line will be used for testing components and other functionalities
 
 // Navigation stuff
 import { NavigationContainer, getFocusedRouteNameFromRoute } from '@react-navigation/native';
@@ -43,6 +43,7 @@ const TestingStack = () => {
   return (
     <Stack.Navigator>
       <Stack.Screen component={TestingScreen} name="TestingScreen"/>
+      <Stack.Screen component={MoodTest} name="MoodTest"/>
       <Stack.Screen component={QuestionnaireBoxTest} name="QuestionnaireBoxTest" options={{headerShown: false}}/>
     </Stack.Navigator>
   );

@@ -14,3 +14,4 @@ export { default as FormDetails }from './hidden/FormDetails';
 // remove next time after all testing is done
 export { default as TestingScreen } from './TestingScreens/TestingScreen';
 export { default as QuestionnaireBoxTest } from './TestingScreens/QuestionnaireBoxTest';
+export { default as MoodTest } from './TestingScreens/MoodTest';

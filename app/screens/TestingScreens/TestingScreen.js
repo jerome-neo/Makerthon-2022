@@ -17,6 +17,9 @@ const TestingScreen = ({navigation}) => {
                 <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('QuestionnaireBoxTest')}>
                     <Text> Questionnaire CheckBox </Text>
                 </TouchableOpacity>
+                <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('MoodTest')}>
+                    <Text> Mood Test</Text>
+                </TouchableOpacity>
             </ImageBackground>
         </SafeAreaView>
     );
