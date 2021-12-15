@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { SafeAreaView, Text, Button, View } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { SafeAreaView, Text, Button, View, Alert} from 'react-native';
 import * as dateFn from 'date-fns';
 
 const todayDate = new Date();
@@ -8,7 +8,7 @@ const dateToCompare = new Date(todayDate.getFullYear(), todayDate.getMonth(), 1)
 const Calendar = (props) => {
   // hooks to set dates
   const [date, setDate] = useState(new Date());
-
+  const [chosen, setChosen] = useState("NONE");
 
   // months in calendar
   const months = ["January", "February", "March", "April", 
@@ -93,7 +93,7 @@ const Calendar = (props) => {
     
     // actual populationdateToCompare
     // styles functions
-    const colourPicker = (item, rowIndex, colIndex) => { 
+    const fontColourPicker = (item, rowIndex, colIndex) => { 
       return rowIndex === 0 
               ? colIndex === 0
                 ? 'red'
@@ -105,29 +105,31 @@ const Calendar = (props) => {
 
     const bgColourPicker = (rowIndex, item) => {
       return rowIndex === 0 
-              ? '#ddd' 
-              : item.isBooked
-                ? 'red'
-                : '#fff'
+              ? '#ddd'
+              : item.value === chosen
+                ? '#90EE90'
+                : item.isBooked
+                  ? 'red'
+                  : '#fff'
     }
 
+    // generating the entire calendar's items
     rows = matrix.map((row, rowIndex) => {
       let rowItems = row.map((item, colIndex) => {
         return (
           <Text
             style={{
               flex: 1,
-              height: 20,
+              height: 30,
               textAlign: 'center',
               // Highlight header
               backgroundColor: bgColourPicker(rowIndex, item),
               // Highlight Sundays
-              color: colourPicker(item, rowIndex, colIndex),
+              color: fontColourPicker(item, rowIndex, colIndex),
               // Highlight current date
-              fontWeight: item == date.getDate() 
+              fontWeight: item.value === date.getDate() 
                                   ? 'bold': 'normal',
               fontSize: 18,
-              
             }}
             onPress={() => pressCalendar(item, colIndex) /* Needs to be changed to go to mood selection screen */}>
             {item.value != -1 ? item.value : ''}
@@ -148,33 +150,38 @@ const Calendar = (props) => {
       );
     });
     
+    // happens when you click on an object in the calendar
     const pressCalendar = (item, col) => {
       if (item === '') {
         // then do nothing
-      } else if (col === 0 || col === 6) {
-        alert("Unable to book on weekends");
-      } else if (item.isBooked) {
-        alert("Fully booked");
       } else if (item.value <= todayDate.getDate()) {
-        alert()
-      } else {
+        Alert.alert("Invalid date", "Only able to book appointments from tomorrow onwards")
+      } else if (col === 0 || col === 6) {
+        Alert.alert("Unavailable", "Sorry, unable to book on weekends");
+      } else if (item.isBooked) {
+        Alert.alert("Fully booked", "Please choose another date");
+      }  else {
         // valid, so we'll need to retrieve the date then black it out..
-        console.log('This is ok');
-        console.log(todayDate.getDate());
+        setChosen(item.value);
+        const year = date.getFullYear();
+        const month = date.getMonth()+1;
+        const day = item.value;
+        props.getDate(day + "-" + month + "-" + year);
       }
     }
     
     
+    // changes the month on screen
     const changeMonth = (n) => {
+      setChosen(0); // to reset the chosen date
       const curr = n > 0 ? dateFn.addMonths(date, Math.abs(n)) : dateFn.subMonths(date, Math.abs(n));
       if (curr <= dateToCompare) {
-        alert("Unable to book an appointment before today.")
+        Alert.alert("Invalid","Unable to book an appointment before today.")
       } else if (curr > dateFn.addMonths(dateToCompare, Math.abs(6))) {
-        alert("Unable to book too far in the future")
+        Alert.alert("Unavailable","Unable to book too far in the future")
       } else {
         return setDate(curr);
       }
-      console.log(todayDate);
     }
     
 
