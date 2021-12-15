@@ -5,7 +5,6 @@ import React, { useState, useEffect } from 'react';
 import { Modal, TouchableOpacity, StyleSheet, Text, View, Alert } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Calendar } from './Custom';
-import { Touchable } from 'react-native-web';
 
 // Use modal with our custom calendar. For our purpose, we have to:
 // 1) Block out dates that have been booked
@@ -19,9 +18,17 @@ const App = () =>  {
   // Define your time with hooks. We use this as the default time. This is a string used to display time only.
   const [time, setTime] = useState("12:34 PM");
   const [apptDate, setApptDate] = useState('NONE');
+  const [item, setItem] = useState('');
+
   const getChosenDateFromCalendar = (chosenDate) => {
     setApptDate(chosenDate); // callback function. Works properly, but not optimal. May want to refactor after everything is done.
   }
+  
+  const getItem = (item) => {
+    setItem(item);
+    console.log(item);
+  }
+
   // Modal
   const [modalVisible, setModalVisible] = useState(false);
   const modal = () => {
@@ -37,8 +44,9 @@ const App = () =>  {
             <Text style={{fontSize: 30, fontWeight: 'bold', textDecorationLine: 'underline'}}>Pick an appointment date</Text>
             <Calendar 
               width="100%" 
-              height="45%" 
-              getDate={getChosenDateFromCalendar} /* callback function. Will probably need to be refactored next time */
+              height="40%" 
+              getDate={getChosenDateFromCalendar}
+              getItem={getItem} /* callback function. Will probably need to be refactored next time */
             /> 
             <TouchableOpacity
               style={{position: 'absolute', bottom: 0, margin: 100}}
@@ -84,9 +92,7 @@ const App = () =>  {
     showMode('time');
   };
 
-  useEffect(() => {
 
-  }, [time, apptDate])
 
   const split_time = time.split(':'); // split by ':', because the hour and minute are separated that way
   const AM_PM = split_time[1].split(" ")[1];
@@ -125,6 +131,7 @@ const App = () =>  {
         <TouchableOpacity onPress={() => {Alert.alert('Request sent',
           `Requested for an appointment on ${apptDate}, at ${time}`);
           // then, also need to change that date to be occupied.
+          handleConfirm(item);
         }}>
           <Text style={styles.confirm}>Confirm</Text>
         </TouchableOpacity>

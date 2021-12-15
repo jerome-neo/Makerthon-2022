@@ -20,6 +20,9 @@ const TestingScreen = ({navigation}) => {
                 <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('MoodTest')}>
                     <Text> Mood Test</Text>
                 </TouchableOpacity>
+                <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('BookingTest')}>
+                    <Text> Booking Test</Text>
+                </TouchableOpacity>                
             </ImageBackground>
         </SafeAreaView>
     );

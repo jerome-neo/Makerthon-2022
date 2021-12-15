@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { SafeAreaView, Text, Button, View, Alert} from 'react-native';
 import * as dateFn from 'date-fns';
 
@@ -29,6 +29,8 @@ const Calendar = (props) => {
     let matrix = [];
     // Create header
     matrix[0] = []; // initialise the first row
+    let year = date.getFullYear(); // a number
+    let month = date.getMonth(); // a number
     for (let i = 0; i < 7; i++) {
       // initialising objects in each column
       matrix[0][i] = {
@@ -37,9 +39,6 @@ const Calendar = (props) => {
         isWeekend: false
       }
     }
-    let year = date.getFullYear(); // a number
-    let month = date.getMonth(); // a number
-
 
     // first day of the month
     let firstDay = new Date(year, month, 1).getDay();
@@ -67,6 +66,8 @@ const Calendar = (props) => {
           // Fill in rows only after the first day of the month
           matrix[row][col] = {
             value: counter++,
+            month: month,
+            year: year,
             isBooked: false,
             isWeekend: col === 6 || col === 0 ? true : false
           }
@@ -75,6 +76,8 @@ const Calendar = (props) => {
           // the number of days in the month
           matrix[row][col] = {
             value: counter++,
+            month: month,
+            year: year,
             isBooked: false,
             isWeekend: col === 6 || col === 0 ? true : false
           }
@@ -131,7 +134,7 @@ const Calendar = (props) => {
                                   ? 'bold': 'normal',
               fontSize: 18,
             }}
-            onPress={() => pressCalendar(item, colIndex) /* Needs to be changed to go to mood selection screen */}>
+            onPress={() => pressCalendar(item, colIndex)}>
             {item.value != -1 ? item.value : ''}
           </Text>
         );
@@ -150,12 +153,24 @@ const Calendar = (props) => {
       );
     });
     
+
     // happens when you click on an object in the calendar
     const pressCalendar = (item, col) => {
       if (item === '') {
         // then do nothing
-      } else if (item.value <= todayDate.getDate()) {
-        Alert.alert("Invalid date", "Only able to book appointments from tomorrow onwards")
+      } else if (item.year === todayDate.getFullYear() && item.month === todayDate.getMonth()) {
+        // if it's the same year and the selected month is this month
+        if (item.value <= todayDate.getDate()) {
+          // if the selected date is lesser than the current date, then cannot book
+          Alert.alert("Invalid date", "Only able to book appointments from tomorrow onwards")
+        } else {
+          setChosen(item.value);
+          const year = date.getFullYear();
+          const month = date.getMonth()+1;
+          const day = item.value;
+          props.getDate(day + "-" + month + "-" + year);
+          props.getItem(item);
+        }
       } else if (col === 0 || col === 6) {
         Alert.alert("Unavailable", "Sorry, unable to book on weekends");
       } else if (item.isBooked) {
@@ -167,6 +182,7 @@ const Calendar = (props) => {
         const month = date.getMonth()+1;
         const day = item.value;
         props.getDate(day + "-" + month + "-" + year);
+        props.getItem(item);
       }
     }
     

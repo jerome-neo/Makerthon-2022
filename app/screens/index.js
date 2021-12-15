@@ -15,3 +15,4 @@ export { default as FormDetails }from './hidden/FormDetails';
 export { default as TestingScreen } from './TestingScreens/TestingScreen';
 export { default as QuestionnaireBoxTest } from './TestingScreens/QuestionnaireBoxTest';
 export { default as MoodTest } from './TestingScreens/MoodTest';
+export { default as BookingTest } from './TestingScreens/BookingTest';
