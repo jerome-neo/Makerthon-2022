@@ -1,12 +1,117 @@
-import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+// Component that allows users to select a time for their daily notifications.
+// Need to add an option to turn off notifications
 
-export default function App() {
+import React, { useState, useEffect } from 'react';
+import { Modal, TouchableOpacity, StyleSheet, Text, View, Pressable } from 'react-native';
+import DateTimePicker from '@react-native-community/datetimepicker';
+import { Calendar } from './Custom';
+// Use modal with our custom calendar. For our purpose, we have to:
+// 1) Block out dates that have been booked
+// As a mockup, we'll do it as such: block out the entire date if it has been booked. Then we'll have to explain
+// 2) Block out weekends
+// Should be trivial -- simply need to check if COL === SAT/SUN, then check if date has been booked.
+
+// Need AsyncStorage to store dates that have been picked.
+const App = () =>  {
+  // Define your time with hooks. We use this as the default time. This is a string used to display time only.
+  const [time, setTime] = useState("12:34 PM");
+  // Modal
+  const [modalVisible, setModalVisible] = useState(false);
+  const modal = () => {
+    return (
+      <View style={styles.timeContainer}>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          Alert.alert("Modal has been closed.");
+          setModalVisible(!modalVisible);
+        }}
+      >
+        <View>
+          <View style={styles.modalView}>
+            <Text style={styles.modalText}>Pick an appointment date</Text>
+            <Calendar width="100%" height="45%"/>
+            <TouchableOpacity
+              style={{position: 'absolute', bottom: 0, marginBottom: 100}}
+              onPress={() => setModalVisible(!modalVisible)}
+            >
+              <Text style={{color: 'red', fontSize: 25}}>Confirm</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+      <TouchableOpacity onPress={() => setModalVisible(true)}>
+        <Text style={styles.text}>Show Modal</Text>
+      </TouchableOpacity>
+    </View>
+    )
+  }
+  // <------------------------------------ DateTimePicker stuff ------------------------------------->
+  const [date, setDate] = useState(new Date());
+  const [mode, setMode] = useState('date');
+  const [show, setShow] = useState(false);
+
+  const onChange = (event, selectedDate) => {
+    const currentDate = selectedDate || date;
+    setShow(Platform.OS === 'ios');
+    setDate(currentDate);
+    // getting time and formatting it to the correct string
+    let curr_hr = selectedDate.getHours() < 12 ? selectedDate.getHours() : selectedDate.getHours() - 12;
+    const curr_min = selectedDate.getMinutes() < 10 ? "0" + selectedDate.getMinutes() : selectedDate.getMinutes();
+    const AM_PM = selectedDate.getHours() > 12 ? " PM" : " AM";
+    if (curr_hr === 0) {
+      curr_hr = 12;
+    }
+    const curr_time = curr_hr + ":" + curr_min + AM_PM;
+    setTime(curr_time);
+  };
+
+  const showMode = (currentMode) => {
+    setShow(true);
+    setMode(currentMode);
+  };
+
+  const showTimepicker = () => {
+    showMode('time');
+  };
+
+
+  // <------------------------------------ Notifications logic  ------------------------------------->
+  const split_time = time.split(':'); // split by ':', because the hour and minute are separated that way
+  const AM_PM = split_time[1].split(" ")[1];
+  const hrs = Number(split_time[0]);
+  const mins = Number(split_time[1].split(" ")[0]);
+  // remove comment if you want to do some debugging
+  // console.log(time);
+  console.log(date);
   return (
     <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
+      <View style={{flexDirection: 'row'}}>
+        <Text>Date: </Text>
+        <Text>Time: {time} </Text>
+      </View>
+      <View style={{flexDirection: 'row'}}>
+          {modal()}
+        <View style={styles.timeContainer}>
+          <TouchableOpacity onPress={showTimepicker}>
+            <Text style={styles.text}> Choose Time </Text>
+          </TouchableOpacity>
+        </View>
+        <View>
+          {show && (
+            <DateTimePicker
+              testID="dateTimePicker"
+              value={date}
+              mode={mode}
+              is24Hour={false}
+              display="default"
+              onChange={onChange}
+            />
+          ) /* Can just ignore this entire thing. It's simply used to help open up the time picker*/}
+        </View>
+      </View>
     </View>
   );
 }
@@ -18,4 +123,66 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  
+  timeContainer: { 
+    borderWidth: 2, 
+    borderColor: 'black', 
+    borderRadius: 20, 
+    backgroundColor: '#99EDC3', 
+    height: 40, 
+    width: 220, 
+    alignItems: 'center', 
+    justifyContent: 'center',
+    marginRight: 30
+  },
+
+  text: {
+    fontSize: 14,
+    color: '#4169e1',
+    fontWeight: 'bold'
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 22
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: "white",
+    borderRadius: 20,
+    height: '90%',
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5
+  },
+  button: {
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2
+  },
+  buttonOpen: {
+    backgroundColor: "#F194FF",
+  },
+  buttonClose: {
+    backgroundColor: "#2196F3",
+  },
+  textStyle: {
+    color: "white",
+    fontWeight: "bold",
+    textAlign: "center"
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: "center"
+  }
 });
+
+export default App;
