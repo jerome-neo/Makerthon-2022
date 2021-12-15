@@ -92,6 +92,24 @@ const Calendar = (props) => {
     let rows = [];
     
     // actual populationdateToCompare
+    // styles functions
+    const colourPicker = (item, rowIndex, colIndex) => { 
+      return rowIndex === 0 
+              ? colIndex === 0
+                ? 'red'
+                : 'black'
+              : item.isWeekend 
+                ? 'grey' 
+                : 'black'
+    }
+
+    const bgColourPicker = (rowIndex, item) => {
+      return rowIndex === 0 
+              ? '#ddd' 
+              : item.isBooked
+                ? 'red'
+                : '#fff'
+    }
 
     rows = matrix.map((row, rowIndex) => {
       let rowItems = row.map((item, colIndex) => {
@@ -102,19 +120,9 @@ const Calendar = (props) => {
               height: 20,
               textAlign: 'center',
               // Highlight header
-              backgroundColor: rowIndex === 0 
-                                        ? '#ddd' 
-                                        : item.isBooked
-                                          ? 'red'
-                                          : '#fff',
+              backgroundColor: bgColourPicker(rowIndex, item),
               // Highlight Sundays
-              color: rowIndex === 0 
-                              ? colIndex === 0
-                                ? 'red'
-                                : 'black'
-                              : item.isWeekend 
-                                ? 'grey' 
-                                : 'black',
+              color: colourPicker(item, rowIndex, colIndex),
               // Highlight current date
               fontWeight: item == date.getDate() 
                                   ? 'bold': 'normal',
