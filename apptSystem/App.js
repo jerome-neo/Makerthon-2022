@@ -122,7 +122,7 @@ const App = () =>  {
     return matrix;
   }
 
-  const transformMatrix = (matrix, arr) => {
+  const updateMatrix = (matrix, arr) => {
     arr.forEach(x => {
       if (x === undefined) {
         // do nothing
@@ -138,7 +138,7 @@ const App = () =>  {
   
 
   let matrix = generateMatrix();
-  transformMatrix(matrix, booked);
+  updateMatrix(matrix, booked);
   const rows = matrix.map((row, rowIndex) => {
     let rowItems = row.map((item, colIndex) => {
       return (
@@ -318,6 +318,7 @@ const App = () =>  {
       setBooked(booked => [...booked, {row: item.row, col: item.col, month: item.month}])
       setApptDate('Please choose a date');
       setTime('Please choose a time');
+      setChosen('');
     }
   }
 
