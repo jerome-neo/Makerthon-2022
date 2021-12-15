@@ -122,8 +122,10 @@ const App = () =>  {
         <Text style={styles.apptText}>Time: {time}</Text>
       </View>
       <View style={{position: 'absolute', bottom: 100}}>
-        <TouchableOpacity onPress={() => Alert.alert('Request sent',
-        `Requested for an appointment on ${apptDate}, at ${time}`)}>
+        <TouchableOpacity onPress={() => {Alert.alert('Request sent',
+          `Requested for an appointment on ${apptDate}, at ${time}`);
+          // then, also need to change that date to be occupied.
+        }}>
           <Text style={styles.confirm}>Confirm</Text>
         </TouchableOpacity>
       </View>
