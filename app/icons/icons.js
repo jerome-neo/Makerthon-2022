@@ -28,7 +28,8 @@ const icons = {
     dashboard_u: require('./dashboard_u.png'),
     // floating action button
     float_button: require('./float_button.png'),
-
+    arrow_L: require('./arrow_L.png'),
+    arrow_R: require('./arrow_R.png')
 };
 
 module.exports = icons;

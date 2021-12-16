@@ -83,7 +83,7 @@ const MoodCalendar = () => {
               color: colIndex == 0 ? '#a00' : '#000',
               // Highlight current date
               fontWeight: item == date.getDate() 
-                                  ? 'bold': '',
+                                  ? 'bold': 'normal',
               fontSize: 18,
               
             }}

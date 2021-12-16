@@ -32,8 +32,8 @@ const App = () =>  {
             ? colIndex === 0
               ? 'red'
               : 'black'
-            : item.isWeekend 
-              ? 'grey' 
+            : item.isWeekend || datePassed(item)
+              ? '#BCBCBC' 
               : 'black'
   }
 
@@ -43,7 +43,7 @@ const App = () =>  {
             : item.value === chosen
               ? '#90EE90'
               : item.isBooked
-                ? 'black'
+                ? 'red'
                 : '#fff'
   }
 
@@ -57,6 +57,13 @@ const App = () =>  {
   const weekDays = [
     "Sun","Mon","Tue","Wed","Thu","Fri","Sat"
   ];
+
+  const datePassed = (item) => {
+    if (item.year === todayDate.getFullYear() && item.month === todayDate.getMonth() && item.value <= todayDate.getDate()) {
+      return true
+    }
+    return false;
+  }
 
   // function that returns a matrix of the dates. Each item in the matrix is an object.
   const generateMatrix = () => {
@@ -87,7 +94,8 @@ const App = () =>  {
     let counter = 1;
     for (let row = 1; row < 7; row++) {
       matrix[row] = []; // represent as 2d array
-      for (let col = 0; col < 7; col++) {          // we represent each index as an object, as we need to have different keys.
+      for (let col = 0; col < 7; col++) {          
+        // we represent each index as an object, as we need to have different keys.
         matrix[row][col] = { 
           value: -1,
           isBooked: false
@@ -134,9 +142,6 @@ const App = () =>  {
     })
   }
 
-
-  
-
   let matrix = generateMatrix();
   updateMatrix(matrix, booked);
   const rows = matrix.map((row, rowIndex) => {
@@ -145,18 +150,19 @@ const App = () =>  {
         <Text
           style={{
             flex: 1,
-            height: 30,
+            height: 25,
             textAlign: 'center',
             // Highlight header
             backgroundColor: bgColourPicker(rowIndex, item),
             // Highlight Sundays
             color: fontColourPicker(item, rowIndex, colIndex),
             // Highlight current date
-            fontWeight: item.value === calDate.getDate() 
-                                ? 'bold': 'normal',
+            // fontWeight: item.value === calDate.getDate() 
+            //                     ? 'bold': 'normal',
             fontSize: 18,
           }}
-          onPress={() => pressCalendar(item, colIndex)}>
+          onPress={() => pressCalendar(item)}
+          >
           {item.value != -1 ? item.value : ''}
         </Text>
       );
@@ -175,17 +181,17 @@ const App = () =>  {
     );
   });
 
-  const pressCalendar = (item, col) => {
+
+  const pressCalendar = (item) => {
     if (item.isBooked) {
       Alert.alert("Fully booked", "Please choose another date");
-    } else if (item.isWeekend) {
-      Alert.alert("Unavailable", "Sorry, unable to book on weekends") 
-    }else if (item.year === todayDate.getFullYear() && item.month === todayDate.getMonth()) {
+    } else if (item.year === todayDate.getFullYear() && item.month === todayDate.getMonth()) {
       // if it's the same year and the selected month is this month
       if (item.value <= todayDate.getDate()) {
         // if the selected date is lesser than the current date, then cannot book
         Alert.alert("Invalid date", "Only able to book appointments from tomorrow onwards")
-      } else {
+      } 
+      else {
         setChosen(item.value);
         const year = calDate.getFullYear();
         const month = calDate.getMonth()+1;
@@ -194,6 +200,8 @@ const App = () =>  {
         setItem(item);
         // console.log(item);
       }
+    } else if (item.isWeekend) {
+      Alert.alert("Unavailable", "Sorry, unable to book on weekends") 
     } else {
       // valid, so we'll need to retrieve the date then black it out..
       setChosen(item.value);
@@ -222,6 +230,10 @@ const App = () =>  {
   const _renderCalendar = (height, width) => {
     return (
       <SafeAreaView style={{marginTop: 25, height: height, width: width}}>
+        <SafeAreaView style={{flexDirection: 'row'}}>
+        <Button title="Previous"
+          style={{flexDirection:'left'}}
+          onPress={() => changeMonth(-1)}/>
           <Text style={{
             fontWeight: 'bold',
             fontSize: 30,
@@ -230,13 +242,11 @@ const App = () =>  {
             {months[calDate.getMonth()]} &nbsp;
             {calDate.getFullYear()}   
           </Text>    
-          { rows }    
-        <Button title="Previous"
-          style={{flexDirection:'left'}}
-          onPress={() => changeMonth(-1)}/>
         <Button title="Next"
           style={{flexDirection:'right'}}
-          onPress={() => changeMonth(1)}/>  
+          onPress={() => changeMonth(1)}/>
+        </SafeAreaView>
+          { rows }    
       </SafeAreaView>
     );
   }
@@ -258,7 +268,7 @@ const App = () =>  {
             <Text style={{fontSize: 30, fontWeight: 'bold', textDecorationLine: 'underline'}}>Pick an appointment date</Text>
             {_renderCalendar("80%", "100%")}
             <TouchableOpacity
-              style={{position: 'absolute', bottom: 0, margin: 100}}
+              style={{position: 'absolute', bottom: 0, margin: 20}}
               onPress={() => {setModalVisible(!modalVisible)}}
             >
               <Text style={styles.confirm}>Select</Text>
