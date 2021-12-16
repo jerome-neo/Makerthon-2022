@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Alert, ScrollView, Button, StyleSheet } from "react-native";
 import { Provider } from "react-redux";
 
@@ -63,8 +63,9 @@ const giveResources = (confirm) => {
   confirm();
 };
 
-const referToPFA = (accept) => {
+const referToPFA = (action) => {
   alert("Referring to PFA...");
+  action();
 };
 
 const getConsent = (accept, decline) => {
@@ -77,8 +78,10 @@ const getConsent = (accept, decline) => {
 };
 
 // not sure if this is necessary now.
-const referToCounsel = (accept, decline) => {
+const referToCounsel = (action) => {
   alert("Referring to counselling...");
+
+  action();
 };
 
 const referToPsych = (accept, decline) => {
@@ -135,7 +138,7 @@ const handleSubmit = (list) => {
 // The syntax is: navigation.navigate('RouteName', { data })
 // Then use route.data to access the data in FormDetails
 const QuestionnaireBoxTest = ({ navigation }) => {
-  const three_alert = (title, msg, PFA_or_Counsellor) => {
+  const three_alert = (title, msg, choice) => {
     Alert.alert(title, msg, [
       {
         text: "I do not want help",
@@ -144,10 +147,10 @@ const QuestionnaireBoxTest = ({ navigation }) => {
       },
       {
         text: "Talk to a counsellor",
-        onPress: () => {
-          PFA_or_Counsellor;
-          navigation.goBack();
-        },
+        onPress: () =>
+          choice === "PFA"
+            ? referToPFA(() => navigation.goBack()) // takes an action
+            : referToCounsel(() => navigation.goBack()), // takes an action
         style: "default",
       },
       {
@@ -168,19 +171,19 @@ const QuestionnaireBoxTest = ({ navigation }) => {
       three_alert(
         "Results",
         "Based on your results, we recommend talking anonymously to a Counsellor, but you can choose either.",
-        referToPFA("") // action if counselling chosen
+        "PFA"
       );
     } else if (recommended === "Counsel") {
       three_alert(
         "Results",
         "Based on your results, we recommend talking anonymously to a Counsellor, but you can choose either.",
-        referToCounsel("", "") // action if counselling chosen
+        "Counsel"
       );
     } else {
       three_alert(
         "Results",
         "Based on your results, we recommend booking an appointment with UCS, but you can choose either.",
-        referToCounsel("", "") // action if counselling chosen
+        "Counsel"
       );
     }
   };

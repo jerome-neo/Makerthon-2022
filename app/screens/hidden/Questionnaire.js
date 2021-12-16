@@ -71,8 +71,9 @@ const giveResources = (confirm) => {
   confirm();
 };
 
-const referToPFA = (accept) => {
+const referToPFA = (action) => {
   alert("Referring to PFA...");
+  action();
 };
 
 const getConsent = (accept, decline) => {
@@ -85,8 +86,10 @@ const getConsent = (accept, decline) => {
 };
 
 // not sure if this is necessary now.
-const referToCounsel = (accept, decline) => {
+const referToCounsel = (action) => {
   alert("Referring to counselling...");
+
+  action();
 };
 
 const referToPsych = (accept, decline) => {
@@ -148,7 +151,7 @@ const Questionnaire = ({ navigation }) => {
     return () => backHandler.remove();
   }, []);
 
-  const three_alert = (title, msg, PFA_or_Counsellor) => {
+  const three_alert = (title, msg, choice) => {
     Alert.alert(title, msg, [
       {
         text: "I do not want help",
@@ -157,10 +160,10 @@ const Questionnaire = ({ navigation }) => {
       },
       {
         text: "Talk to a counsellor",
-        onPress: () => {
-          PFA_or_Counsellor;
-          navigation.goBack();
-        },
+        onPress: () =>
+          choice === "PFA"
+            ? referToPFA(() => navigation.goBack()) // takes an action
+            : referToCounsel(() => navigation.goBack()), // takes an action
         style: "default",
       },
       {
@@ -174,24 +177,26 @@ const Questionnaire = ({ navigation }) => {
       },
     ]);
   };
+
+  // the message to be shown to the user
   const msg = (recommended) => {
     if (recommended === "PFA") {
       three_alert(
         "Results",
         "Based on your results, we recommend talking anonymously to a Counsellor, but you can choose either.",
-        referToPFA("") // action if counselling chosen
+        "PFA"
       );
     } else if (recommended === "Counsel") {
       three_alert(
         "Results",
         "Based on your results, we recommend talking anonymously to a Counsellor, but you can choose either.",
-        referToCounsel("", "") // action if counselling chosen
+        "Counsel"
       );
     } else {
       three_alert(
         "Results",
         "Based on your results, we recommend booking an appointment with UCS, but you can choose either.",
-        referToCounsel("", "") // action if counselling chosen
+        "Counsel"
       );
     }
   };
