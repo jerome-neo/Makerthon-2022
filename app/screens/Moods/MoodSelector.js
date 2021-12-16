@@ -32,18 +32,43 @@ const MoodSelector = ({ navigation, route }) => {
   return (
     <SafeAreaView style={styles.container}>
       <Text>Select Mood</Text>
-      <SafeAreaView style={styles.moodStyle}>
-        {possible.map((moods, index) => (
-          <TouchableOpacity
-            key={moods}
-            onPress={() => {
-              addMoods(index);
-              navigation.goBack();
-            }}
-          >
-            <Image style={styles.imageStyle} source={icons[moods]} />
-          </TouchableOpacity>
-        ))}
+      <SafeAreaView style={styles.moodSplit}>
+        <SafeAreaView style={styles.moodStyle}>
+          {possible.map((moods, index) => {
+            if (index < 4) {
+              return (
+                <SafeAreaView style={{ flexDirection: "row" }}>
+                  <TouchableOpacity
+                    key={moods}
+                    onPress={() => {
+                      addMoods(index);
+                      navigation.goBack();
+                    }}
+                  >
+                    <Image style={styles.imageStyle} source={icons[moods]} />
+                  </TouchableOpacity>
+                </SafeAreaView>
+              );
+            }
+          })}
+        </SafeAreaView>
+        <SafeAreaView style={styles.moodStyle}>
+          {possible.map((moods, index) => {
+            if (index >= 4) {
+              return (
+                <TouchableOpacity
+                  key={moods}
+                  onPress={() => {
+                    addMoods(index);
+                    navigation.goBack();
+                  }}
+                >
+                  <Image style={styles.imageStyle} source={icons[moods]} />
+                </TouchableOpacity>
+              );
+            }
+          })}
+        </SafeAreaView>
       </SafeAreaView>
     </SafeAreaView>
   );
@@ -52,6 +77,8 @@ const MoodSelector = ({ navigation, route }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    width: "100%",
+    height: "100%",
     backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "center",
@@ -59,13 +86,19 @@ const styles = StyleSheet.create({
 
   moodStyle: {
     flexDirection: "row",
+    margin: 10,
+  },
+
+  moodSplit: {
+    justifyContent: "center",
+    alignItems: "center",
   },
 
   imageStyle: {
     height: 50,
     width: 50,
-    marginLeft: 5,
-    marginRight: 5,
+    marginLeft: 10,
+    marginRight: 10,
   },
 });
 
