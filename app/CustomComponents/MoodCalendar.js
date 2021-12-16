@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { SafeAreaView, Text, Button, View } from 'react-native';
 import * as dateFn from 'date-fns';
 
-
 const MoodCalendar = () => {
   const [date, setDate] = useState(new Date());
 
@@ -111,18 +110,7 @@ const MoodCalendar = () => {
     TO DO: WJ will linkup with mood tracking
     */
 
-    
-    // const _onPress = (item) => {    
-    //   //item is a number representing the day
-    //   console.log(item.match)
-    //   setState(() => {
-    //     if (!item.match && item != -1) {
-    //       date.setDate(item);
-    //       return date;
-    //     }
-    //   });
-    //  };
-    
+
     
     const changeMonth = (n) => {
       const curr = n > 0 ? dateFn.addMonths(date, Math.abs(n)) : dateFn.subMonths(date, Math.abs(n));

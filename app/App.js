@@ -107,6 +107,7 @@ const ServicesStack = () => {
 // **Remember to change dailyReset when the time comes :)
 // Add whatever should have bottom tabs to here.
 const Bottoms = () => {
+  // Here, create context
   return (
   <BottomTabs.Navigator initialRouteName={ dailyReset === true ? "SubMoodStack" : "Dashboard"}>
     <BottomTabs.Screen component={Resources} name="Resources" options={{

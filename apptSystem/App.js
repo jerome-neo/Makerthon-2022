@@ -178,7 +178,9 @@ const App = () =>  {
   const pressCalendar = (item, col) => {
     if (item.isBooked) {
       Alert.alert("Fully booked", "Please choose another date");
-    } else if (item.year === todayDate.getFullYear() && item.month === todayDate.getMonth()) {
+    } else if (item.isWeekend) {
+      Alert.alert("Unavailable", "Sorry, unable to book on weekends") 
+    }else if (item.year === todayDate.getFullYear() && item.month === todayDate.getMonth()) {
       // if it's the same year and the selected month is this month
       if (item.value <= todayDate.getDate()) {
         // if the selected date is lesser than the current date, then cannot book
@@ -192,11 +194,7 @@ const App = () =>  {
         setItem(item);
         // console.log(item);
       }
-    } else if (col === 0 || col === 6) {
-      Alert.alert("Unavailable", "Sorry, unable to book on weekends");
-    } else if (item.isBooked) {
-      Alert.alert("Fully booked", "Please choose another date");
-    }  else {
+    } else {
       // valid, so we'll need to retrieve the date then black it out..
       setChosen(item.value);
       const year = calDate.getFullYear();
@@ -309,7 +307,7 @@ const App = () =>  {
   const handleConfirm = (apptDate, time, item) => {
     if (time === 'Please choose a time' || apptDate === 'Please choose a date') {
       Alert.alert("Invalid date or time", "Please select both");
-    } else if (hours < 8 || hours > 20) {
+    } else if (hours < 8 || hours >= 20) {
       Alert.alert("Off operating hours", "Please choose a time between 8am and 8pm");
     }
     else {
