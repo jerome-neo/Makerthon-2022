@@ -1,56 +1,31 @@
 // the actions, remember to "export", then import in the place where action is taking place!
-export const CHANGE_MOOD = 'CHANGE_MOOD';
+export const ADD_MOOD = "ADD_MOOD";
 
-/**
- * Eventually change to hexcodes
- * Colour : Represents
- * Yellow : Happy 
- * Blue : Sad
- * Grey : Stressed
- * Red : Irritated
- * Green : Calm
- */
-
-const initialState = {
-    current: 'white',
-    possible: ['yellow', 'blue', 'grey', 'red', 'green'],
-    text: '',
-}
+// the state represents the moods that have been selected
+let initialState = [];
 
 // reducers take in a state, and an action
 const moodReducer = (state = initialState, action) => {
-    // what to do with the action given?
-    switch (action.type) {
-        case CHANGE_MOOD:
-            // action.payload is an index
-            state.current = state.possible[action.payload];
-            // change the text
-            switch(state.current) {
-                case 'yellow':
-                    state.text = 'happy';
-                    break;
-                case 'blue':
-                    state.text = 'sad';
-                    break;
-                case 'grey':
-                    state.text = 'stressed';
-                    break;
-                case 'red':
-                    state.text = 'irritated';
-                    break;
-                case 'green':
-                    state.text = 'calm';
-                    break;
-                default:
-                    state.text = '';
-                    break;   
-            }
-            // return the object to moodReducer
-            return {...state, CHANGE_MOOD: action.payload};
-        // just return itself by default
-        default:
-            return state;
-    }
-}
+  // what to do with the action given?
+  switch (action.type) {
+    case ADD_MOOD:
+      let payload = action.payload;
+      let item = payload.item;
+      initialState = [
+        ...initialState,
+        {
+          moodIndex: payload.moodIndex + 1,
+          col: item.col,
+          row: item.row,
+          month: item.month,
+        },
+      ];
+      // return the object to moodReducer
+      return initialState;
+    // just return itself by default
+    default:
+      return state;
+  }
+};
 
 export default moodReducer;

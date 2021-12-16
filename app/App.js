@@ -57,12 +57,31 @@ const Stack = createNativeStackNavigator();
 const BottomTabs = createBottomTabNavigator();
 const dailyReset = false; // change to redux state later on
 
+const MoodTestingStack = () => {
+  return (
+    <Provider store={moodStore}>
+      <Stack.Navigator>
+        <Stack.Screen
+          component={MoodTest}
+          name="MoodTest"
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          component={MoodSelector}
+          name="MoodSelector"
+          options={{ headerShown: false }}
+        />
+      </Stack.Navigator>
+    </Provider>
+  );
+};
+
 // For testing. Remove next time when all testing is finished
 const TestingStack = () => {
   return (
     <Stack.Navigator>
       <Stack.Screen component={TestingScreen} name="TestingScreen" />
-      <Stack.Screen component={MoodTest} name="MoodTest" />
+      <Stack.Screen component={MoodTestingStack} name="MoodTestingStack" />
       <Stack.Screen
         component={QuestionnaireBoxTest}
         name="QuestionnaireBoxTest"

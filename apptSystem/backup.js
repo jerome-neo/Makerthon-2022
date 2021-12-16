@@ -15,14 +15,8 @@ import * as dateFn from "date-fns";
 
 const icons = require("../../icons/icons.js");
 
-// Will need to add AsyncStorage next time
 const MoodTest = ({ navigation }) => {
   const [date, setDate] = useState(new Date());
-  // addedMoods stores all the moods that have been added
-  const addedMoods = useSelector((state) => state);
-
-  // all possible moods
-  // empty is usual placeholder, then the rest follows the picking order
   const possible = [
     "mood_empty",
     "mood_happy",
@@ -33,8 +27,8 @@ const MoodTest = ({ navigation }) => {
     "mood_angry",
     "mood_anxious",
   ];
-
-  // the months in the year
+  // const iconState = useSelector((state) => state);
+  // remember to add const
   const months = [
     "January",
     "February",
@@ -63,8 +57,6 @@ const MoodTest = ({ navigation }) => {
     let month = date.getMonth(); // a number
     for (let i = 0; i < 7; i++) {
       matrix[0][i] = {
-        row: 0,
-        col: i,
         day: weekDays[i],
         month: month,
         year: year,
@@ -94,8 +86,6 @@ const MoodTest = ({ navigation }) => {
       for (let col = 0; col < 7; col++) {
         // start from -1, until we hit the first day
         matrix[row][col] = {
-          row: row,
-          col: col,
           day: -1,
           month: month,
           year: year,
@@ -104,8 +94,6 @@ const MoodTest = ({ navigation }) => {
         if (row == 1 && col >= firstDay) {
           // Fill in rows only after the first day of the month
           matrix[row][col] = {
-            row: row,
-            col: col,
             day: counter++,
             month: month,
             year: year,
@@ -115,8 +103,6 @@ const MoodTest = ({ navigation }) => {
           // Fill in rows only if the counter's not greater than
           // the number of days in the month
           matrix[row][col] = {
-            row: row,
-            col: col,
             day: counter++,
             month: month,
             year: year,
@@ -128,29 +114,11 @@ const MoodTest = ({ navigation }) => {
     return matrix;
   };
 
-  // generate the matrix
+  // make your matrix <-- 2d array of dates
   let matrix = generateMatrix();
 
   let rows = [];
 
-  // from Redux state, we know which dates are occupied.
-  // so, we use that information to update our calendar on every render
-  const updateMatrix = (moods, matrix) => {
-    moods.forEach((moodObject) => {
-      const row = moodObject.row;
-      const col = moodObject.col;
-      const moodIndex = moodObject.moodIndex;
-      const month = moodObject.month;
-      if (matrix[row][col].month === month) {
-        matrix[row][col].img = possible[moodIndex];
-      }
-    });
-  };
-
-  // update matrix before each re-render
-  updateMatrix(addedMoods, matrix);
-
-  // conditionally render the icons
   const _renderIcons = (item, rowIndex) => {
     if (item !== -1 && rowIndex !== 0) {
       return (
@@ -161,41 +129,57 @@ const MoodTest = ({ navigation }) => {
     }
   };
 
-  // do this on every render
   rows = matrix.map((row, rowIndex) => {
     let rowItems = row.map((item, colIndex) => {
       return (
         <TouchableOpacity
           style={{
-            // needs to use ternary ops, so no choice but to do inline styling
-            // note, change the background colour to be different in order to see the size of pressable box.
             flex: 1,
-            height: rowIndex === 0 ? 20 : 60,
-            justifyContent: "center",
+            height: 20,
             textAlign: "center",
             alignItems: "center",
             // Highlight header
-            backgroundColor: rowIndex === 0 ? "#ddd" : "white",
+            backgroundColor: rowIndex === 0 ? "#ddd" : "#fff",
             // Highlight Sundays
             color: colIndex === 0 ? "#a00" : "#000",
             // Highlight current date
             fontSize: 18,
           }}
-          onPress={() =>
-            rowIndex === 0 || item.day === -1
-              ? console.log("nothing")
-              : navigation.navigate("MoodSelector", {
-                  item: item, // pass the entire item as a parameter to the route
-                })
-          }
+          onPress={() => navigation.navigate("MoodSelector")}
         >
           {_renderIcons(item, rowIndex)}
           <Text key={colIndex}>{item.day !== -1 ? item.day : ""}</Text>
         </TouchableOpacity>
       );
     });
-    return <View style={styles.rowItems}>{rowItems}</View>;
+    return (
+      <View
+        style={{
+          flexDirection: "row",
+          padding: 35,
+          justifyContent: "space-around",
+          alignItems: "center",
+        }}
+      >
+        {rowItems}
+      </View>
+    );
   });
+
+  /*
+    TO DO: WJ will linkup with mood tracking
+    */
+
+  // const _onPress = (item) => {
+  //   //item is a number representing the day
+  //   console.log(item.match)
+  //   setState(() => {
+  //     if (!item.match && item != -1) {
+  //       date.setDate(item);
+  //       return date;
+  //     }
+  //   });
+  //  };
 
   const changeMonth = (n) => {
     const curr =
@@ -227,7 +211,6 @@ const MoodTest = ({ navigation }) => {
         </TouchableOpacity>
       </SafeAreaView>
       {rows}
-      <Button title="Get state" onPress={() => console.log(addedMoods)} />
     </SafeAreaView>
   );
 };
@@ -249,13 +232,6 @@ const styles = StyleSheet.create({
     marginTop: 2.5,
     height: 25,
     width: 50,
-  },
-
-  rowItems: {
-    flexDirection: "row",
-    padding: 15,
-    justifyContent: "space-around",
-    alignItems: "center",
   },
 });
 
