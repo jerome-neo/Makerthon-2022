@@ -156,124 +156,27 @@ const Bottoms = () => {
           <BottomTabs.Screen
             component={Resources}
             name="Resources"
-            options={{
-              title: "Resources",
-              tabBarIcon: ({ size, focused, color }) => {
-                if (focused) {
-                  return (
-                    <Image
-                      style={{ width: size, height: size }}
-                      source={icons["resources_s"]}
-                    />
-                  );
-                } else {
-                  return (
-                    <Image
-                      style={{ width: size, height: size }}
-                      source={icons["resources_u"]}
-                    />
-                  );
-                }
-              },
-            }}
+            options={screenStyles.resourcesOptions}
           />
           <BottomTabs.Screen
             component={SubMoodStack}
             name="SubMoodStack"
-            options={{
-              title: "Mood Journal",
-              headerShown: false,
-              tabBarIcon: ({ size, focused, color }) => {
-                if (focused) {
-                  return (
-                    <Image
-                      style={{ width: size, height: size }}
-                      source={icons["moodscreen_s"]}
-                    />
-                  );
-                } else {
-                  return (
-                    <Image
-                      style={{ width: size, height: size }}
-                      source={icons["moodscreen_u"]}
-                    />
-                  );
-                }
-              },
-            }}
+            options={screenStyles.subMoodOptions}
           />
           <BottomTabs.Screen
             component={Dashboard}
             name="Dashboard"
-            options={{
-              tabBarIcon: ({ size, focused, color }) => {
-                if (focused) {
-                  return (
-                    <Image
-                      style={{ width: size, height: size }}
-                      source={icons["dashboard_s"]}
-                    />
-                  );
-                } else {
-                  return (
-                    <Image
-                      style={{ width: size, height: size }}
-                      source={icons["dashboard_u"]}
-                    />
-                  );
-                }
-              },
-            }}
+            options={screenStyles.dashboardOptions}
           />
           <BottomTabs.Screen
             component={ServicesStack}
             name="ServicesStack"
-            options={{
-              title: "Services",
-              headerShown: false,
-              tabBarIcon: ({ size, focused, color }) => {
-                if (focused) {
-                  return (
-                    <Image
-                      style={{ width: size, height: size }}
-                      source={icons["services_s"]}
-                    />
-                  );
-                } else {
-                  return (
-                    <Image
-                      style={{ width: size, height: size }}
-                      source={icons["services_u"]}
-                    />
-                  );
-                }
-              },
-            }}
+            options={screenStyles.servicesOptions}
           />
           <BottomTabs.Screen
             component={Settings}
             name="Settings"
-            options={{
-              title: "Settings",
-              headerShown: false,
-              tabBarIcon: ({ size, focused, color }) => {
-                if (focused) {
-                  return (
-                    <Image
-                      style={{ width: size, height: size }}
-                      source={icons["settings_s"]}
-                    />
-                  );
-                } else {
-                  return (
-                    <Image
-                      style={{ width: size, height: size }}
-                      source={icons["settings_u"]}
-                    />
-                  );
-                }
-              },
-            }}
+            options={screenStyles.settingsOptions}
           />
           <BottomTabs.Screen
             component={TestingStack}
@@ -330,5 +233,119 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
 });
+
+// all the screen styles' options
+const screenStyles = {
+  resourcesOptions: {
+    title: "Resources",
+    unmountOnBlur: true,
+    tabBarIcon: ({ size, focused, color }) => {
+      if (focused) {
+        return (
+          <Image
+            style={{ width: size, height: size }}
+            source={icons["resources_s"]}
+          />
+        );
+      } else {
+        return (
+          <Image
+            style={{ width: size, height: size }}
+            source={icons["resources_u"]}
+          />
+        );
+      }
+    },
+  },
+
+  subMoodOptions: {
+    title: "Mood Journal",
+    unmountOnBlur: true,
+    headerShown: false,
+    tabBarIcon: ({ size, focused, color }) => {
+      if (focused) {
+        return (
+          <Image
+            style={{ width: size, height: size }}
+            source={icons["moodscreen_s"]}
+          />
+        );
+      } else {
+        return (
+          <Image
+            style={{ width: size, height: size }}
+            source={icons["moodscreen_u"]}
+          />
+        );
+      }
+    },
+  },
+
+  dashboardOptions: {
+    tabBarIcon: ({ size, focused, color }) => {
+      if (focused) {
+        return (
+          <Image
+            style={{ width: size, height: size }}
+            source={icons["dashboard_s"]}
+          />
+        );
+      } else {
+        return (
+          <Image
+            style={{ width: size, height: size }}
+            source={icons["dashboard_u"]}
+          />
+        );
+      }
+    },
+  },
+
+  servicesOptions: {
+    title: "Services",
+    unmountOnBlur: true,
+    headerShown: false,
+    tabBarIcon: ({ size, focused, color }) => {
+      if (focused) {
+        return (
+          <Image
+            style={{ width: size, height: size }}
+            source={icons["services_s"]}
+          />
+        );
+      } else {
+        return (
+          <Image
+            style={{ width: size, height: size }}
+            source={icons["services_u"]}
+          />
+        );
+      }
+    },
+  },
+
+  settingsOptions: {
+    title: "Settings",
+    unmountOnBlur: true,
+    headerShown: false,
+    tabBarIcon: ({ size, focused, color }) => {
+      if (focused) {
+        return (
+          <Image
+            style={{ width: size, height: size }}
+            source={icons["settings_s"]}
+          />
+        );
+      } else {
+        return (
+          <Image
+            style={{ width: size, height: size }}
+            source={icons["settings_u"]}
+          />
+        );
+      }
+    },
+  },
+};
 
 export default App;
