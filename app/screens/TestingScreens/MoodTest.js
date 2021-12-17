@@ -69,6 +69,7 @@ const MoodTest = ({ navigation }) => {
         month: month,
         year: year,
         img: "not possible",
+        key: weekDays[i] + month + year,
       };
     }
 
@@ -100,6 +101,8 @@ const MoodTest = ({ navigation }) => {
           month: month,
           year: year,
           img: "not possible",
+          dayString: weekDays[col].day,
+          key: weekDays[col].day + "-1" + month + year,
         };
         if (row == 1 && col >= firstDay) {
           // Fill in rows only after the first day of the month
@@ -110,6 +113,8 @@ const MoodTest = ({ navigation }) => {
             month: month,
             year: year,
             img: possible[0],
+            dayString: weekDays[col].day,
+            key: weekDays[col].day + counter + month + year,
           };
         } else if (row > 1 && counter <= maxDays) {
           // Fill in rows only if the counter's not greater than
@@ -121,6 +126,8 @@ const MoodTest = ({ navigation }) => {
             month: month,
             year: year,
             img: possible[0],
+            dayString: weekDays[col].day,
+            key: weekDays[col].day + counter + month + year,
           };
         }
       }
@@ -184,13 +191,12 @@ const MoodTest = ({ navigation }) => {
           onPress={() =>
             rowIndex === 0 || item.day === -1
               ? console.log("nothing")
-              : navigation.navigate("MoodSelector", {
-                  item: item, // pass the entire item as a parameter to the route
-                })
+              : navigation.navigate("MoodSelector", { item: item })
           }
+          key={item.key}
         >
           {_renderIcons(item, rowIndex)}
-          <Text key={colIndex}>{item.day !== -1 ? item.day : ""}</Text>
+          <Text>{item.day !== -1 ? item.day : ""}</Text>
         </TouchableOpacity>
       );
     });

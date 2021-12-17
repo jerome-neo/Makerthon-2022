@@ -7,7 +7,7 @@ import {
   Image,
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-import { ADD_MOOD } from "../../redux/mood/moodReducer"; // action takes place here, so import
+import { ADD_MOOD, MODIFY_MOOD } from "../../redux/mood/moodReducer"; // action takes place here, so import
 
 const icons = require("../../icons/icons.js");
 const possible = [
@@ -21,6 +21,7 @@ const possible = [
 ];
 const MoodSelector = ({ navigation, route }) => {
   const { item } = route.params;
+  const addedMoods = useSelector((state) => state); // get the array of added moods, aka our state array
   const dispatch = useDispatch();
   // dispatching the action, which is to add a mood to our state array
   // we pass down the entire item so we ensure that we'll always have all properties of the object
@@ -29,6 +30,12 @@ const MoodSelector = ({ navigation, route }) => {
       type: ADD_MOOD,
       payload: { moodIndex: moodIndex, item: item },
     });
+  const modifyMoods = (moodIndex) => {
+    dispatch({
+      type: MODIFY_MOOD,
+      payload: { moodIndex: moodIndex, item: item },
+    });
+  };
   return (
     <SafeAreaView style={styles.container}>
       <Text>Select Mood</Text>
@@ -41,7 +48,7 @@ const MoodSelector = ({ navigation, route }) => {
                   <TouchableOpacity
                     key={moods}
                     onPress={() => {
-                      addMoods(index);
+                      addedMoods.some(x => x.key === item.key) ? modifyMoods(index) : addMoods(index);
                       navigation.goBack();
                     }}
                   >
@@ -59,7 +66,7 @@ const MoodSelector = ({ navigation, route }) => {
                 <TouchableOpacity
                   key={moods}
                   onPress={() => {
-                    addMoods(index);
+                    addedMoods.some(x => x.key === item.key) ? modifyMoods(index) : addMoods(index);
                     navigation.goBack();
                   }}
                 >
