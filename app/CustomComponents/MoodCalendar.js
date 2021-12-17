@@ -1,3 +1,5 @@
+// Based component that was used to work on for the other stuff, such as
+// Mood and FormDetails
 import React, { useState } from 'react';
 import { SafeAreaView, Text, Button, View } from 'react-native';
 import * as dateFn from 'date-fns';

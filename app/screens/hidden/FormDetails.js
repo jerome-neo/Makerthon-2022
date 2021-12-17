@@ -10,11 +10,15 @@ import {
   View,
   TouchableOpacity,
   Image,
+  Linking,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Button } from "react-native-elements";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import * as dateFn from "date-fns";
+import nodemailer from "nodemailer";
+import { USER, PASS } from "react-native-dotenv";
+
 
 // function to check char is indeed a character
 function isCharacterALetter(char) {
@@ -418,7 +422,6 @@ const FormDetails = ({ navigation }) => {
     "A0123456B",
     "nusnet@u.nus.edu",
   ]);
-  // console.log(details);
 
   /* AsyncStorage stuff now */
   const saveDetails = async () => {
@@ -611,6 +614,33 @@ const FormDetails = ({ navigation }) => {
     );
   };
 
+  // Nodemailer + Mailtrap for sending test emails
+  let transport = nodemailer.createTransport({
+    host: "smtp.mailtrap.io",
+    port: 2525,
+    auth: {
+      user: USER,
+      pass: PASS
+    }
+  });
+
+  let mailOptions = {
+    from: '"Example Team" <from@example.com>',
+    to: 'user1@example.com, user2@example.com',
+    subject: 'Nice Nodemailer test',
+    text: 'Hey there, it’s our first message sent with Nodemailer ;) ',
+    html: '<b>Hey there! </b><br> This is our first message sent with Nodemailer'
+  };
+
+  transport.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      console.log(error);
+      return ;
+    }
+
+    console.log('Message sent: %s', info.messageId);
+  });
+
   // Rendering the rest of the things
   return (
     <SafeAreaView style={styles.container}>
@@ -692,7 +722,10 @@ const FormDetails = ({ navigation }) => {
                 // easily cancel the sending via their own email app. But, we'll assume that this will not happen since they have already pressed "submit".
 
                 // email sending
-
+                sendEmail('98lawweijie@gmail.com', 
+                'Test subject',
+                `name: ${details[0]}\nstudent no: ${details[1]}\nemail: ${details[2]}\nappointment details: ${apptDate}, ${time}`,
+                "")
                 // return back to dashboard
                 navigation.navigate("Dashboard");
               })
