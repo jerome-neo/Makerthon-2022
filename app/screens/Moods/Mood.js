@@ -45,7 +45,8 @@ const Mood = ({ navigation }) => {
   const [promptedDays, addPromptedDays] = useState([]);
   const [storedMoods, setStoredMoods] = useState([]);
   // addedMoods stores all the moods that have been added
-  const addedMoods = useSelector((state) => state);
+  const state = useSelector((state) => state);
+  const addedMoods = state.data;
 
   // <-------------------------------- AsyncStorage Stuff -------------------------------->
   const savePromptedDays = async () => {
@@ -208,7 +209,7 @@ const Mood = ({ navigation }) => {
 
   // update matrix before each re-render
   updateMatrix(addedMoods, matrix);
-  console.log(addedMoods);
+  // console.log(addedMoods);
   const declineHandler = (submit) => {
     Alert.alert(
       "Declined", // title
@@ -364,7 +365,7 @@ const Mood = ({ navigation }) => {
       <Button
         title="Get state"
         onPress={() => {
-          console.log(addedMoods);
+          console.log(state);
         }}
       />
       <Button title="Get added dates" onPress={() => console.log(promptedDays)}/>

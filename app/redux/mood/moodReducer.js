@@ -2,7 +2,7 @@
 export const ADD_MOOD = "ADD_MOOD";
 export const MODIFY_MOOD = "MODIFY_MOOD";
 // the state represents the moods that have been selected
-let initialState = [];
+let initialState = {data: []}
 
 // reducers take in a state, and an action
 const moodReducer = (state = initialState, action) => {
@@ -11,8 +11,8 @@ const moodReducer = (state = initialState, action) => {
     case ADD_MOOD:
       let payload = action.payload;
       let item = payload.item;
-      initialState = [
-        ...initialState,
+      initialState.data = [
+        ...(initialState.data),
         {
           moodIndex: payload.moodIndex + 1,
           col: item.col,
@@ -27,7 +27,7 @@ const moodReducer = (state = initialState, action) => {
     case MODIFY_MOOD:
       console.log("Modifying");
       // create new array with initialState. Necessary so that it will cause a re-render
-      const tempState = [...initialState];
+      const tempState = [...(initialState).data];
       // Check if there are any items within the state array that corresponds with the key of the item we are wanting to add
       tempState.forEach(item => {
         if (item.key === action.payload.item.key) {

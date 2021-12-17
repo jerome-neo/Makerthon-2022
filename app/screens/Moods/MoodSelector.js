@@ -21,7 +21,7 @@ const possible = [
 ];
 const MoodSelector = ({ navigation, route }) => {
   const { item } = route.params;
-  const addedMoods = useSelector((state) => state); // get the array of added moods, aka our state array
+  const addedMoods = useSelector((state) => state.data); // get the array of added moods, aka our state array
   const dispatch = useDispatch();
   // dispatching the action, which is to add a mood to our state array
   // we pass down the entire item so we ensure that we'll always have all properties of the object
@@ -48,6 +48,7 @@ const MoodSelector = ({ navigation, route }) => {
                   <TouchableOpacity
                     key={moods}
                     onPress={() => {
+                      // console.log(addedMoods)
                       addedMoods.some(x => x.key === item.key) ? modifyMoods(index) : addMoods(index);
                       navigation.goBack();
                     }}

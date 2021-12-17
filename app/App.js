@@ -20,9 +20,10 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
 // Redux stuff
 import { Provider } from "react-redux";
-
+import { PersistGate } from 'redux-persist/integration/react';
+import { store, persistor } from './redux/mood/store';
 // local imports
-import moodStore from "./redux/mood/store";
+// import store from "./redux/mood/store";
 
 import {
   About,
@@ -60,7 +61,7 @@ const dailyReset = false; // change to redux state later on
 
 const MoodTestingStack = () => {
   return (
-    <Provider store={moodStore}>
+    <Provider store={store}>
       <Stack.Navigator>
         <Stack.Screen
           component={MoodTest}
@@ -106,7 +107,8 @@ const TestingStack = () => {
 // contains the mood stuff
 const SubMoodStack = () => {
   return (
-    <Provider store={moodStore}>
+    <Provider store={store}>
+      <PersistGate loading={null} persistor={persistor}>
         <Stack.Navigator>
           <Stack.Screen
             component={Mood}
@@ -119,44 +121,10 @@ const SubMoodStack = () => {
             options={{ title: "Select mood" }}
           />
         </Stack.Navigator>
+      </PersistGate>
     </Provider>
   );
 };
-
-// Questionnaire needs to be aware of:
-// 1) Resources
-// 2) PFA
-// 3) Counsel
-// 4) Form + Psych
-// const QuestionnaireStack = () => {
-//   return (
-//     <Stack.Navigator>
-//       <Stack.Screen
-//         component={Questionnaire}
-//         name="Questionnaire"
-//         options={{ headerShown: false }}
-//       />
-//     </Stack.Navigator>
-//   );
-// };
-
-// Probably not needed anymore. Remove when confirmed.
-// const FullMoodStack = () => {
-//   return (
-//     <Stack.Navigator>
-//       <Stack.Screen
-//         component={SubMoodStack}
-//         name="SubMoodStack"
-//         options={{ headerShown: false }}
-//       />
-//       <Stack.Screen
-//         component={QuestionnaireStack}
-//         name="QuestionnaireStack"
-//         options={{ headerShown: false }}
-//       />
-//     </Stack.Navigator>
-//   );
-// };
 
 // contains all the resources stuff. Add exercises, face massage, etc...
 const Resources = () => {
