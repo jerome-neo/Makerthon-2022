@@ -20,8 +20,8 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
 // Redux stuff
 import { Provider } from "react-redux";
-import { PersistGate } from 'redux-persist/integration/react';
-import { store, persistor } from './redux/mood/store';
+import { PersistGate } from "redux-persist/integration/react";
+import { store, persistor } from "./redux/mood/store";
 // local imports
 // import store from "./redux/mood/store";
 
@@ -76,9 +76,8 @@ const MoodTestingStack = () => {
         <Stack.Screen
           component={QuestionnaireBoxTest}
           name="QuestionnaireBoxTest"
-          options={{headerShown: false}}
+          options={{ headerShown: false }}
         />
-
       </Stack.Navigator>
     </Provider>
   );
@@ -107,22 +106,18 @@ const TestingStack = () => {
 // contains the mood stuff
 const SubMoodStack = () => {
   return (
-    <Provider store={store}>
-      <PersistGate loading={null} persistor={persistor}>
-        <Stack.Navigator>
-          <Stack.Screen
-            component={Mood}
-            name="Mood"
-            options={{ title: "Mood Journal" }}
-          />
-          <Stack.Screen
-            component={MoodSelector}
-            name="MoodSelector"
-            options={{ title: "Select mood" }}
-          />
-        </Stack.Navigator>
-      </PersistGate>
-    </Provider>
+    <Stack.Navigator>
+      <Stack.Screen
+        component={Mood}
+        name="Mood"
+        options={{ title: "Mood Journal" }}
+      />
+      <Stack.Screen
+        component={MoodSelector}
+        name="MoodSelector"
+        options={{ title: "Select mood" }}
+      />
+    </Stack.Navigator>
   );
 };
 
@@ -150,141 +145,144 @@ const ServicesStack = () => {
 };
 
 // **Remember to change dailyReset when the time comes :)
-// Add whatever should have bottom tabs to here.
+// Entire thing is wrapped with mood store, so Dashboard can have access to the mood object
 const Bottoms = () => {
-  // Here, create context
   return (
-    <BottomTabs.Navigator
-      initialRouteName={dailyReset === true ? "SubMoodStack" : "Dashboard"}
-    >
-      <BottomTabs.Screen
-        component={Resources}
-        name="Resources"
-        options={{
-          title: "Resources",
-          tabBarIcon: ({ size, focused, color }) => {
-            if (focused) {
-              return (
-                <Image
-                  style={{ width: size, height: size }}
-                  source={icons["resources_s"]}
-                />
-              );
-            } else {
-              return (
-                <Image
-                  style={{ width: size, height: size }}
-                  source={icons["resources_u"]}
-                />
-              );
-            }
-          },
-        }}
-      />
-      <BottomTabs.Screen
-        component={SubMoodStack}
-        name="SubMoodStack"
-        options={{
-          title: "Mood Journal",
-          headerShown: false,
-          tabBarIcon: ({ size, focused, color }) => {
-            if (focused) {
-              return (
-                <Image
-                  style={{ width: size, height: size }}
-                  source={icons["moodscreen_s"]}
-                />
-              );
-            } else {
-              return (
-                <Image
-                  style={{ width: size, height: size }}
-                  source={icons["moodscreen_u"]}
-                />
-              );
-            }
-          },
-        }}
-      />
-      <BottomTabs.Screen
-        component={Dashboard}
-        name="Dashboard"
-        options={{
-          tabBarIcon: ({ size, focused, color }) => {
-            if (focused) {
-              return (
-                <Image
-                  style={{ width: size, height: size }}
-                  source={icons["dashboard_s"]}
-                />
-              );
-            } else {
-              return (
-                <Image
-                  style={{ width: size, height: size }}
-                  source={icons["dashboard_u"]}
-                />
-              );
-            }
-          },
-        }}
-      />
-      <BottomTabs.Screen
-        component={ServicesStack}
-        name="ServicesStack"
-        options={{
-          title: "Services",
-          headerShown: false,
-          tabBarIcon: ({ size, focused, color }) => {
-            if (focused) {
-              return (
-                <Image
-                  style={{ width: size, height: size }}
-                  source={icons["services_s"]}
-                />
-              );
-            } else {
-              return (
-                <Image
-                  style={{ width: size, height: size }}
-                  source={icons["services_u"]}
-                />
-              );
-            }
-          },
-        }}
-      />
-      <BottomTabs.Screen
-        component={Settings}
-        name="Settings"
-        options={{
-          title: "Settings",
-          headerShown: false,
-          tabBarIcon: ({ size, focused, color }) => {
-            if (focused) {
-              return (
-                <Image
-                  style={{ width: size, height: size }}
-                  source={icons["settings_s"]}
-                />
-              );
-            } else {
-              return (
-                <Image
-                  style={{ width: size, height: size }}
-                  source={icons["settings_u"]}
-                />
-              );
-            }
-          },
-        }}
-      />
-      <BottomTabs.Screen
-        component={TestingStack}
-        name="TestingStack"
-        options={{ headerShown: false }}
-      />
-    </BottomTabs.Navigator>
+    <Provider store={store}>
+      <PersistGate loading={null} persistor={persistor}>
+        <BottomTabs.Navigator
+          initialRouteName={dailyReset === true ? "SubMoodStack" : "Dashboard"}
+        >
+          <BottomTabs.Screen
+            component={Resources}
+            name="Resources"
+            options={{
+              title: "Resources",
+              tabBarIcon: ({ size, focused, color }) => {
+                if (focused) {
+                  return (
+                    <Image
+                      style={{ width: size, height: size }}
+                      source={icons["resources_s"]}
+                    />
+                  );
+                } else {
+                  return (
+                    <Image
+                      style={{ width: size, height: size }}
+                      source={icons["resources_u"]}
+                    />
+                  );
+                }
+              },
+            }}
+          />
+          <BottomTabs.Screen
+            component={SubMoodStack}
+            name="SubMoodStack"
+            options={{
+              title: "Mood Journal",
+              headerShown: false,
+              tabBarIcon: ({ size, focused, color }) => {
+                if (focused) {
+                  return (
+                    <Image
+                      style={{ width: size, height: size }}
+                      source={icons["moodscreen_s"]}
+                    />
+                  );
+                } else {
+                  return (
+                    <Image
+                      style={{ width: size, height: size }}
+                      source={icons["moodscreen_u"]}
+                    />
+                  );
+                }
+              },
+            }}
+          />
+          <BottomTabs.Screen
+            component={Dashboard}
+            name="Dashboard"
+            options={{
+              tabBarIcon: ({ size, focused, color }) => {
+                if (focused) {
+                  return (
+                    <Image
+                      style={{ width: size, height: size }}
+                      source={icons["dashboard_s"]}
+                    />
+                  );
+                } else {
+                  return (
+                    <Image
+                      style={{ width: size, height: size }}
+                      source={icons["dashboard_u"]}
+                    />
+                  );
+                }
+              },
+            }}
+          />
+          <BottomTabs.Screen
+            component={ServicesStack}
+            name="ServicesStack"
+            options={{
+              title: "Services",
+              headerShown: false,
+              tabBarIcon: ({ size, focused, color }) => {
+                if (focused) {
+                  return (
+                    <Image
+                      style={{ width: size, height: size }}
+                      source={icons["services_s"]}
+                    />
+                  );
+                } else {
+                  return (
+                    <Image
+                      style={{ width: size, height: size }}
+                      source={icons["services_u"]}
+                    />
+                  );
+                }
+              },
+            }}
+          />
+          <BottomTabs.Screen
+            component={Settings}
+            name="Settings"
+            options={{
+              title: "Settings",
+              headerShown: false,
+              tabBarIcon: ({ size, focused, color }) => {
+                if (focused) {
+                  return (
+                    <Image
+                      style={{ width: size, height: size }}
+                      source={icons["settings_s"]}
+                    />
+                  );
+                } else {
+                  return (
+                    <Image
+                      style={{ width: size, height: size }}
+                      source={icons["settings_u"]}
+                    />
+                  );
+                }
+              },
+            }}
+          />
+          <BottomTabs.Screen
+            component={TestingStack}
+            name="TestingStack"
+            options={{ headerShown: false }}
+          />
+        </BottomTabs.Navigator>
+      </PersistGate>
+    </Provider>
   );
 };
 

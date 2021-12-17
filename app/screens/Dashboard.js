@@ -1,5 +1,6 @@
 // the Dashboard screen
 import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
 import { ImageBackground, StyleSheet, Text, SafeAreaView, Button } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 // Dashboard screen
@@ -9,6 +10,7 @@ const image = { uri: "https://reactjs.org/logo-og.png" };
 
 // navigation may be used later so we keep it here for now.
 const Dashboard = ({navigation}) => {
+  const moodsData = useSelector(state => state.data);
   const clearAll = async () => {
     try {
       await AsyncStorage.clear()
@@ -24,7 +26,8 @@ const Dashboard = ({navigation}) => {
   return( 
       <SafeAreaView>
           <ImageBackground source={image} style={styles.image}>
-              <SafeAreaView style={{ alignItems: 'center', justifyContent: 'center', flex: 0.2}}> 
+              <SafeAreaView style={{ alignItems: 'center', justifyContent: 'center', flex: 0.2}}>
+                  <Button title="Show data on console" onPress={() => console.log(moodsData)}/>
                   <Text style={{ fontSize: 24, color: 'white'}}> Dashboard Screen </Text>
                   <Button title="Clear whole AsyncStorage" onPress={() => clearAll()}/>
               </SafeAreaView>

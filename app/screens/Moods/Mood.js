@@ -116,7 +116,7 @@ const Mood = ({ navigation }) => {
         month: month,
         year: year,
         img: "not possible",
-        key: weekDays[i] + month + year,
+        key: weekDays[i] + "-" + month + "-" + year,
       };
     }
 
@@ -161,7 +161,7 @@ const Mood = ({ navigation }) => {
             year: year,
             img: possible[0],
             dayString: weekDays[col].day,
-            key: weekDays[col].day + counter + month + year,
+            key: weekDays[col].day + "-" + counter + "-" + month + "-" + year,
           };
         } else if (row > 1 && counter <= maxDays) {
           // Fill in rows only if the counter's not greater than
@@ -174,7 +174,7 @@ const Mood = ({ navigation }) => {
             year: year,
             img: possible[0],
             dayString: weekDays[col].day,
-            key: weekDays[col].day + counter + month + year,
+            key: weekDays[col].day + "-" + counter + "-" + month + "-" + year,
           };
         }
       }
