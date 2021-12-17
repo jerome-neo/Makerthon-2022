@@ -10,11 +10,28 @@ import {
   View,
   Image,
   TouchableOpacity,
+  Alert,
 } from "react-native";
 import * as dateFn from "date-fns";
 
 const icons = require("../../icons/icons.js");
+const customAlert = (title, msg, accept, decline) => {
+  Alert.alert(title, msg, [
+    {
+      text: "Decline",
+      onPress: decline,
+      style: "cancel",
+    },
+    {
+      text: "Accept",
+      onPress: accept,
+      style: "default",
+    },
+  ]);
+};
 
+let zero_checker = false;
+let questionnaireFlag = false;
 // Will need to add AsyncStorage next time
 const MoodTest = ({ navigation }) => {
   const [date, setDate] = useState(new Date());
@@ -139,7 +156,7 @@ const MoodTest = ({ navigation }) => {
   let matrix = generateMatrix();
 
   let rows = [];
-
+  let counter = 0;
   // from Redux state, we know which dates are occupied.
   // so, we use that information to update our calendar on every render
   const updateMatrix = (moods, matrix) => {
@@ -148,10 +165,41 @@ const MoodTest = ({ navigation }) => {
       const col = moodObject.col;
       const moodIndex = moodObject.moodIndex;
       const month = moodObject.month;
+      const mood = moodObject.moodIndex;
+      if (mood >= 4) {
+        counter++;
+      } else {
+        counter = 0;
+      }
       if (matrix[row][col].month === month) {
         matrix[row][col].img = possible[moodIndex];
       }
     });
+  };
+
+  const declineHandler = (submit) => {
+    Alert.alert(
+      "Declined", // title
+      "That's OK! Meanwhile, here's some resources which may help you to feel better", // message
+      submit // on accept
+    );
+  };
+
+  const acceptHandler = () => {
+    questionnaireFlag = false; // don't prompt user to do questionnaire anymore
+    navigation.navigate('QuestionnaireBoxTest');
+  }
+
+  const prompter = () => {
+    if (counter >= 5) {
+      customAlert(
+        "Important",
+        "Hey, we noticed you haven't been feeling the best lately, please help us to answer some questions so we know how we can help :)",
+        () => { acceptHandler()},
+        () => { declineHandler(navigation.navigate('Resources')) }
+      );
+      // if accepted, then reset counter
+    }
   };
 
   // update matrix before each re-render
@@ -233,7 +281,14 @@ const MoodTest = ({ navigation }) => {
         </TouchableOpacity>
       </SafeAreaView>
       {rows}
-      <Button title="Get state" onPress={() => console.log(addedMoods)} />
+      <Button
+        title="Get state"
+        onPress={() => {
+          console.log(addedMoods);
+          console.log(counter);
+        }}
+      />
+      {prompter()}
     </SafeAreaView>
   );
 };

@@ -71,6 +71,12 @@ const MoodTestingStack = () => {
           name="MoodSelector"
           options={{ headerShown: false }}
         />
+        <Stack.Screen
+          component={QuestionnaireBoxTest}
+          name="QuestionnaireBoxTest"
+          options={{headerShown: false}}
+        />
+
       </Stack.Navigator>
     </Provider>
   );
