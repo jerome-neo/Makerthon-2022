@@ -42,7 +42,6 @@ const PROMPT_KEY = "@prompt_key";
 const Mood = ({ navigation }) => {
   const [date, setDate] = useState(new Date());
   const [promptedDays, addPromptedDays] = useState([]);
-  const [storedMoods, setStoredMoods] = useState([]);
   // addedMoods stores all the moods that have been added
   const state = useSelector((state) => state);
   const addedMoods = state.data;
@@ -183,7 +182,6 @@ const Mood = ({ navigation }) => {
 
   // generate the matrix
   let matrix = generateMatrix();
-
   let rows = [];
   let moodyDays = 0;
   // from Redux state, we know which dates are occupied.
@@ -393,10 +391,6 @@ const Mood = ({ navigation }) => {
       <Button
         title="Get added dates"
         onPress={() => console.log(promptedDays)}
-      />
-      <Button
-        title="Get stored moods"
-        onPress={() => console.log(storedMoods)}
       />
       {prompter()}
     </SafeAreaView>

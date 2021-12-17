@@ -23,6 +23,7 @@ const MoodSelector = ({ navigation, route }) => {
   const { item } = route.params;
   const addedMoods = useSelector((state) => state.data); // get the array of added moods, aka our state array
   const dispatch = useDispatch();
+  console.log(addedMoods);
   // dispatching the action, which is to add a mood to our state array
   // we pass down the entire item so we ensure that we'll always have all properties of the object
   const addMoods = (moodIndex) =>
