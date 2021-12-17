@@ -30,8 +30,7 @@ const customAlert = (title, msg, accept, decline) => {
   ]);
 };
 
-let zero_checker = false;
-let questionnaireFlag = false;
+
 // Will need to add AsyncStorage next time
 const MoodTest = ({ navigation }) => {
   const [date, setDate] = useState(new Date());
@@ -186,10 +185,10 @@ const MoodTest = ({ navigation }) => {
   };
 
   const acceptHandler = () => {
-    questionnaireFlag = false; // don't prompt user to do questionnaire anymore
     navigation.navigate('QuestionnaireBoxTest');
   }
 
+  // needs to add more logic here.
   const prompter = () => {
     if (counter >= 5) {
       customAlert(
