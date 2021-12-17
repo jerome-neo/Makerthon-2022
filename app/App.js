@@ -127,35 +127,35 @@ const SubMoodStack = () => {
 // 2) PFA
 // 3) Counsel
 // 4) Form + Psych
-const QuestionnaireStack = () => {
-  return (
-    <Stack.Navigator>
-      <Stack.Screen
-        component={Questionnaire}
-        name="Questionnaire"
-        options={{ headerShown: false }}
-      />
-    </Stack.Navigator>
-  );
-};
+// const QuestionnaireStack = () => {
+//   return (
+//     <Stack.Navigator>
+//       <Stack.Screen
+//         component={Questionnaire}
+//         name="Questionnaire"
+//         options={{ headerShown: false }}
+//       />
+//     </Stack.Navigator>
+//   );
+// };
 
 // Probably not needed anymore. Remove when confirmed.
-const FullMoodStack = () => {
-  return (
-    <Stack.Navigator>
-      <Stack.Screen
-        component={SubMoodStack}
-        name="SubMoodStack"
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        component={QuestionnaireStack}
-        name="QuestionnaireStack"
-        options={{ headerShown: false }}
-      />
-    </Stack.Navigator>
-  );
-};
+// const FullMoodStack = () => {
+//   return (
+//     <Stack.Navigator>
+//       <Stack.Screen
+//         component={SubMoodStack}
+//         name="SubMoodStack"
+//         options={{ headerShown: false }}
+//       />
+//       <Stack.Screen
+//         component={QuestionnaireStack}
+//         name="QuestionnaireStack"
+//         options={{ headerShown: false }}
+//       />
+//     </Stack.Navigator>
+//   );
+// };
 
 // contains all the resources stuff. Add exercises, face massage, etc...
 const Resources = () => {
@@ -334,8 +334,8 @@ const App = () => {
           })}
         />
         <Stack.Screen
-          component={QuestionnaireStack}
-          name="QuestionnaireStack"
+          component={Questionnaire}
+          name="Questionnaire"
           options={{
             headerShown: true,
           }} /*  Set to false later, because users should not be able to go back from this. */
