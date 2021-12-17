@@ -122,7 +122,7 @@ const Mood = ({ navigation }) => {
     // **any date function, returns you a number
 
     // first day of the month
-    let firstDay = new Date(year, month, 1).getDate();
+    let firstDay = new Date(year, month, 1).getDay();
     let maxDays = nDays[month]; // max number of days for month, pre-defined
     if (month == 1) {
       // February
@@ -315,6 +315,18 @@ const Mood = ({ navigation }) => {
     return <View style={styles.rowItems}>{rowItems}</View>;
   });
 
+  // retrieves item based on the days of the week, and today's date
+  const retrieveItem = () => {
+    let item = "";
+    const col = todayDate.getDay();
+    const currentDay = todayDate.getDate();
+    for (let i = 0; i < 7; i++) {
+      if (matrix[i][col].day === currentDay) {
+        return matrix[i][col];
+      }
+    }
+  };
+
   const changeMonth = (n) => {
     const curr = dateFn.addMonths(date, n);
     // prevent going forward if the next date is greater than today's date
@@ -363,6 +375,15 @@ const Mood = ({ navigation }) => {
         </TouchableOpacity>
       </SafeAreaView>
       {rows}
+      <View style={styles.floatView}>
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate("MoodSelector", { item: retrieveItem() });
+          }}
+        >
+          <Image source={icons["float_button"]} style={styles.floatButton} />
+        </TouchableOpacity>
+      </View>
       <Button
         title="Get state"
         onPress={() => {
@@ -406,6 +427,18 @@ const styles = StyleSheet.create({
     padding: 15,
     justifyContent: "space-around",
     alignItems: "center",
+  },
+
+  floatButton: {
+    height: 100,
+    width: 100,
+  },
+
+  floatView: {
+    flex: 1,
+    position: "absolute",
+    right: 25,
+    bottom: 50,
   },
 });
 
