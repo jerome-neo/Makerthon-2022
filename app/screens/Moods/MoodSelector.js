@@ -49,7 +49,9 @@ const MoodSelector = ({ navigation, route }) => {
                     key={moods}
                     onPress={() => {
                       // console.log(addedMoods)
-                      addedMoods.some(x => x.key === item.key) ? modifyMoods(index) : addMoods(index);
+                      addedMoods.some((x) => x.key === item.key)
+                        ? modifyMoods(index)
+                        : addMoods(index);
                       navigation.goBack();
                     }}
                   >
@@ -67,7 +69,9 @@ const MoodSelector = ({ navigation, route }) => {
                 <TouchableOpacity
                   key={moods}
                   onPress={() => {
-                    addedMoods.some(x => x.key === item.key) ? modifyMoods(index) : addMoods(index);
+                    addedMoods.some((x) => x.key === item.key)
+                      ? modifyMoods(index)
+                      : addMoods(index);
                     navigation.goBack();
                   }}
                 >
@@ -103,7 +107,8 @@ const styles = StyleSheet.create({
   },
 
   imageStyle: {
-    height: 50,
+    // Height to width ratio is 1.25 : 1
+    height: 62.5,
     width: 50,
     marginLeft: 10,
     marginRight: 10,

@@ -6,14 +6,14 @@ const icons = {
   pic2: require("./pic2.png"),
   pic3: require("./pic3.png"),
   // moods, for selection
-  mood_empty: require("./mood_empty.png"),
-  mood_sad: require("./mood_sad.png"),
-  mood_stress: require("./mood_stress.png"),
-  mood_okay: require("./mood_okay.png"),
-  mood_happy: require("./mood_happy.png"),
-  mood_calm: require("./mood_calm.png"),
-  mood_anxious: require("./mood_anxious.png"),
-  mood_angry: require("./mood_angry.png"),
+  mood_empty: require("./Moods/mood_empty.png"),
+  mood_sad: require("./Moods/mood_sad.png"),
+  mood_stress: require("./Moods/mood_stressed.png"),
+  mood_okay: require("./Moods/mood_okay.png"),
+  mood_happy: require("./Moods/mood_happy.png"),
+  mood_calm: require("./Moods/mood_calm.png"),
+  mood_anxious: require("./Moods/mood_anxious.png"),
+  mood_angry: require("./Moods/mood_angry.png"),
   // current tabs
   settings_s: require("./settings_s.png"),
   services_s: require("./services_s.png"),
@@ -30,6 +30,15 @@ const icons = {
   float_button: require("./float_button.png"),
   arrow_L: require("./arrow_L.png"),
   arrow_R: require("./arrow_R.png"),
+
+  // the alternates!
+  mood_sad_sunglasses: require("./Moods2/mood_sad_sunglasses.png"),
+  mood_stress_sunglasses: require("./Moods2/mood_stressed_sunglasses.png"),
+  mood_okay_sunglasses: require("./Moods2/mood_okay_sunglasses.png"),
+  mood_happy_sunglasses: require("./Moods2/mood_happy_sunglasses.png"),
+  mood_calm_sunglasses: require("./Moods2/mood_calm_sunglasses.png"),
+  mood_anxious_sunglasses: require("./Moods2/mood_anxious_sunglasses.png"),
+  mood_angry_sunglasses: require("./Moods2/mood_angry_sunglasses.png"),
 };
 
 module.exports = icons;

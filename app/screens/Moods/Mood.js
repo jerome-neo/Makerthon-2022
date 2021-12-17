@@ -13,7 +13,7 @@ import {
   Alert,
 } from "react-native";
 import * as dateFn from "date-fns";
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 // need this so easy handling of icons
 const icons = require("../../icons/icons.js");
 
@@ -36,8 +36,7 @@ const customAlert = (title, msg, accept, decline) => {
 const todayDate = new Date(); // to be used for handling calendar back/front
 
 // AsyncStorage keys
-const PROMPT_KEY = '@prompt_key';
-
+const PROMPT_KEY = "@prompt_key";
 
 // Main body
 const Mood = ({ navigation }) => {
@@ -53,20 +52,20 @@ const Mood = ({ navigation }) => {
     try {
       await AsyncStorage.setItem(PROMPT_KEY, JSON.stringify(promptedDays));
     } catch (e) {
-      console.log(e)
+      console.log(e);
     }
-  }
+  };
 
   const readPromptedDays = async () => {
     try {
       const res = await AsyncStorage.getItem(PROMPT_KEY);
-      if (res !== null) { 
+      if (res !== null) {
         addPromptedDays(JSON.parse(res));
       }
     } catch (e) {
       console.log(e);
     }
-  }
+  };
 
   // all possible moods
   // empty is usual placeholder, then the rest follows the picking order
@@ -230,8 +229,11 @@ const Mood = ({ navigation }) => {
   }
   // needs to add more logic here.
   const prompter = () => {
-    const formatted = dateFn.lightFormat(todayDate, 'yyyy-MM-dd');
-    if (shouldPrompt && !promptedDays.some(someDate => someDate === formatted)) {
+    const formatted = dateFn.lightFormat(todayDate, "yyyy-MM-dd");
+    if (
+      shouldPrompt &&
+      !promptedDays.some((someDate) => someDate === formatted)
+    ) {
       addPromptedDays([...promptedDays, formatted]);
       console.log(promptedDays);
       customAlert(
@@ -248,19 +250,17 @@ const Mood = ({ navigation }) => {
     }
   };
 
-
-
   // conditionally render the icons
   const _renderIcons = (item, rowIndex) => {
     if (item.day !== -1 && rowIndex !== 0) {
       if (item.month < todayDate.getMonth())
         return (
-          <Image style={{ width: 40, height: 40 }} source={icons[item.img]} />
+          <Image style={{ width: 40, height: 50 }} source={icons[item.img]} />
         );
       else {
         if (item.day <= todayDate.getDate()) {
           return (
-            <Image style={{ width: 40, height: 40 }} source={icons[item.img]} />
+            <Image style={{ width: 40, height: 50 }} source={icons[item.img]} />
           );
         }
       }
@@ -268,7 +268,6 @@ const Mood = ({ navigation }) => {
       return;
     }
   };
-
 
   // do this on every render
   rows = matrix.map((row, rowIndex) => {
@@ -279,14 +278,13 @@ const Mood = ({ navigation }) => {
             // needs to use ternary ops, so no choice but to do inline styling
             // note, change the background colour to be different in order to see the size of pressable box.
             flex: 1,
-            height: rowIndex === 0 ? 20 : 60,
+            height: rowIndex === 0 ? 20 : 60, // conditionally rendering the height. If it is the days of the week, then lower.
             justifyContent: "center",
             textAlign: "center",
             alignItems: "center",
             // Highlight header
-            backgroundColor: rowIndex === 0 ? "#ddd" : "white",
+            backgroundColor: rowIndex === 0 ? "#ddd" : "white", // if days of week, grey bg
             // Highlight Sundays
-            color: colIndex === 0 ? "#a00" : "#000",
             // Highlight current date
             fontSize: 18,
           }}
@@ -298,7 +296,11 @@ const Mood = ({ navigation }) => {
           key={item.key}
         >
           {_renderIcons(item, rowIndex)}
-          <Text>
+          <Text
+            style={{
+              color: colIndex === 0 && rowIndex === 0 ? "#a00" : "#000",
+            }}
+          >
             {rowIndex === 0 // if it row 0, which are the days
               ? item.day // render it
               : item.day !== -1 && item.month < todayDate.getMonth() // if not, check if these conditions are met
@@ -314,13 +316,12 @@ const Mood = ({ navigation }) => {
   });
 
   const changeMonth = (n) => {
-    const curr =
-      n > 0
-        ? dateFn.addMonths(date, Math.abs(n))
-        : dateFn.subMonths(date, Math.abs(n));
-    console.log(curr);
+    const curr = dateFn.addMonths(date, n);
     // prevent going forward if the next date is greater than today's date
-    if (curr > todayDate) {
+    if (
+      dateFn.lightFormat(curr, "yyyy-MM-dd") >
+      dateFn.lightFormat(todayDate, "yyyy-MM-dd")
+    ) {
       return;
     }
     return setDate(curr);
@@ -328,11 +329,11 @@ const Mood = ({ navigation }) => {
 
   useEffect(() => {
     readPromptedDays();
-  }, [])
+  }, []);
 
   useEffect(() => {
     savePromptedDays();
-  }, [promptedDays])
+  }, [promptedDays]);
 
   return (
     <SafeAreaView style={styles.moodCalendar}>
@@ -368,8 +369,14 @@ const Mood = ({ navigation }) => {
           console.log(state);
         }}
       />
-      <Button title="Get added dates" onPress={() => console.log(promptedDays)}/>
-      <Button title="Get stored moods" onPress={() => console.log(storedMoods)}/>
+      <Button
+        title="Get added dates"
+        onPress={() => console.log(promptedDays)}
+      />
+      <Button
+        title="Get stored moods"
+        onPress={() => console.log(storedMoods)}
+      />
       {prompter()}
     </SafeAreaView>
   );
