@@ -1,6 +1,6 @@
 // Testing for the mood calendar
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import {
   SafeAreaView,
@@ -13,7 +13,7 @@ import {
   Alert,
 } from "react-native";
 import * as dateFn from "date-fns";
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 // need this so easy handling of icons
 const icons = require("../../icons/icons.js");
 
@@ -33,13 +33,39 @@ const customAlert = (title, msg, accept, decline) => {
   ]);
 };
 
-const todayDate = new Date(); // to be used for handling back/forth
+const todayDate = new Date(); // to be used for handling calendar back/front
 
-// Will need to add AsyncStorage next time
+// AsyncStorage keys
+const PROMPT_KEY = '@prompt_key';
+
+
+// Main body
 const Mood = ({ navigation }) => {
   const [date, setDate] = useState(new Date());
+  const [promptedDays, addPromptedDays] = useState([]);
+  const [storedMoods, setStoredMoods] = useState([]);
   // addedMoods stores all the moods that have been added
   const addedMoods = useSelector((state) => state);
+
+  // <-------------------------------- AsyncStorage Stuff -------------------------------->
+  const savePromptedDays = async () => {
+    try {
+      await AsyncStorage.setItem(PROMPT_KEY, JSON.stringify(promptedDays));
+    } catch (e) {
+      console.log(e)
+    }
+  }
+
+  const readPromptedDays = async () => {
+    try {
+      const res = await AsyncStorage.getItem(PROMPT_KEY);
+      if (res !== null) { 
+        addPromptedDays(JSON.parse(res));
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  }
 
   // all possible moods
   // empty is usual placeholder, then the rest follows the picking order
@@ -159,7 +185,7 @@ const Mood = ({ navigation }) => {
   let matrix = generateMatrix();
 
   let rows = [];
-  let counter = 0;
+  let moodyDays = 0;
   // from Redux state, we know which dates are occupied.
   // so, we use that information to update our calendar on every render
   const updateMatrix = (moods, matrix) => {
@@ -170,9 +196,9 @@ const Mood = ({ navigation }) => {
       const month = moodObject.month;
       const mood = moodObject.moodIndex;
       if (mood >= 4) {
-        counter++;
+        moodyDays++;
       } else {
-        counter = 0;
+        moodyDays = 0;
       }
       if (matrix[row][col].month === month) {
         matrix[row][col].img = possible[moodIndex];
@@ -180,6 +206,9 @@ const Mood = ({ navigation }) => {
     });
   };
 
+  // update matrix before each re-render
+  updateMatrix(addedMoods, matrix);
+  console.log(addedMoods);
   const declineHandler = (submit) => {
     Alert.alert(
       "Declined", // title
@@ -192,9 +221,18 @@ const Mood = ({ navigation }) => {
     navigation.navigate("Questionnaire");
   };
 
+  // <-------------------------------- Prompt Handling Stuff --------------------------------->
+  let shouldPrompt = false;
+  console.log(moodyDays);
+  if (moodyDays >= 5) {
+    shouldPrompt = true;
+  }
   // needs to add more logic here.
   const prompter = () => {
-    if (counter >= 5) {
+    const formatted = dateFn.lightFormat(todayDate, 'yyyy-MM-dd');
+    if (shouldPrompt && !promptedDays.some(someDate => someDate === formatted)) {
+      addPromptedDays([...promptedDays, formatted]);
+      console.log(promptedDays);
       customAlert(
         "Important",
         "Hey, we noticed you haven't been feeling the best lately, please help us to answer some questions so we know how we can help :)",
@@ -209,8 +247,7 @@ const Mood = ({ navigation }) => {
     }
   };
 
-  // update matrix before each re-render
-  updateMatrix(addedMoods, matrix);
+
 
   // conditionally render the icons
   const _renderIcons = (item, rowIndex) => {
@@ -222,8 +259,8 @@ const Mood = ({ navigation }) => {
       else {
         if (item.day <= todayDate.getDate()) {
           return (
-              <Image style={{ width: 40, height: 40 }} source={icons[item.img]} />
-            );
+            <Image style={{ width: 40, height: 40 }} source={icons[item.img]} />
+          );
         }
       }
     } else {
@@ -231,9 +268,6 @@ const Mood = ({ navigation }) => {
     }
   };
 
-  const _renderFull = (item, rowIndex) => {
-    _renderIcons(item, rowIndex);
-  };
 
   // do this on every render
   rows = matrix.map((row, rowIndex) => {
@@ -267,10 +301,10 @@ const Mood = ({ navigation }) => {
             {rowIndex === 0 // if it row 0, which are the days
               ? item.day // render it
               : item.day !== -1 && item.month < todayDate.getMonth() // if not, check if these conditions are met
-                ? item.day // render everything if it is a past month
-                : item.day <= todayDate.getDate() && item.day !== -1 // if it is current month, render only those that are before today, and before
-                  ? item.day
-                  : ""}
+              ? item.day // render everything if it is a past month
+              : item.day <= todayDate.getDate() && item.day !== -1 // if it is current month, render only those that are before today, and before
+              ? item.day
+              : ""}
           </Text>
         </TouchableOpacity>
       );
@@ -290,6 +324,14 @@ const Mood = ({ navigation }) => {
     }
     return setDate(curr);
   };
+
+  useEffect(() => {
+    readPromptedDays();
+  }, [])
+
+  useEffect(() => {
+    savePromptedDays();
+  }, [promptedDays])
 
   return (
     <SafeAreaView style={styles.moodCalendar}>
@@ -323,9 +365,10 @@ const Mood = ({ navigation }) => {
         title="Get state"
         onPress={() => {
           console.log(addedMoods);
-          console.log(counter);
         }}
       />
+      <Button title="Get added dates" onPress={() => console.log(promptedDays)}/>
+      <Button title="Get stored moods" onPress={() => console.log(storedMoods)}/>
       {prompter()}
     </SafeAreaView>
   );

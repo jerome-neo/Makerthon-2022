@@ -23,6 +23,7 @@ import { Provider } from "react-redux";
 
 // local imports
 import moodStore from "./redux/mood/store";
+
 import {
   About,
   Dashboard,
@@ -106,18 +107,18 @@ const TestingStack = () => {
 const SubMoodStack = () => {
   return (
     <Provider store={moodStore}>
-      <Stack.Navigator>
-        <Stack.Screen
-          component={Mood}
-          name="Mood"
-          options={{ title: "Mood Journal" }}
-        />
-        <Stack.Screen
-          component={MoodSelector}
-          name="MoodSelector"
-          options={{ title: "Select mood" }}
-        />
-      </Stack.Navigator>
+        <Stack.Navigator>
+          <Stack.Screen
+            component={Mood}
+            name="Mood"
+            options={{ title: "Mood Journal" }}
+          />
+          <Stack.Screen
+            component={MoodSelector}
+            name="MoodSelector"
+            options={{ title: "Select mood" }}
+          />
+        </Stack.Navigator>
     </Provider>
   );
 };
