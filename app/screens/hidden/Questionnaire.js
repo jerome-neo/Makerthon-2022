@@ -125,15 +125,15 @@ const handleSubmit = (list) => {
     break_flag = false;
     alert("Please fill in all questions");
   } else {
-    // if score..
-    if (score <= 24) {
+    // the scoring tiers are based off actual scientific data. We used those tiers as a guideline as to what resource to recommend
+    if (score <= 20) {
       navigator = "Resources";
-    } else if (score >= 25 && score <= 30) {
+    } else if (score >= 21 && score < 25) {
       navigator = "PFA";
-    } else if (score > 30 && score <= 40) {
+    } else if (score >= 25 && score <= 28) {
       navigator = "Counsel";
     } else {
-      // score > 40
+      // score >= 29
       navigator = "Psych";
     }
   }
@@ -144,6 +144,7 @@ const handleSubmit = (list) => {
 // no need to reset after submitting because the states are not saved on app restart.
 const Questionnaire = ({ navigation }) => {
   useEffect(() => {
+    // disable hardware back press
     const backHandler = BackHandler.addEventListener(
       "hardwareBackPress",
       () => true
