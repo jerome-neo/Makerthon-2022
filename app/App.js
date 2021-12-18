@@ -8,6 +8,7 @@ import {
   QuestionnaireBoxTest,
   MoodTest,
   BookingTest,
+  FlatListMoods,
 } from "./screens"; // this entire line will be used for testing components and other functionalities
 
 // Navigation stuff
@@ -69,8 +70,8 @@ const MoodTestingStack = () => {
           options={{ headerShown: false }}
         />
         <Stack.Screen
-          component={MoodSelector}
-          name="MoodSelector"
+          component={FlatListMoods}
+          name="FlatListMoods"
           options={{ headerShown: false }}
         />
         <Stack.Screen
@@ -97,6 +98,11 @@ const TestingStack = () => {
       <Stack.Screen
         component={BookingTest}
         name="BookingTest"
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        component={FlatListMoods}
+        name="FlatListMoods"
         options={{ headerShown: false }}
       />
     </Stack.Navigator>

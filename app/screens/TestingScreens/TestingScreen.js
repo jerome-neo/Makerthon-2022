@@ -40,6 +40,12 @@ const TestingScreen = ({ navigation }) => {
         >
           <Text> Booking Test</Text>
         </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => navigation.navigate("FlatListMoods")}
+        >
+          <Text> FlatListMoods</Text>
+        </TouchableOpacity>
       </ImageBackground>
     </SafeAreaView>
   );
