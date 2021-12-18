@@ -410,8 +410,6 @@ const Mood = ({ navigation, route, props }) => {
       setDone(false);
     }
   }
-  console.log(done);
-  console.log(x);
 
   const handleRetrieval = () => {
     const year_difference = todayDate.getFullYear() - date.getFullYear();
@@ -465,7 +463,7 @@ const Mood = ({ navigation, route, props }) => {
           <Image source={icons["float_button"]} style={styles.floatButton} />
         </TouchableOpacity>
       </View>
-      <Button title="Manual prompt" onPress={() => manualPrompt()} />
+      {/* <Button title="Manual prompt" onPress={() => manualPrompt()} /> */}
       {/* <Button
         title="Get state"
         onPress={() => {
@@ -515,7 +513,7 @@ const styles = StyleSheet.create({
     flex: 1,
     position: "absolute",
     right: 25,
-    bottom: 50,
+    bottom: 25,
   },
 });
 
