@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   TouchableOpacity,
   StyleSheet,
@@ -7,6 +7,7 @@ import {
   Image,
   FlatList,
   Button,
+  Alert,
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { ADD_MOOD, MODIFY_MOOD } from "../../redux/mood/moodReducer"; // action takes place here, so import
@@ -35,6 +36,8 @@ const possible_sunglasses = [
 const MoodSelector = ({ navigation, route }) => {
   const { item } = route.params;
   const addedMoods = useSelector((state) => state.data); // get the array of added moods, aka our state array
+  // just store the accessible, additional icons as an array, and just read from the array if we want to check if user has access to it
+  const [accessible, setAccessible] = useState([]);
   const dispatch = useDispatch();
   // Actions. Item to be passed down to Reducer. actualMood is "src".
   const addMoods = (mood) =>
@@ -52,6 +55,15 @@ const MoodSelector = ({ navigation, route }) => {
   console.log(item);
   // Flatlist stuff
   const Item = ({ imageSrc, moodName, moodSrc }) => {
+    const _onPress = () => {
+      // if the key already exists, it means we are modifying a mood instead of adding
+      console.log(moodSrc);
+      addedMoods.some((x) => x.key === item.key)
+        ? modifyMoods(moodSrc)
+        : addMoods(moodSrc);
+      navigation.goBack();
+    };
+
     return (
       <TouchableOpacity
         style={{
@@ -59,14 +71,27 @@ const MoodSelector = ({ navigation, route }) => {
           alignItems: "center",
           justifyContent: "center",
         }}
-        onPress={() => {
-          // if the key already exists, it means we are modifying a mood instead of adding
-          console.log(moodSrc);
-          addedMoods.some((x) => x.key === item.key)
-            ? modifyMoods(moodSrc)
-            : addMoods(moodSrc);
-          navigation.goBack();
+        onPress={() => _onPress()}
+      >
+        <Image style={styles.imageStyle} source={imageSrc} />
+        <Text>{moodName}</Text>
+      </TouchableOpacity>
+    );
+  };
+
+  const LockedItem = ({ imageSrc, moodName }) => {
+    const _onPress = () => {
+      Alert.alert("Sorry!", "You do not have access to these yet");
+    };
+
+    return (
+      <TouchableOpacity
+        style={{
+          marginTop: 10,
+          alignItems: "center",
+          justifyContent: "center",
         }}
+        onPress={() => _onPress()}
       >
         <Image style={styles.imageStyle} source={imageSrc} />
         <Text>{moodName}</Text>
@@ -77,6 +102,16 @@ const MoodSelector = ({ navigation, route }) => {
   const renderItem = ({ item }) => {
     return (
       <Item
+        imageSrc={icons[item.src]}
+        moodName={item.title}
+        moodSrc={item.src}
+      />
+    );
+  };
+
+  const renderLockedItem = ({ item }) => {
+    return (
+      <LockedItem
         imageSrc={icons[item.src]}
         moodName={item.title}
         moodSrc={item.src}
@@ -99,6 +134,7 @@ const MoodSelector = ({ navigation, route }) => {
         renderItem={renderItem}
         keyExtractor={(item) => item.id}
       />
+
       <FlatList
         ListHeaderComponent={<Text>Sunglasses Series</Text>}
         contentContainerStyle={{
@@ -108,7 +144,9 @@ const MoodSelector = ({ navigation, route }) => {
         }}
         data={possible_sunglasses}
         numColumns={4}
-        renderItem={renderItem}
+        renderItem={
+          accessible.some((x) => "sunglasses") ? renderItem : renderLockedItem // if user has access, then render the unlocked item. else, render a locked one.
+        }
         keyExtractor={(item) => item.id}
       />
     </SafeAreaView>
