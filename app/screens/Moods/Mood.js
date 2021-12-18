@@ -14,9 +14,11 @@ import {
 } from "react-native";
 import * as dateFn from "date-fns";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import useStateWithCallback from "use-state-with-callback";
+
 // need this so easy handling of icons
 const icons = require("../../icons/icons.js");
-
+let x = 0;
 // custom alert
 const customAlert = (title, msg, accept, decline) => {
   Alert.alert(title, msg, [
@@ -42,6 +44,7 @@ const Mood = ({ navigation, route, props }) => {
   const [date, setDate] = useState(new Date());
   const [loading, setLoading] = useState(true);
   const [promptedDays, addPromptedDays] = useState([]);
+  const [persistentItem, setPersistentItem] = useState("");
 
   // addedMoods stores all the moods that have been added
   const state = useSelector((state) => state);
@@ -313,13 +316,16 @@ const Mood = ({ navigation, route, props }) => {
             textAlign: "center",
             alignItems: "center",
             // Highlight header
-            backgroundColor: rowIndex === 0 ? "#ddd" : "white", // if days of week, grey bg
+            backgroundColor: rowIndex === 0 ? "#ddd" : "#F8DE7E", // if days of week, grey bg
             // Highlight Sundays
             // Highlight current date
             fontSize: 18,
           }}
           onPress={() =>
-            rowIndex === 0 || item.day === -1 || item.day > todayDate.getDate()
+            rowIndex === 0 ||
+            item.day === -1 ||
+            (item.day > todayDate.getDate() &&
+              item.month == todayDate.getMonth())
               ? console.log(todayDate.getDate())
               : navigation.navigate("MoodSelector", {
                   item: item,
@@ -347,6 +353,26 @@ const Mood = ({ navigation, route, props }) => {
     return <View style={styles.rowItems}>{rowItems}</View>;
   });
 
+  const changeMonth = (n) => {
+    // console.log("Change month start: " + date);
+    const curr = dateFn.addMonths(date, n);
+    const days_over = todayDate.getDate() - 1;
+    const comparator = dateFn.subDays(
+      dateFn.addMonths(new Date(), 1),
+      days_over
+    );
+    // prevent going forward if the next date is greater than today's date
+    if (
+      dateFn.lightFormat(curr, "yyyy-MM-dd") >
+      dateFn.lightFormat(comparator, "yyyy-MM-dd")
+    ) {
+      return;
+    }
+    setDate(curr);
+    console.log("Change month end: " + curr);
+    return curr;
+  };
+
   // retrieves item based on the days of the week, and today's date
   const retrieveItem = () => {
     const col = todayDate.getDay();
@@ -356,31 +382,49 @@ const Mood = ({ navigation, route, props }) => {
         return matrix[i][col];
       }
     }
+    return null;
   };
+
+  if (x === 0) {
+    setPersistentItem(retrieveItem());
+    x++;
+  }
+  console.log(persistentItem);
 
   const { done, setDone } = useContext(dailyContext);
   const todayItem = retrieveItem();
-  // console.log("From mood: " + done);
-  if (todayItem.img !== "mood_empty") {
-    if (!done) {
-      Alert.alert("Mood saved", "Today's mood done! You have earned 1 point.");
+  if (todayItem !== null) {
+    const formatted = dateFn.lightFormat(todayDate, "yyyy-MM-dd");
+    const formattedCurr = dateFn.lightFormat(date, "yyyy-MM-dd");
+    if (todayItem.img !== "mood_empty") {
+      if (!done && x === 1) {
+        Alert.alert(
+          "Mood saved",
+          "Today's mood done! You have earned 1 point."
+        );
+        x++;
+      }
+      setDone(true);
+    } else if (formatted === formattedCurr && todayItem.img === "mood_empty") {
+      console.log("Mood for today not put in yet.");
+      setDone(false);
     }
-    setDone(true);
-  } else if (todayItem.img === "mood_empty") {
-    console.log("Mood for today not put in yet.");
-    setDone(false);
   }
+  console.log(done);
+  console.log(x);
 
-  const changeMonth = (n) => {
-    const curr = dateFn.addMonths(date, n);
-    // prevent going forward if the next date is greater than today's date
-    if (
-      dateFn.lightFormat(curr, "yyyy-MM-dd") >
-      dateFn.lightFormat(todayDate, "yyyy-MM-dd")
-    ) {
-      return;
+  const handleRetrieval = () => {
+    const year_difference = todayDate.getFullYear() - date.getFullYear();
+    const month_difference = todayDate.getMonth() - date.getMonth();
+    console.log("year: " + year_difference + ", month: " + month_difference);
+    if (month_difference === 0 && year_difference === 0) {
+      navigation.navigate("MoodSelector", { item: retrieveItem() });
+    } else {
+      changeMonth(12 * year_difference + month_difference);
+      navigation.navigate("MoodSelector", {
+        item: persistentItem,
+      });
     }
-    return setDate(curr);
   };
 
   return (
@@ -403,7 +447,8 @@ const Mood = ({ navigation, route, props }) => {
           <Image
             style={styles.arrowImage}
             source={
-              dateFn.getMonth(date) === todayDate.getMonth()
+              dateFn.getMonth(date) === todayDate.getMonth() &&
+              dateFn.getYear(date) === todayDate.getFullYear()
                 ? null // render nothing if it is past today's date
                 : icons["arrow_R"]
             }
@@ -414,9 +459,7 @@ const Mood = ({ navigation, route, props }) => {
       <View style={styles.floatView}>
         <TouchableOpacity
           onPress={() => {
-            navigation.navigate("MoodSelector", {
-              item: retrieveItem(),
-            });
+            handleRetrieval();
           }}
         >
           <Image source={icons["float_button"]} style={styles.floatButton} />
@@ -439,7 +482,7 @@ const Mood = ({ navigation, route, props }) => {
 
 const styles = StyleSheet.create({
   moodCalendar: {
-    backgroundColor: "white",
+    backgroundColor: "#F8DE7E",
     flex: 1,
   },
 

@@ -200,6 +200,7 @@ const Bottoms = () => {
           >
             <BottomTabs.Navigator
               initialRouteName={done ? "Dashboard" : "SubMoodStack"}
+              screenOptions={{ tabBarStyle: { backgroundColor: "white" } }}
             >
               <BottomTabs.Screen
                 component={Resources}
@@ -244,7 +245,7 @@ const Bottoms = () => {
 const App = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator>
+      <Stack.Navigator barStyle={{ backgroundColor: "#694fad" }}>
         <Stack.Screen
           component={Bottoms}
           name="Bottoms"

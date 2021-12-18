@@ -49,6 +49,7 @@ const MoodSelector = ({ navigation, route }) => {
     });
   };
 
+  console.log(item);
   // Flatlist stuff
   const Item = ({ imageSrc, moodName, moodSrc }) => {
     return (
@@ -119,7 +120,7 @@ const styles = StyleSheet.create({
     flex: 1,
     width: "100%",
     height: "100%",
-    backgroundColor: "#fff",
+    backgroundColor: "pink",
     alignItems: "center",
     justifyContent: "center",
   },
