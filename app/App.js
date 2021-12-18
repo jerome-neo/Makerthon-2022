@@ -1,6 +1,7 @@
 // Normal stuff
-import React from "react";
-import { StyleSheet, Image } from "react-native";
+import React, { useState, useEffect } from "react";
+import { StyleSheet, Image, SafeAreaView } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 // To be removed
 import {
@@ -23,9 +24,9 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 import { store, persistor } from "./redux/mood/store";
-// local imports
-// import store from "./redux/mood/store";
 
+// local imports
+import dailyContext from "./dailyContext";
 import {
   About,
   Dashboard,
@@ -150,49 +151,92 @@ const ServicesStack = () => {
   );
 };
 
-// **Remember to change dailyReset when the time comes :)
+const DAILY_KEY = "@daily_key";
 // Entire thing is wrapped with mood store, so Dashboard can have access to the mood object
 const Bottoms = () => {
-  return (
-    <Provider store={store}>
-      <PersistGate loading={null} persistor={persistor}>
-        <BottomTabs.Navigator
-          initialRouteName={dailyReset === true ? "SubMoodStack" : "Dashboard"}
-        >
-          <BottomTabs.Screen
-            component={Resources}
-            name="Resources"
-            options={screenStyles.resourcesOptions}
-          />
-          <BottomTabs.Screen
-            component={SubMoodStack}
-            name="SubMoodStack"
-            options={screenStyles.subMoodOptions}
-          />
-          <BottomTabs.Screen
-            component={Dashboard}
-            name="Dashboard"
-            options={screenStyles.dashboardOptions}
-          />
-          <BottomTabs.Screen
-            component={ServicesStack}
-            name="ServicesStack"
-            options={screenStyles.servicesOptions}
-          />
-          <BottomTabs.Screen
-            component={Settings}
-            name="Settings"
-            options={screenStyles.settingsOptions}
-          />
-          <BottomTabs.Screen
-            component={TestingStack}
-            name="TestingStack"
-            options={{ headerShown: false }}
-          />
-        </BottomTabs.Navigator>
-      </PersistGate>
-    </Provider>
-  );
+  const [done, setDone] = useState(false);
+  const [todayMood, setTodayMood] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  const saveDone = async () => {
+    try {
+      await AsyncStorage.setItem(DAILY_KEY, JSON.stringify(done));
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const readDone = async () => {
+    try {
+      const res = await AsyncStorage.getItem(DAILY_KEY);
+      if (res !== null) {
+        setDone(JSON.parse(res));
+      }
+    } catch (e) {
+      console.log(e);
+    }
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    readDone();
+  }, []);
+
+  useEffect(() => {
+    saveDone();
+  }, [done]);
+
+  // console.log("From app: " + done);
+
+  if (loading) {
+    // just a dummy. Set a loading screen so that nothing is rendered while fetching from AsyncStorage
+    return <SafeAreaView></SafeAreaView>;
+  } else {
+    return (
+      <Provider store={store}>
+        <PersistGate loading={null} persistor={persistor}>
+          <dailyContext.Provider
+            value={{ done, setDone, todayMood, setTodayMood }}
+          >
+            <BottomTabs.Navigator
+              initialRouteName={done ? "Dashboard" : "SubMoodStack"}
+            >
+              <BottomTabs.Screen
+                component={Resources}
+                name="Resources"
+                options={screenStyles.resourcesOptions}
+              />
+              <BottomTabs.Screen
+                component={SubMoodStack}
+                name="SubMoodStack"
+                options={screenStyles.subMoodOptions}
+              />
+              <BottomTabs.Screen
+                component={Dashboard}
+                name="Dashboard"
+                options={screenStyles.dashboardOptions}
+              />
+              <BottomTabs.Screen
+                component={ServicesStack}
+                name="ServicesStack"
+                options={screenStyles.servicesOptions}
+              />
+              <BottomTabs.Screen
+                component={Settings}
+                name="Settings"
+                options={screenStyles.settingsOptions}
+              />
+              <BottomTabs.Screen
+                component={TestingStack}
+                name="TestingStack"
+                options={{ headerShown: false }}
+              />
+            </BottomTabs.Navigator>
+          </dailyContext.Provider>
+        </PersistGate>
+      </Provider>
+    );
+  }
 };
 
 // Render the entire thing

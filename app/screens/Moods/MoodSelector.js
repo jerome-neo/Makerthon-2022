@@ -6,6 +6,7 @@ import {
   SafeAreaView,
   Image,
   FlatList,
+  Button,
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { ADD_MOOD, MODIFY_MOOD } from "../../redux/mood/moodReducer"; // action takes place here, so import
@@ -35,7 +36,6 @@ const MoodSelector = ({ navigation, route }) => {
   const { item } = route.params;
   const addedMoods = useSelector((state) => state.data); // get the array of added moods, aka our state array
   const dispatch = useDispatch();
-
   // Actions. Item to be passed down to Reducer. actualMood is "src".
   const addMoods = (mood) =>
     dispatch({

@@ -1,6 +1,6 @@
 // Testing for the mood calendar
-
-import React, { useState, useEffect } from "react";
+import dailyContext from "../../dailyContext";
+import React, { useState, useEffect, useContext } from "react";
 import { useSelector } from "react-redux";
 import {
   SafeAreaView,
@@ -37,12 +37,12 @@ const todayDate = new Date(); // to be used for handling calendar back/front
 
 // AsyncStorage keys
 const PROMPT_KEY = "@prompt_key";
-
 // Main body
-const Mood = ({ navigation }) => {
+const Mood = ({ navigation, route, props }) => {
   const [date, setDate] = useState(new Date());
   const [loading, setLoading] = useState(true);
   const [promptedDays, addPromptedDays] = useState([]);
+
   // addedMoods stores all the moods that have been added
   const state = useSelector((state) => state);
   const addedMoods = state.data;
@@ -73,22 +73,8 @@ const Mood = ({ navigation }) => {
     } catch (e) {
       console.log(e);
     }
-    // console.log("Data loaded. Set loading to false");
     setLoading(false);
   };
-
-  // all possible moods
-  // empty is usual placeholder, then the rest follows the picking order
-  const possible = [
-    "mood_empty",
-    "mood_happy",
-    "mood_okay",
-    "mood_calm",
-    "mood_sad",
-    "mood_stress",
-    "mood_angry",
-    "mood_anxious",
-  ];
 
   // the months in the year
   const months = [
@@ -170,7 +156,14 @@ const Mood = ({ navigation }) => {
             year: year,
             img: "mood_empty",
             dayString: weekDays[col].day,
-            key: weekDays[col].day + "-" + counter + "-" + month + "-" + year,
+            key:
+              weekDays[col].day +
+              "-" +
+              (counter - 1) +
+              "-" +
+              month +
+              "-" +
+              year,
           };
         } else if (row > 1 && counter <= maxDays) {
           // Fill in rows only if the counter's not greater than
@@ -183,7 +176,14 @@ const Mood = ({ navigation }) => {
             year: year,
             img: "mood_empty",
             dayString: weekDays[col].day,
-            key: weekDays[col].day + "-" + counter + "-" + month + "-" + year,
+            key:
+              weekDays[col].day +
+              "-" +
+              (counter - 1) +
+              "-" +
+              month +
+              "-" +
+              year,
           };
         }
       }
@@ -262,9 +262,23 @@ const Mood = ({ navigation }) => {
     }
   };
 
+  // force prompter to wait for fetched data from AsyncStorage
   if (!loading) {
     prompter();
   }
+
+  const manualPrompt = () => {
+    customAlert(
+      "Important",
+      "Hey, we noticed you haven't been feeling the best lately, please help us to answer some questions so we know how we can help :)",
+      () => {
+        acceptHandler();
+      },
+      () => {
+        declineHandler(navigation.navigate("Resources"));
+      }
+    );
+  };
 
   // conditionally render the icons
   const _renderIcons = (item, rowIndex) => {
@@ -307,7 +321,9 @@ const Mood = ({ navigation }) => {
           onPress={() =>
             rowIndex === 0 || item.day === -1 || item.day > todayDate.getDate()
               ? console.log(todayDate.getDate())
-              : navigation.navigate("MoodSelector", { item: item })
+              : navigation.navigate("MoodSelector", {
+                  item: item,
+                })
           }
           key={item.key}
         >
@@ -333,7 +349,6 @@ const Mood = ({ navigation }) => {
 
   // retrieves item based on the days of the week, and today's date
   const retrieveItem = () => {
-    let item = "";
     const col = todayDate.getDay();
     const currentDay = todayDate.getDate();
     for (let i = 0; i < 7; i++) {
@@ -342,6 +357,19 @@ const Mood = ({ navigation }) => {
       }
     }
   };
+
+  const { done, setDone } = useContext(dailyContext);
+  const todayItem = retrieveItem();
+  // console.log("From mood: " + done);
+  if (todayItem.img !== "mood_empty") {
+    if (!done) {
+      Alert.alert("Mood saved", "Today's mood done! You have earned 1 point.");
+    }
+    setDone(true);
+  } else if (todayItem.img === "mood_empty") {
+    console.log("Mood for today not put in yet.");
+    setDone(false);
+  }
 
   const changeMonth = (n) => {
     const curr = dateFn.addMonths(date, n);
@@ -386,13 +414,16 @@ const Mood = ({ navigation }) => {
       <View style={styles.floatView}>
         <TouchableOpacity
           onPress={() => {
-            navigation.navigate("MoodSelector", { item: retrieveItem() });
+            navigation.navigate("MoodSelector", {
+              item: retrieveItem(),
+            });
           }}
         >
           <Image source={icons["float_button"]} style={styles.floatButton} />
         </TouchableOpacity>
       </View>
-      <Button
+      <Button title="Manual prompt" onPress={() => manualPrompt()} />
+      {/* <Button
         title="Get state"
         onPress={() => {
           console.log(state);
@@ -401,7 +432,7 @@ const Mood = ({ navigation }) => {
       <Button
         title="Get added dates"
         onPress={() => console.log(promptedDays)}
-      />
+      /> */}
     </SafeAreaView>
   );
 };
