@@ -41,10 +41,19 @@ const PROMPT_KEY = "@prompt_key";
 // Main body
 const Mood = ({ navigation }) => {
   const [date, setDate] = useState(new Date());
+  const [loading, setLoading] = useState(true);
   const [promptedDays, addPromptedDays] = useState([]);
   // addedMoods stores all the moods that have been added
   const state = useSelector((state) => state);
   const addedMoods = state.data;
+
+  useEffect(() => {
+    readPromptedDays();
+  }, []);
+
+  useEffect(() => {
+    savePromptedDays();
+  }, [promptedDays]);
 
   // <-------------------------------- AsyncStorage Stuff -------------------------------->
   const savePromptedDays = async () => {
@@ -64,6 +73,8 @@ const Mood = ({ navigation }) => {
     } catch (e) {
       console.log(e);
     }
+    // console.log("Data loaded. Set loading to false");
+    setLoading(false);
   };
 
   // all possible moods
@@ -219,12 +230,17 @@ const Mood = ({ navigation }) => {
     navigation.navigate("Questionnaire");
   };
 
+  // To check if we've been prompted
+  // console.log(
+  //   "Have we been prompted today?" +
+  //     promptedDays.some(
+  //       (someDate) => someDate === dateFn.lightFormat(todayDate, "yyyy-MM-dd")
+  //     )
+  // );
   // <-------------------------------- Prompt Handling Stuff --------------------------------->
-  let shouldPrompt = false;
-  console.log(moodyDays);
-  if (moodyDays >= 5) {
-    shouldPrompt = true;
-  }
+  let shouldPrompt = moodyDays >= 5;
+  // console.log(moodyDays);
+
   // needs to add more logic here.
   const prompter = () => {
     const formatted = dateFn.lightFormat(todayDate, "yyyy-MM-dd");
@@ -233,7 +249,6 @@ const Mood = ({ navigation }) => {
       !promptedDays.some((someDate) => someDate === formatted)
     ) {
       addPromptedDays([...promptedDays, formatted]);
-      console.log(promptedDays);
       customAlert(
         "Important",
         "Hey, we noticed you haven't been feeling the best lately, please help us to answer some questions so we know how we can help :)",
@@ -247,6 +262,10 @@ const Mood = ({ navigation }) => {
       // if accepted, then reset counter
     }
   };
+
+  if (!loading) {
+    prompter();
+  }
 
   // conditionally render the icons
   const _renderIcons = (item, rowIndex) => {
@@ -337,14 +356,6 @@ const Mood = ({ navigation }) => {
     return setDate(curr);
   };
 
-  useEffect(() => {
-    readPromptedDays();
-  }, []);
-
-  useEffect(() => {
-    savePromptedDays();
-  }, [promptedDays]);
-
   return (
     <SafeAreaView style={styles.moodCalendar}>
       <SafeAreaView style={styles.moodCalendarHeader}>
@@ -392,7 +403,6 @@ const Mood = ({ navigation }) => {
         title="Get added dates"
         onPress={() => console.log(promptedDays)}
       />
-      {prompter()}
     </SafeAreaView>
   );
 };

@@ -19,11 +19,21 @@ const possible = [
   "mood_angry",
   "mood_anxious",
 ];
+
+const possible_sunglasses = [
+  "mood_sad_sunglasses",
+  "mood_stress_sunglasses",
+  "mood_okay_sunglasses",
+  "mood_happy_sunglasses",
+  "mood_calm_sunglasses",
+  "mood_anxious_sunglasses",
+  "mood_angry_sunglasses",
+];
+
 const MoodSelector = ({ navigation, route }) => {
   const { item } = route.params;
   const addedMoods = useSelector((state) => state.data); // get the array of added moods, aka our state array
   const dispatch = useDispatch();
-  console.log(addedMoods);
   // dispatching the action, which is to add a mood to our state array
   // we pass down the entire item so we ensure that we'll always have all properties of the object
   const addMoods = (moodIndex) =>

@@ -26,22 +26,23 @@ const clearAll = async () => {
 
 // navigation may be used later so we keep it here for now.
 const Dashboard = ({ navigation }) => {
-  const moodsData = useSelector((state) => state.data);
-
+  const moodState = useSelector((state) => state);
+  const moodsData = moodState.data;
+  const logPoints = moodState.logPoints;
   return (
     <SafeAreaView>
       <ImageBackground source={image} style={styles.image}>
         <SafeAreaView
           style={{ alignItems: "center", justifyContent: "center", flex: 0.2 }}
         >
+          <Text style={styles.text}>
+            Points accumulated so far: {logPoints}
+          </Text>
+          <Text style={styles.text}>Dashboard Screen</Text>
           <Button
             title="Show data on console"
-            onPress={() => console.log(moodsData)}
+            onPress={() => console.log(moodState)}
           />
-          <Text style={{ fontSize: 24, color: "white" }}>
-            {" "}
-            Dashboard Screen{" "}
-          </Text>
           <Button title="Clear whole AsyncStorage" onPress={() => clearAll()} />
         </SafeAreaView>
       </ImageBackground>
@@ -55,6 +56,10 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "center",
+  },
+  text: {
+    fontSize: 24,
+    color: "white",
   },
   button: {
     // default button, change later?

@@ -1,9 +1,16 @@
 import { REHYDRATE } from "redux-persist/es/constants";
+import * as dateFn from "date-fns";
+
 // the actions, remember to "export", then import in the place where action is taking place!
 export const ADD_MOOD = "ADD_MOOD";
 export const MODIFY_MOOD = "MODIFY_MOOD";
 // the state represents the moods that have been selected
-let initialState = { data: [] };
+let initialState = {
+  data: [],
+  logPoints: 0,
+};
+
+const currentDate = new Date();
 
 // reducers take in a state, and an action
 const moodReducer = (state = initialState, action) => {
@@ -12,16 +19,27 @@ const moodReducer = (state = initialState, action) => {
     case ADD_MOOD:
       let payload = action.payload;
       let item = payload.item;
+      const itemDay = item.day;
+      const itemMonth = item.month;
+      const currDay = dateFn.getDate(currentDate);
+      const currMonth = dateFn.getMonth(currentDate);
       initialState.data = [
         ...initialState.data,
         {
           moodIndex: payload.moodIndex + 1,
           col: item.col,
           row: item.row,
-          month: item.month,
+          day: itemDay,
+          month: itemMonth,
+          year: item.year, // most likely not needed
           key: item.key,
         },
       ];
+
+      if (itemDay === currDay && itemMonth === currMonth) {
+        initialState.logPoints++; // if you log on that day itself, you get 1 point
+      }
+
       // return the object to moodReducer
       return { ...initialState, ADD_MOOD: action.payload };
     // just return itself by default
@@ -50,6 +68,7 @@ const moodReducer = (state = initialState, action) => {
       if (tempStateData !== null) {
         initialState.data = tempStateData;
       }
+      initialState.logPoints = action.payload.logPoints; // getting back the rehydrated logPoints
       // return the merged state
       return { ...initialState, REHYDRATE: action.payload };
     default:
