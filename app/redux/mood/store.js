@@ -3,11 +3,12 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { persistStore, persistReducer } from "redux-persist";
 import moodReducer from "./moodReducer"; // we create a store from this
 import hardSet from "redux-persist/lib/stateReconciler/hardSet";
+import autoMergeLevel2 from "redux-persist/lib/stateReconciler/autoMergeLevel2";
 
 const persistConfig = {
-  key: "root",
+  key: "moodReducer",
   storage: AsyncStorage,
-  stateReconciler: hardSet,
+  stateReconciler: autoMergeLevel2,
 };
 
 const persistedReducer = persistReducer(persistConfig, moodReducer);

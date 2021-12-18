@@ -40,9 +40,18 @@ const moodReducer = (state = initialState, action) => {
       return { ...initialState, MODIFY_MOOD: action.payload };
     // then find that item and modify its state
     case REHYDRATE:
-      console.log("Rehydraying");
-      console.log(action.payload);
-      return { ...state, REHYDRATE: action.payload };
+      // some error handling, for initial startup where there's no payload
+      if (action.payload === undefined) {
+        return state;
+      }
+      // merging the data
+      const tempStateData = state.data.concat(action.payload.data);
+      // in case data is blank
+      if (tempStateData !== null) {
+        initialState.data = tempStateData;
+      }
+      // return the merged state
+      return { ...initialState, REHYDRATE: action.payload };
     default:
       return state;
   }
