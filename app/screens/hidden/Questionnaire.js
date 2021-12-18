@@ -66,7 +66,8 @@ const customAlert = (title, msg, accept, decline) => {
 const giveResources = (confirm) => {
   Alert.alert(
     "Results",
-    "Based on the survey, you're just having a bad time these few days. Here's some resources to help you!"
+    "Based on the survey, you're just having a bad time these few days.\nHere's some resources to help you!"
+    // "You do not seem to be distressed much across the last month!\nContinue to check-in on your mental health through our mood app!\nHere's some resources to keep up your mental hygiene!"
   );
   confirm();
 };
@@ -143,6 +144,12 @@ const handleSubmit = (list) => {
 
 // no need to reset after submitting because the states are not saved on app restart.
 const Questionnaire = ({ navigation }) => {
+  Alert.alert(
+    "Disclaimer",
+    "The following questions are widely recommended as a simple measure of psychological distress.\n" +
+      "It is used as an indication for the need for interventions and is no way diagnostic in nature.\n" +
+      "Do try your best to answer these questions as accurately as possible."
+  );
   useEffect(() => {
     // disable hardware back press
     const backHandler = BackHandler.addEventListener(
@@ -184,19 +191,19 @@ const Questionnaire = ({ navigation }) => {
     if (recommended === "PFA") {
       three_alert(
         "Results",
-        "Based on your results, we recommend talking anonymously to a Counsellor, but you can choose either.",
+        "You seem to be in slight psychological distress across the last month.\nWe recommend talking anonymously to a Counsellor, but you can choose either.",
         "PFA"
       );
     } else if (recommended === "Counsel") {
       three_alert(
         "Results",
-        "Based on your results, we recommend talking anonymously to a Counsellor, but you can choose either.",
+        "You seem to be in slight psychological distress across the last month.\nWe recommend talking anonymously to a Counsellor, but you can choose either.",
         "Counsel"
       );
     } else {
       three_alert(
         "Results",
-        "Based on your results, we recommend booking an appointment with UCS, but you can choose either.",
+        "You seem to be in a high level of psychological distress across the last month.\nWe recommend booking an appointment with UCS.",
         "Counsel"
       );
     }
