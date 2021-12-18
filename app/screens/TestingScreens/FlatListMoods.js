@@ -5,35 +5,66 @@ import {
   Text,
   SafeAreaView,
   Image,
+  FlatList,
 } from "react-native";
-import { useDispatch, useSelector } from "react-redux";
-import { ADD_MOOD, MODIFY_MOOD } from "../../redux/mood/moodReducer"; // action takes place here, so import
 
 const icons = require("../../icons/icons.js");
 const possible = [
-  "mood_happy",
-  "mood_okay",
-  "mood_calm",
-  "mood_sad",
-  "mood_stress",
-  "mood_angry",
-  "mood_anxious",
+  { id: "0", title: "happy", src: "mood_happy_sunglasses" },
+  { id: "1", title: "okay", src: "mood_okay_sunglasses" },
+  { id: "2", title: "calm", src: "mood_calm_sunglasses" },
+  { id: "3", title: "sad", src: "mood_sad_sunglasses" },
+  { id: "4", title: "stressed", src: "mood_stressed_sunglasses" },
+  { id: "5", title: "angry", src: "mood_angry_sunglasses" },
+  { id: "6", title: "anxious", src: "mood_anxious_sunglasses" },
 ];
 
 const possible_sunglasses = [
-  "mood_sad_sunglasses",
-  "mood_stress_sunglasses",
-  "mood_okay_sunglasses",
-  "mood_happy_sunglasses",
-  "mood_calm_sunglasses",
-  "mood_anxious_sunglasses",
-  "mood_angry_sunglasses",
+  { id: "0_sunglasses", title: "happy", src: "mood_happy_sunglasses" },
+  { id: "1_sunglasses", title: "okay", src: "mood_okay_sunglasses" },
+  { id: "2_sunglasses", title: "calm", src: "mood_calm_sunglasses" },
+  { id: "3_sunglasses", title: "sad", src: "mood_sad_sunglasses" },
+  { id: "4_sunglasses", title: "stressed", src: "mood_stressed_sunglasses" },
+  { id: "5_sunglasses", title: "angry", src: "mood_angry_sunglasses" },
+  { id: "6_sunglasses", title: "anxious", src: "mood_anxious_sunglasses" },
 ];
 
 const FlatListMoods = ({ navigation, route }) => {
+  const Item = ({ image, mood }) => {
+    return (
+      <TouchableOpacity
+        style={{
+          marginTop: 10,
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+        onPress={() => console.log("Handler activated")}
+      >
+        <Image style={styles.imageStyle} source={image} />
+        <Text>{mood}</Text>
+      </TouchableOpacity>
+    );
+  };
+
+  const renderItem = ({ item }) => {
+    return <Item image={icons[item.src]} mood={item.title} />;
+  };
+
   return (
     <SafeAreaView style={styles.container}>
-      <Text>Select Mood</Text>
+      <Text>Select moods</Text>
+      <FlatList
+        ListHeaderComponent={<Text>Sunglasses Series</Text>}
+        contentContainerStyle={{
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+        data={possible_sunglasses}
+        numColumns={4}
+        renderItem={renderItem}
+        keyExtractor={(item) => item.id}
+      />
     </SafeAreaView>
   );
 };

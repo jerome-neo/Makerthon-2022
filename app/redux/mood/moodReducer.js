@@ -26,7 +26,7 @@ const moodReducer = (state = initialState, action) => {
       initialState.data = [
         ...initialState.data,
         {
-          moodIndex: payload.moodIndex + 1,
+          mood: action.payload.mood,
           col: item.col,
           row: item.row,
           day: itemDay,
@@ -50,7 +50,7 @@ const moodReducer = (state = initialState, action) => {
       // Check if there are any items within the state array that corresponds with the key of the item we are wanting to add
       tempState.forEach((item) => {
         if (item.key === action.payload.item.key) {
-          item.moodIndex = action.payload.moodIndex + 1;
+          item.mood = action.payload.mood;
         }
       });
       // Reassign initialState to tempState. Since this is a new object, a re-render is forced.

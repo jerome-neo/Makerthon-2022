@@ -8,7 +8,7 @@ const icons = {
   // moods, for selection
   mood_empty: require("./Moods/mood_empty.png"),
   mood_sad: require("./Moods/mood_sad.png"),
-  mood_stress: require("./Moods/mood_stressed.png"),
+  mood_stressed: require("./Moods/mood_stressed.png"),
   mood_okay: require("./Moods/mood_okay.png"),
   mood_happy: require("./Moods/mood_happy.png"),
   mood_calm: require("./Moods/mood_calm.png"),
@@ -33,7 +33,7 @@ const icons = {
 
   // the alternates!
   mood_sad_sunglasses: require("./Moods2/mood_sad_sunglasses.png"),
-  mood_stress_sunglasses: require("./Moods2/mood_stressed_sunglasses.png"),
+  mood_stressed_sunglasses: require("./Moods2/mood_stressed_sunglasses.png"),
   mood_okay_sunglasses: require("./Moods2/mood_okay_sunglasses.png"),
   mood_happy_sunglasses: require("./Moods2/mood_happy_sunglasses.png"),
   mood_calm_sunglasses: require("./Moods2/mood_calm_sunglasses.png"),

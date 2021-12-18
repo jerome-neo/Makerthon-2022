@@ -5,94 +5,111 @@ import {
   Text,
   SafeAreaView,
   Image,
+  FlatList,
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { ADD_MOOD, MODIFY_MOOD } from "../../redux/mood/moodReducer"; // action takes place here, so import
 
 const icons = require("../../icons/icons.js");
 const possible = [
-  "mood_happy",
-  "mood_okay",
-  "mood_calm",
-  "mood_sad",
-  "mood_stress",
-  "mood_angry",
-  "mood_anxious",
+  { id: "0", title: "happy", src: "mood_happy" },
+  { id: "1", title: "okay", src: "mood_okay" },
+  { id: "2", title: "calm", src: "mood_calm" },
+  { id: "3", title: "sad", src: "mood_sad" },
+  { id: "4", title: "stressed", src: "mood_stressed" },
+  { id: "5", title: "angry", src: "mood_angry" },
+  { id: "6", title: "anxious", src: "mood_anxious" },
 ];
 
 const possible_sunglasses = [
-  "mood_sad_sunglasses",
-  "mood_stress_sunglasses",
-  "mood_okay_sunglasses",
-  "mood_happy_sunglasses",
-  "mood_calm_sunglasses",
-  "mood_anxious_sunglasses",
-  "mood_angry_sunglasses",
+  { id: "0_sunglasses", title: "happy", src: "mood_happy_sunglasses" },
+  { id: "1_sunglasses", title: "okay", src: "mood_okay_sunglasses" },
+  { id: "2_sunglasses", title: "calm", src: "mood_calm_sunglasses" },
+  { id: "3_sunglasses", title: "sad", src: "mood_sad_sunglasses" },
+  { id: "4_sunglasses", title: "stressed", src: "mood_stressed_sunglasses" },
+  { id: "5_sunglasses", title: "angry", src: "mood_angry_sunglasses" },
+  { id: "6_sunglasses", title: "anxious", src: "mood_anxious_sunglasses" },
 ];
 
 const MoodSelector = ({ navigation, route }) => {
   const { item } = route.params;
   const addedMoods = useSelector((state) => state.data); // get the array of added moods, aka our state array
   const dispatch = useDispatch();
-  // dispatching the action, which is to add a mood to our state array
-  // we pass down the entire item so we ensure that we'll always have all properties of the object
-  const addMoods = (moodIndex) =>
+
+  // Actions. Item to be passed down to Reducer. actualMood is "src".
+  const addMoods = (mood) =>
     dispatch({
       type: ADD_MOOD,
-      payload: { moodIndex: moodIndex, item: item },
+      payload: { mood: mood, item: item },
     });
-  const modifyMoods = (moodIndex) => {
+  const modifyMoods = (mood) => {
     dispatch({
       type: MODIFY_MOOD,
-      payload: { moodIndex: moodIndex, item: item },
+      payload: { mood: mood, item: item },
     });
   };
+
+  // Flatlist stuff
+  const Item = ({ imageSrc, moodName, moodSrc }) => {
+    return (
+      <TouchableOpacity
+        style={{
+          marginTop: 10,
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+        onPress={() => {
+          // if the key already exists, it means we are modifying a mood instead of adding
+          console.log(moodSrc);
+          addedMoods.some((x) => x.key === item.key)
+            ? modifyMoods(moodSrc)
+            : addMoods(moodSrc);
+          navigation.goBack();
+        }}
+      >
+        <Image style={styles.imageStyle} source={imageSrc} />
+        <Text>{moodName}</Text>
+      </TouchableOpacity>
+    );
+  };
+
+  const renderItem = ({ item }) => {
+    return (
+      <Item
+        imageSrc={icons[item.src]}
+        moodName={item.title}
+        moodSrc={item.src}
+      />
+    );
+  };
+
   return (
     <SafeAreaView style={styles.container}>
-      <Text>Select Mood</Text>
-      <SafeAreaView style={styles.moodSplit}>
-        <SafeAreaView style={styles.moodStyle}>
-          {possible.map((moods, index) => {
-            if (index < 4) {
-              return (
-                <SafeAreaView style={{ flexDirection: "row" }}>
-                  <TouchableOpacity
-                    key={moods}
-                    onPress={() => {
-                      // console.log(addedMoods)
-                      addedMoods.some((x) => x.key === item.key)
-                        ? modifyMoods(index)
-                        : addMoods(index);
-                      navigation.goBack();
-                    }}
-                  >
-                    <Image style={styles.imageStyle} source={icons[moods]} />
-                  </TouchableOpacity>
-                </SafeAreaView>
-              );
-            }
-          })}
-        </SafeAreaView>
-        <SafeAreaView style={styles.moodStyle}>
-          {possible.map((moods, index) => {
-            if (index >= 4) {
-              return (
-                <TouchableOpacity
-                  key={moods}
-                  onPress={() => {
-                    addedMoods.some((x) => x.key === item.key)
-                      ? modifyMoods(index)
-                      : addMoods(index);
-                    navigation.goBack();
-                  }}
-                >
-                  <Image style={styles.imageStyle} source={icons[moods]} />
-                </TouchableOpacity>
-              );
-            }
-          })}
-        </SafeAreaView>
-      </SafeAreaView>
+      <Text>Select moods</Text>
+      <FlatList
+        ListHeaderComponent={<Text>Normal Series</Text>}
+        contentContainerStyle={{
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+        data={possible}
+        numColumns={4}
+        renderItem={renderItem}
+        keyExtractor={(item) => item.id}
+      />
+      <FlatList
+        ListHeaderComponent={<Text>Sunglasses Series</Text>}
+        contentContainerStyle={{
+          flex: 1,
+          // justifyContent: "center",
+          alignItems: "center",
+        }}
+        data={possible_sunglasses}
+        numColumns={4}
+        renderItem={renderItem}
+        keyExtractor={(item) => item.id}
+      />
     </SafeAreaView>
   );
 };

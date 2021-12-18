@@ -168,7 +168,7 @@ const Mood = ({ navigation }) => {
             day: counter++,
             month: month,
             year: year,
-            img: possible[0],
+            img: "mood_empty",
             dayString: weekDays[col].day,
             key: weekDays[col].day + "-" + counter + "-" + month + "-" + year,
           };
@@ -181,7 +181,7 @@ const Mood = ({ navigation }) => {
             day: counter++,
             month: month,
             year: year,
-            img: possible[0],
+            img: "mood_empty",
             dayString: weekDays[col].day,
             key: weekDays[col].day + "-" + counter + "-" + month + "-" + year,
           };
@@ -201,16 +201,15 @@ const Mood = ({ navigation }) => {
     moods.forEach((moodObject) => {
       const row = moodObject.row;
       const col = moodObject.col;
-      const moodIndex = moodObject.moodIndex;
+      const mood = moodObject.mood;
       const month = moodObject.month;
-      const mood = moodObject.moodIndex;
       if (mood >= 4) {
         moodyDays++;
       } else {
         moodyDays = 0;
       }
       if (matrix[row][col].month === month) {
-        matrix[row][col].img = possible[moodIndex];
+        matrix[row][col].img = mood; // now a string
       }
     });
   };
