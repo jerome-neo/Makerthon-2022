@@ -545,9 +545,6 @@ const FormDetails = ({ navigation }) => {
   // 1) Send an email
   // 2) Navigate to home screen (dashboard)
   const handleSubmit = (action) => {
-    if (!handlePickerConfirm(apptDate, time, item)) {
-      return;
-    }
     // Student number is only 9 characters long
     const checkStudentNumber = () => {
       if (details[1].length !== 9) {
@@ -588,11 +585,15 @@ const FormDetails = ({ navigation }) => {
       );
     } else if (!isMailOK) {
       Alert.alert("Wrong format", "Check your email");
+      return;
     } else if (!isNumberOK) {
       Alert.alert("Wrong format", "Please check your student number");
+      return;
     } else if (!isNameOK) {
       Alert.alert("Empty name", "Please fill in your name");
+      return;
     }
+    handlePickerConfirm(apptDate, time, item);
   };
 
   const declineHandler = (submit) => {
@@ -721,12 +722,7 @@ const FormDetails = ({ navigation }) => {
                 // easily cancel the sending via their own email app. But, we'll assume that this will not happen since they have already pressed "submit".
 
                 // email sending
-                sendEmail(
-                  "98lawweijie@gmail.com",
-                  "Test subject",
-                  `name: ${details[0]}\nstudent no: ${details[1]}\nemail: ${details[2]}\nappointment details: ${apptDate}, ${time}`,
-                  ""
-                );
+                console.log("Email sent");
                 // return back to dashboard
                 navigation.navigate("Dashboard");
               })
