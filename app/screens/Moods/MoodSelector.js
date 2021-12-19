@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import {
   TouchableOpacity,
   StyleSheet,
@@ -8,12 +8,15 @@ import {
   FlatList,
   Button,
   Alert,
+  Picker,
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { ADD_MOOD, MODIFY_MOOD } from "../../redux/mood/moodReducer"; // action takes place here, so import
+import contentContext from "../../contexts/contentContext";
 
 const icons = require("../../icons/icons.js");
-const possible = [
+
+const normal = [
   { id: "0", title: "happy", src: "mood_happy" },
   { id: "1", title: "okay", src: "mood_okay" },
   { id: "2", title: "calm", src: "mood_calm" },
@@ -23,7 +26,7 @@ const possible = [
   { id: "6", title: "anxious", src: "mood_anxious" },
 ];
 
-const possible_sunglasses = [
+const sunglasses = [
   { id: "0_sunglasses", title: "happy", src: "mood_happy_sunglasses" },
   { id: "1_sunglasses", title: "okay", src: "mood_okay_sunglasses" },
   { id: "2_sunglasses", title: "calm", src: "mood_calm_sunglasses" },
@@ -33,34 +36,69 @@ const possible_sunglasses = [
   { id: "6_sunglasses", title: "anxious", src: "mood_anxious_sunglasses" },
 ];
 
+const possible_themes = {
+  normal: normal,
+  sunglasses: sunglasses,
+};
+
+const all_content = ["normal", "sunglasses"];
+
 const MoodSelector = ({ navigation, route }) => {
+  const { content, setContent } = useContext(contentContext);
+  const [selectedValue, setSelectedValue] = useState(content[0]);
   const { item } = route.params;
   const addedMoods = useSelector((state) => state.data); // get the array of added moods, aka our state array
-  // just store the accessible, additional icons as an array, and just read from the array if we want to check if user has access to it
-  const [accessible, setAccessible] = useState([]);
+  // just store the content, additional icons as an array, and just read from the array if we want to check if user has access to it
+
   const dispatch = useDispatch();
   // Actions. Item to be passed down to Reducer. actualMood is "src".
-  const addMoods = (mood) =>
+
+  // console.log(theme);
+
+  const addMoods = (mood, moodValue) =>
     dispatch({
       type: ADD_MOOD,
-      payload: { mood: mood, item: item },
+      payload: { mood: mood, moodValue: moodValue, item: item },
     });
-  const modifyMoods = (mood) => {
+  const modifyMoods = (mood, moodValue) => {
     dispatch({
       type: MODIFY_MOOD,
-      payload: { mood: mood, item: item },
+      payload: { mood: mood, moodValue: moodValue, item: item },
     });
   };
 
-  console.log(item);
+  console.log(content);
   // Flatlist stuff
   const Item = ({ imageSrc, moodName, moodSrc }) => {
     const _onPress = () => {
       // if the key already exists, it means we are modifying a mood instead of adding
-      console.log(moodSrc);
+      let moodValue = 0;
+      switch (moodName) {
+        case "happy":
+          moodValue = 1;
+          break;
+        case "okay":
+          moodValue = 2;
+          break;
+        case "calm":
+          moodValue = 3;
+          break;
+        case "sad":
+          moodValue = 4;
+          break;
+        case "stressed":
+          moodValue = 5;
+          break;
+        case "angry":
+          moodValue = 6;
+          break;
+        case "anxious":
+          moodValue = 7;
+          break;
+      }
       addedMoods.some((x) => x.key === item.key)
-        ? modifyMoods(moodSrc)
-        : addMoods(moodSrc);
+        ? modifyMoods(moodSrc, moodValue)
+        : addMoods(moodSrc, moodValue);
       navigation.goBack();
     };
 
@@ -119,35 +157,59 @@ const MoodSelector = ({ navigation, route }) => {
     );
   };
 
+  const renderPicker = all_content.map((item) => {
+    return <Picker.Item value={item} label={item} />;
+  });
+
+  console.log(selectedValue);
+  let theme = "";
+  switch (selectedValue) {
+    case "normal":
+      theme = possible_themes.normal;
+      break;
+    case "sunglasses":
+      theme = possible_themes.sunglasses;
+      break;
+    default:
+      theme = possible_themes.normal;
+      break;
+  }
+  console.log(content.some((x) => x === selectedValue));
   return (
     <SafeAreaView style={styles.container}>
+      <SafeAreaView
+        style={{
+          marginTop: 10,
+          backgroundColor: "white",
+        }}
+      >
+        <Picker
+          style={{ height: 25, width: 150, alignItems: "center" }}
+          selectedValue={selectedValue}
+          onValueChange={(itemValue, itemIndex) => setSelectedValue(itemValue)}
+        >
+          {renderPicker}
+        </Picker>
+      </SafeAreaView>
       <Text>Select moods</Text>
       <FlatList
-        ListHeaderComponent={<Text>Normal Series</Text>}
         contentContainerStyle={{
           flex: 1,
           justifyContent: "center",
           alignItems: "center",
         }}
-        data={possible}
-        numColumns={4}
-        renderItem={renderItem}
-        keyExtractor={(item) => item.id}
-      />
-
-      <FlatList
-        ListHeaderComponent={<Text>Sunglasses Series</Text>}
-        contentContainerStyle={{
-          flex: 1,
-          // justifyContent: "center",
-          alignItems: "center",
-        }}
-        data={possible_sunglasses}
+        data={theme}
         numColumns={4}
         renderItem={
-          accessible.some((x) => "sunglasses") ? renderItem : renderLockedItem // if user has access, then render the unlocked item. else, render a locked one.
+          content.some((x) => x === selectedValue)
+            ? renderItem
+            : renderLockedItem
         }
         keyExtractor={(item) => item.id}
+      />
+      <Button
+        title="Unlock"
+        onPress={() => setContent([...content, "sunglasses"])}
       />
     </SafeAreaView>
   );

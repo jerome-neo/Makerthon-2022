@@ -26,7 +26,9 @@ import { PersistGate } from "redux-persist/integration/react";
 import { store, persistor } from "./redux/mood/store";
 
 // local imports
-import dailyContext from "./dailyContext";
+import dailyContext from "./contexts/dailyContext";
+import contentContext from "./contexts/contentContext";
+
 import {
   About,
   Dashboard,
@@ -110,21 +112,53 @@ const TestingStack = () => {
   );
 };
 
+const CONTENT_KEY = "@content_key";
 // contains the mood stuff
 const SubMoodStack = () => {
+  const [content, setContent] = useState(["normal"]);
+
+  const saveContent = async () => {
+    try {
+      await AsyncStorage.setItem(CONTENT_KEY, JSON.stringify(content));
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const readContent = async () => {
+    try {
+      const res = await AsyncStorage.getItem(CONTENT_KEY);
+      if (res !== null) {
+        setContent(JSON.parse(res));
+      }
+    } catch (e) {
+      console.log("Error caught: " + e);
+    }
+  };
+
+  useEffect(() => {
+    readContent();
+  }, []);
+
+  useEffect(() => {
+    saveContent();
+  }, [content]);
+
   return (
-    <Stack.Navigator>
-      <Stack.Screen
-        component={Mood}
-        name="Mood"
-        options={{ title: "Mood Journal" }}
-      />
-      <Stack.Screen
-        component={MoodSelector}
-        name="MoodSelector"
-        options={{ title: "Select mood" }}
-      />
-    </Stack.Navigator>
+    <contentContext.Provider value={{ content, setContent }}>
+      <Stack.Navigator>
+        <Stack.Screen
+          component={Mood}
+          name="Mood"
+          options={{ title: "Mood Journal" }}
+        />
+        <Stack.Screen
+          component={MoodSelector}
+          name="MoodSelector"
+          options={{ title: "Select mood" }}
+        />
+      </Stack.Navigator>
+    </contentContext.Provider>
   );
 };
 

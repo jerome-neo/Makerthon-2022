@@ -1,5 +1,5 @@
 // Testing for the mood calendar
-import dailyContext from "../../dailyContext";
+import dailyContext from "../../contexts/dailyContext";
 import React, { useState, useEffect, useContext } from "react";
 import { useSelector } from "react-redux";
 import {
@@ -14,7 +14,6 @@ import {
 } from "react-native";
 import * as dateFn from "date-fns";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import useStateWithCallback from "use-state-with-callback";
 
 // need this so easy handling of icons
 const icons = require("../../icons/icons.js");
@@ -206,7 +205,8 @@ const Mood = ({ navigation, route, props }) => {
       const col = moodObject.col;
       const mood = moodObject.mood;
       const month = moodObject.month;
-      if (mood >= 4) {
+      const moodValue = moodObject.moodValue;
+      if (moodValue >= 4) {
         moodyDays++;
       } else {
         moodyDays = 0;
@@ -216,6 +216,8 @@ const Mood = ({ navigation, route, props }) => {
       }
     });
   };
+
+  console.log(moodyDays);
 
   // update matrix before each re-render
   updateMatrix(addedMoods, matrix);
@@ -389,7 +391,7 @@ const Mood = ({ navigation, route, props }) => {
     setPersistentItem(retrieveItem());
     x++;
   }
-  console.log(persistentItem);
+  // console.log(persistentItem);
 
   const { done, setDone } = useContext(dailyContext);
   const todayItem = retrieveItem();
@@ -414,7 +416,7 @@ const Mood = ({ navigation, route, props }) => {
   const handleRetrieval = () => {
     const year_difference = todayDate.getFullYear() - date.getFullYear();
     const month_difference = todayDate.getMonth() - date.getMonth();
-    console.log("year: " + year_difference + ", month: " + month_difference);
+    // console.log("year: " + year_difference + ", month: " + month_difference);
     if (month_difference === 0 && year_difference === 0) {
       navigation.navigate("MoodSelector", { item: retrieveItem() });
     } else {

@@ -3,7 +3,7 @@ import { createContext } from "react";
 
 const dailyContext = createContext({
   done: false,
-  setDone: (d) => {},
+  setDone: (d) => [],
 });
 
 export default dailyContext;
