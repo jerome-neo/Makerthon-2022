@@ -714,13 +714,9 @@ const FormDetails = ({ navigation }) => {
             title="Submit"
             onPress={() =>
               handleSubmit(() => {
-                // Do the email sending here.
-                // What I'm expecting is that, we'll send an email from the server-side to UCS, with the student's details.
-                // Only security concern here is that, since we're sending from our server side and not the student's personal email, it is easy for
                 // a malicious actor that's monitoring our server's traffic to intercept potentially every single student's email's being sent.
-                // The upside is that, doing it from server-side ensures that the emails get sent through. If it were from the students' side, they could
-                // easily cancel the sending via their own email app. But, we'll assume that this will not happen since they have already pressed "submit".
-
+                // Will actually need to implement email sender.
+                // Firebase Cloud + Gmail + Nodemailer should be sufficient, but need to find out how to do it.
                 // email sending
                 console.log("Email sent");
                 // return back to dashboard
