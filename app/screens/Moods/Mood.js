@@ -46,8 +46,8 @@ const Mood = ({ navigation, route, props }) => {
   const [persistentItem, setPersistentItem] = useState("");
 
   // addedMoods stores all the moods that have been added
-  const state = useSelector((state) => state);
-  const addedMoods = state.data;
+  const user_state = useSelector((state) => state);
+  const addedMoods = user_state.data;
 
   useEffect(() => {
     readPromptedDays();

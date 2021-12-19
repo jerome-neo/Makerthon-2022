@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import {
   TouchableOpacity,
   StyleSheet,
@@ -11,8 +11,13 @@ import {
   Picker,
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-import { ADD_MOOD, MODIFY_MOOD } from "../../redux/mood/moodReducer"; // action takes place here, so import
+import {
+  ADD_MOOD,
+  MODIFY_MOOD,
+  SPEND_POINTS,
+} from "../../redux/mood/moodReducer"; // action takes place here, so import
 import contentContext from "../../contexts/contentContext";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const icons = require("../../icons/icons.js");
 
@@ -37,24 +42,75 @@ const sunglasses = [
 ];
 
 const possible_themes = {
-  normal: normal,
-  sunglasses: sunglasses,
+  normal: {
+    theme: normal,
+    cost: 0,
+  },
+  sunglasses: {
+    theme: sunglasses,
+    cost: 10,
+  },
+};
+
+const customAlert = (title, msg, accept, decline) => {
+  Alert.alert(title, msg, [
+    {
+      text: "No",
+      onPress: decline,
+      style: "cancel",
+    },
+    {
+      text: "Yes!",
+      onPress: accept,
+      style: "default",
+    },
+  ]);
 };
 
 const all_content = ["normal", "sunglasses"];
 
+const SELECTION_KEY = "@selection_key";
 const MoodSelector = ({ navigation, route }) => {
   const { content, setContent } = useContext(contentContext);
-  const [selectedValue, setSelectedValue] = useState(content[0]);
+  const [selectedValue, setSelectedValue] = useState("normal"); // default state.
   const { item } = route.params;
-  const addedMoods = useSelector((state) => state.data); // get the array of added moods, aka our state array
+  const user_state = useSelector((state) => state);
+  const addedMoods = user_state.data; // get the array of added moods, aka our state array
+  const logPoints = user_state.logPoints;
   // just store the content, additional icons as an array, and just read from the array if we want to check if user has access to it
 
   const dispatch = useDispatch();
-  // Actions. Item to be passed down to Reducer. actualMood is "src".
+
+  // AsyncStorage to remember the last selected series. For better UX, so user does not need to constantly choose a series that is not default.
+  const storeSelected = async () => {
+    try {
+      await AsyncStorage.setItem(SELECTION_KEY, JSON.stringify(selectedValue));
+    } catch (e) {
+      console.log("Store selected failed: " + e);
+    }
+  };
+
+  const readSelected = async () => {
+    try {
+      const res = await AsyncStorage.getItem(SELECTION_KEY);
+      if (res !== null) {
+        setSelectedValue(JSON.parse(res));
+      }
+    } catch (e) {
+      console.log("Read selected failed: " + e);
+    }
+  };
+
+  useEffect(() => {
+    readSelected();
+  }, []);
+
+  useEffect(() => {
+    storeSelected();
+  }, [selectedValue]);
 
   // console.log(theme);
-
+  // Actions. Item to be passed down to Reducer. actualMood is "src".
   const addMoods = (mood, moodValue) =>
     dispatch({
       type: ADD_MOOD,
@@ -67,9 +123,17 @@ const MoodSelector = ({ navigation, route }) => {
     });
   };
 
-  console.log(content);
+  const spendPoints = (pointsToSpend, seriesName) => {
+    dispatch({
+      type: SPEND_POINTS,
+      payload: { pointsToSpend: pointsToSpend, seriesName: seriesName },
+    });
+  };
+
+  // console.log(content);
   // Flatlist stuff
   const Item = ({ imageSrc, moodName, moodSrc }) => {
+    // Logic for what to do when a mood is selected
     const _onPress = () => {
       // if the key already exists, it means we are modifying a mood instead of adding
       let moodValue = 0;
@@ -117,9 +181,27 @@ const MoodSelector = ({ navigation, route }) => {
     );
   };
 
+  const unlockTheme = (themeObject) => {
+    if (logPoints >= themeObject.cost) {
+      spendPoints(themeObject.cost, selectedValue);
+      setContent([...content, selectedValue]);
+    } else {
+      console.log(themeObject);
+      Alert.alert(
+        "Insufficient points",
+        "You do not have enough points to unlock this series yet. Track your mood daily to earn points!"
+      );
+    }
+  };
+
   const LockedItem = ({ imageSrc, moodName }) => {
     const _onPress = () => {
-      Alert.alert("Sorry!", "You do not have access to these yet");
+      customAlert(
+        "Sorry!",
+        `You do not have access to the ${selectedValue} series yet. Would you like to unlock it for ${themeObject.cost} points?`,
+        () => unlockTheme(themeObject), // logic on accept. In the form of () => ....
+        () => console.log("User declined") // logic on decline. In the form of () => ... || For this purpose, we can just do nothing if user does not want to unlock it.
+      );
     };
 
     return (
@@ -161,20 +243,25 @@ const MoodSelector = ({ navigation, route }) => {
     return <Picker.Item value={item} label={item} />;
   });
 
-  console.log(selectedValue);
-  let theme = "";
+  let themeObject = "";
+  // if
   switch (selectedValue) {
     case "normal":
-      theme = possible_themes.normal;
+      themeObject = possible_themes.normal;
       break;
     case "sunglasses":
-      theme = possible_themes.sunglasses;
+      themeObject = possible_themes.sunglasses;
       break;
     default:
-      theme = possible_themes.normal;
+      themeObject = possible_themes.normal;
       break;
   }
-  console.log(content.some((x) => x === selectedValue));
+  if (content.some((x) => x === selectedValue)) {
+    console.log("User has access to " + selectedValue);
+  } else {
+    console.log("User does not have access to " + selectedValue);
+  }
+
   return (
     <SafeAreaView style={styles.container}>
       <SafeAreaView
@@ -198,7 +285,7 @@ const MoodSelector = ({ navigation, route }) => {
           justifyContent: "center",
           alignItems: "center",
         }}
-        data={theme}
+        data={themeObject.theme}
         numColumns={4}
         renderItem={
           content.some((x) => x === selectedValue)

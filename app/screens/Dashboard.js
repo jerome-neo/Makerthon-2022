@@ -26,9 +26,11 @@ const clearAll = async () => {
 
 // navigation may be used later so we keep it here for now.
 const Dashboard = ({ navigation }) => {
-  const moodState = useSelector((state) => state);
-  const moodsData = moodState.data;
-  const logPoints = moodState.logPoints;
+  // Note that if we want to update anything related to the state, we have to directly call user_state.(dataType) = ....
+  const user_state = useSelector((state) => state);
+  const moodsData = user_state.data;
+  const logPoints = user_state.logPoints;
+
   return (
     <SafeAreaView>
       <ImageBackground source={image} style={styles.image}>
@@ -41,14 +43,7 @@ const Dashboard = ({ navigation }) => {
           <Text style={styles.text}>Dashboard Screen</Text>
           <Button
             title="Show data on console"
-            onPress={() => console.log(moodState)}
-          />
-          <Button
-            title="Increase Log Points"
-            onPress={() => {
-              moodState.logPoints += 10;
-              console.log(moodState.logPoints);
-            }}
+            onPress={() => console.log(user_state)}
           />
           <Button title="Clear whole AsyncStorage" onPress={() => clearAll()} />
         </SafeAreaView>

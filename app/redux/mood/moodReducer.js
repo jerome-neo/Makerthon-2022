@@ -1,13 +1,15 @@
 import { REHYDRATE } from "redux-persist/es/constants";
 import * as dateFn from "date-fns";
+import { Alert } from "react-native";
 
 // the actions, remember to "export", then import in the place where action is taking place!
 export const ADD_MOOD = "ADD_MOOD";
 export const MODIFY_MOOD = "MODIFY_MOOD";
+export const SPEND_POINTS = "SPEND_POINTS";
 // the state represents the moods that have been selected
 let initialState = {
   data: [],
-  logPoints: 0,
+  logPoints: 10, // change to 0 after progress update.
 };
 
 const currentDate = new Date();
@@ -49,6 +51,7 @@ const moodReducer = (state = initialState, action) => {
       // create new array with initialState. Necessary so that it will cause a re-render
       const tempState = [...initialState.data];
       // Check if there are any items within the state array that corresponds with the key of the item we are wanting to add
+      // then find that item and modify its state
       tempState.forEach((item) => {
         if (item.key === action.payload.item.key) {
           item.mood = action.payload.mood;
@@ -58,7 +61,15 @@ const moodReducer = (state = initialState, action) => {
       // Reassign initialState to tempState. Since this is a new object, a re-render is forced.
       initialState.data = tempState;
       return { ...initialState, MODIFY_MOOD: action.payload };
-    // then find that item and modify its state
+    case SPEND_POINTS:
+      console.log("Spending points");
+      console.log(initialState.logPoints);
+      initialState.logPoints -= action.payload.pointsToSpend;
+      Alert.alert(
+        "Success",
+        `You have unlocked the ${action.payload.seriesName} series!`
+      );
+      return { ...initialState, SPEND_POINTS: action.payload };
     case REHYDRATE:
       // some error handling, for initial startup where there's no payload
       if (action.payload === undefined) {
