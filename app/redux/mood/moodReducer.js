@@ -27,6 +27,7 @@ const moodReducer = (state = initialState, action) => {
         ...initialState.data,
         {
           mood: action.payload.mood,
+          moodValue: action.payload.moodValue, // unique value assigned to each mood. Can help in making data processing easier as well
           col: item.col,
           row: item.row,
           day: itemDay,
@@ -51,6 +52,7 @@ const moodReducer = (state = initialState, action) => {
       tempState.forEach((item) => {
         if (item.key === action.payload.item.key) {
           item.mood = action.payload.mood;
+          item.moodValue = action.payload.moodValue;
         }
       });
       // Reassign initialState to tempState. Since this is a new object, a re-render is forced.

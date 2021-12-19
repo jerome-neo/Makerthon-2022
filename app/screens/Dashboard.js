@@ -43,6 +43,13 @@ const Dashboard = ({ navigation }) => {
             title="Show data on console"
             onPress={() => console.log(moodState)}
           />
+          <Button
+            title="Increase Log Points"
+            onPress={() => {
+              moodState.logPoints += 10;
+              console.log(moodState.logPoints);
+            }}
+          />
           <Button title="Clear whole AsyncStorage" onPress={() => clearAll()} />
         </SafeAreaView>
       </ImageBackground>
