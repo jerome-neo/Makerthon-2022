@@ -714,7 +714,6 @@ const FormDetails = ({ navigation }) => {
             title="Submit"
             onPress={() =>
               handleSubmit(() => {
-                // a malicious actor that's monitoring our server's traffic to intercept potentially every single student's email's being sent.
                 // Will actually need to implement email sender.
                 // Firebase Cloud + Gmail + Nodemailer should be sufficient, but need to find out how to do it.
                 // email sending
