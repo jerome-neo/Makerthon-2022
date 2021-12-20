@@ -9,10 +9,21 @@ export const SPEND_POINTS = "SPEND_POINTS";
 // the state represents the moods that have been selected
 let initialState = {
   data: [],
-  logPoints: 10, // change to 0 after progress update.
+  logPoints: 20, // change to 0 after progress update.
 };
 
 const currentDate = new Date();
+
+const comp = (x, y) => {
+  if (x.year !== y.year) {
+    return x.year > y.year ? 1 : -1
+  } else if (x.month !== y.month) {
+    return x.month > y.month ? 1 : -1
+  } else {
+    return x.day > y.day ? 1 : -1
+  }
+}
+
 
 // reducers take in a state, and an action
 const moodReducer = (state = initialState, action) => {
@@ -42,7 +53,7 @@ const moodReducer = (state = initialState, action) => {
       if (itemDay === currDay && itemMonth === currMonth) {
         initialState.logPoints++; // if you log on that day itself, you get 1 point
       }
-
+      (initialState.data).sort(comp);
       // return the object to moodReducer
       return { ...initialState, ADD_MOOD: action.payload };
     // just return itself by default
@@ -58,6 +69,7 @@ const moodReducer = (state = initialState, action) => {
           item.moodValue = action.payload.moodValue;
         }
       });
+      tempState.sort(comp);
       // Reassign initialState to tempState. Since this is a new object, a re-render is forced.
       initialState.data = tempState;
       return { ...initialState, MODIFY_MOOD: action.payload };

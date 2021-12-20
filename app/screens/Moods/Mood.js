@@ -262,10 +262,6 @@ const Mood = ({ navigation, route, props }) => {
     }
   };
 
-  // force prompter to wait for fetched data from AsyncStorage
-  if (!loading) {
-    prompter();
-  }
 
   const manualPrompt = () => {
     customAlert(
@@ -405,6 +401,10 @@ const Mood = ({ navigation, route, props }) => {
         x++;
       }
       setDone(true);
+      // force prompter to wait for fetched data from AsyncStorage
+      setTimeout(() => {if (!loading && done) {
+        prompter();
+      }}, 2000)
     } else if (formatted === formattedCurr && todayItem.img === "mood_empty") {
       console.log("Mood for today not put in yet.");
       setDone(false);
@@ -469,8 +469,8 @@ const Mood = ({ navigation, route, props }) => {
         onPress={() => {
           console.log(state);
         }}
-      />
-      <Button
+      /> */}
+      {/* <Button
         title="Get added dates"
         onPress={() => console.log(promptedDays)}
       /> */}

@@ -43,6 +43,20 @@ const sunglasses = [
   { id: "6_sunglasses", title: "anxious", src: "mood_anxious_sunglasses" },
 ];
 
+const moustache = [
+  { id: "0_moustache", title: "happy", src: "mood_happy_moustache" },
+  { id: "1_moustache", title: "okay", src: "mood_okay_moustache" },
+  { id: "2_moustache", title: "calm", src: "mood_calm_moustache" },
+  { id: "3_moustache", title: "sad", src: "mood_sad_moustache" },
+  { id: "4_moustache", title: "stressed", src: "mood_stressed_moustache" },
+  { id: "5_moustache", title: "angry", src: "mood_angry_moustache" },
+  { id: "6_moustache", title: "anxious", src: "mood_anxious_moustache" },
+];
+
+// when adding themes, add to here (0) --> add array of objects
+
+
+// when adding themes, add to here (1)
 const possible_themes = {
   normal: {
     theme: normal,
@@ -50,6 +64,10 @@ const possible_themes = {
   },
   sunglasses: {
     theme: sunglasses,
+    cost: 10,
+  },
+  moustache: {
+    theme: moustache,
     cost: 10,
   },
 };
@@ -68,8 +86,8 @@ const customAlert = (title, msg, accept, decline) => {
     },
   ]);
 };
-
-const all_content = ["normal", "sunglasses"];
+// when adding themes, add to here (2)
+const all_content = ["normal", "sunglasses", "moustache"];
 
 const SELECTION_KEY = "@selection_key";
 const MoodSelector = ({ navigation, route }) => {
@@ -250,7 +268,7 @@ const MoodSelector = ({ navigation, route }) => {
   });
 
   let themeObject = "";
-  // if
+  // when adding themes, add to here (3)
   switch (selectedValue) {
     case "normal":
       themeObject = possible_themes.normal;
@@ -258,6 +276,9 @@ const MoodSelector = ({ navigation, route }) => {
     case "sunglasses":
       themeObject = possible_themes.sunglasses;
       break;
+    case "moustache":
+      themeObject = possible_themes.moustache;
+        break;
     default:
       themeObject = possible_themes.normal;
       break;
