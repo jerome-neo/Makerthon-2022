@@ -193,7 +193,7 @@ const Mood = ({ navigation, route, props }) => {
       const year = moodObject.year;
       const month = moodObject.month;
       const moodValue = moodObject.moodValue;
-      if (moodValue >= 4) {
+      if (month === todayDate.getMonth() && moodValue >= 4) {
         moodyDays++;
       } else {
         moodyDays = 0;
