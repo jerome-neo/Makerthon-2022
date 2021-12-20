@@ -45,7 +45,6 @@ const Mood = ({ navigation, route, props }) => {
   const [promptedDays, addPromptedDays] = useState([]);
   const [persistentItem, setPersistentItem] = useState("");
 
-
   // addedMoods stores all the moods that have been added
   const user_state = useSelector((state) => state);
   const addedMoods = user_state.data;
@@ -159,14 +158,7 @@ const Mood = ({ navigation, route, props }) => {
             year: year,
             img: "mood_empty",
             dayString: weekDays[col].day,
-            key:
-              weekDays[col].day +
-              "-" +
-              (counter - 1) +
-              "-" +
-              month +
-              "-" +
-              year,
+            key: (counter - 1) + "-" + month + "-" + year,
           };
         } else if (row > 1 && counter <= maxDays) {
           // Fill in rows only if the counter's not greater than
@@ -179,14 +171,7 @@ const Mood = ({ navigation, route, props }) => {
             year: year,
             img: "mood_empty",
             dayString: weekDays[col].day,
-            key:
-              weekDays[col].day +
-              "-" +
-              (counter - 1) +
-              "-" +
-              month +
-              "-" +
-              year,
+            key: counter - 1 + "-" + month + "-" + year,
           };
         }
       }
@@ -205,6 +190,7 @@ const Mood = ({ navigation, route, props }) => {
       const row = moodObject.row;
       const col = moodObject.col;
       const mood = moodObject.mood;
+      const year = moodObject.year;
       const month = moodObject.month;
       const moodValue = moodObject.moodValue;
       if (moodValue >= 4) {
@@ -212,7 +198,7 @@ const Mood = ({ navigation, route, props }) => {
       } else {
         moodyDays = 0;
       }
-      if (matrix[row][col].month === month) {
+      if (matrix[row][col].year === year && matrix[row][col].month === month) {
         matrix[row][col].img = mood; // now a string
       }
     });
@@ -234,7 +220,6 @@ const Mood = ({ navigation, route, props }) => {
   const acceptHandler = () => {
     navigation.navigate("Questionnaire");
   };
-
 
   // <-------------------------------- Prompt Handling Stuff --------------------------------->
   let shouldPrompt = moodyDays >= 5;
@@ -262,7 +247,6 @@ const Mood = ({ navigation, route, props }) => {
     }
   };
 
-
   const manualPrompt = () => {
     customAlert(
       "Important",
@@ -279,7 +263,10 @@ const Mood = ({ navigation, route, props }) => {
   // conditionally render the icons
   const _renderIcons = (item, rowIndex) => {
     if (item.day !== -1 && rowIndex !== 0) {
-      if (item.month < todayDate.getMonth())
+      if (
+        item.month < todayDate.getMonth() ||
+        item.year < todayDate.getFullYear()
+      )
         return (
           <Image style={{ width: 40, height: 50 }} source={icons[item.img]} />
         );
@@ -318,7 +305,8 @@ const Mood = ({ navigation, route, props }) => {
             rowIndex === 0 ||
             item.day === -1 ||
             (item.day > todayDate.getDate() &&
-              item.month == todayDate.getMonth())
+              item.month === todayDate.getMonth() &&
+              item.year === todayDate.getFullYear())
               ? console.log(todayDate.getDate())
               : navigation.navigate("MoodSelector", {
                   item: item,
@@ -332,11 +320,13 @@ const Mood = ({ navigation, route, props }) => {
               color: colIndex === 0 && rowIndex === 0 ? "#a00" : "#000",
             }}
           >
-            {rowIndex === 0 // if it row 0, which are the days
+            {rowIndex === 0 // if its row 0, which are the days
               ? item.day // render it
-              : item.day !== -1 && item.month < todayDate.getMonth() // if not, check if these conditions are met
-              ? item.day // render everything if it is a past month
-              : item.day <= todayDate.getDate() && item.day !== -1 // if it is current month, render only those that are before today, and before
+              : item.day !== -1 && item.year < todayDate.getFullYear() // if not, check if these conditions are met
+              ? item.day
+              : item.month < todayDate.getMonth() && item.day !== -1
+              ? item.day
+              : item.day <= todayDate.getDate() && item.day !== -1
               ? item.day
               : ""}
           </Text>
@@ -384,7 +374,7 @@ const Mood = ({ navigation, route, props }) => {
     x++;
   }
   // console.log("aaaaaaaa");
-  console.log("Item is: ")
+  console.log("Item is: ");
   console.log(persistentItem);
 
   const { done, setDone } = useContext(dailyContext);
@@ -402,9 +392,11 @@ const Mood = ({ navigation, route, props }) => {
       }
       setDone(true);
       // force prompter to wait for fetched data from AsyncStorage
-      setTimeout(() => {if (!loading && done) {
-        prompter();
-      }}, 2000)
+      setTimeout(() => {
+        if (!loading && done) {
+          prompter();
+        }
+      }, 2000);
     } else if (formatted === formattedCurr && todayItem.img === "mood_empty") {
       console.log("Mood for today not put in yet.");
       setDone(false);
