@@ -57,6 +57,9 @@ const moustache = [
 
 
 // when adding themes, add to here (1)
+// possible_themes is an object of objects
+// Each object is a possible theme that can be chosen
+// Each theme contains the theme name, and the cost to unlock
 const possible_themes = {
   normal: {
     theme: normal,
@@ -72,6 +75,11 @@ const possible_themes = {
   },
 };
 
+// when adding themes, add to here (2)
+// all_content is an array that contains the name of all possible themes.
+// This is used to render out the names within a Picker.
+const all_content = ["normal", "sunglasses", "moustache"];
+
 const customAlert = (title, msg, accept, decline) => {
   Alert.alert(title, msg, [
     {
@@ -86,8 +94,7 @@ const customAlert = (title, msg, accept, decline) => {
     },
   ]);
 };
-// when adding themes, add to here (2)
-const all_content = ["normal", "sunglasses", "moustache"];
+
 
 const SELECTION_KEY = "@selection_key";
 const MoodSelector = ({ navigation, route }) => {
@@ -155,11 +162,28 @@ const MoodSelector = ({ navigation, route }) => {
   };
 
   // console.log(content);
-  // Flatlist stuff
+
+  // The action to be taken when attempting to unlock a theme
+  // Themes can only be unlocked if the user has sufficient logPoints.
+  const unlockTheme = (themeObject) => {
+    if (logPoints >= themeObject.cost) {
+      spendPoints(themeObject.cost, selectedValue);
+      setContent([...content, selectedValue]);
+    } else {
+      console.log(themeObject);
+      Alert.alert(
+        "Insufficient points",
+        "You do not have enough points to unlock this series yet. Track your mood daily to earn points!"
+      );
+    }
+  };
+
+  // Logic for an unlocked theme.
   const Item = ({ imageSrc, moodName, moodSrc }) => {
     // Logic for what to do when a mood is selected
     const _onPress = () => {
-      // if the key already exists, it means we are modifying a mood instead of adding
+      // Determine the "value" based on the moodName
+      // moodValue is just an integer indicator to make things simpler for comparison.
       let moodValue = 0;
       switch (moodName) {
         case "happy":
@@ -184,6 +208,7 @@ const MoodSelector = ({ navigation, route }) => {
           moodValue = 7;
           break;
       }
+      // if the key already exists, it means we are modifying a mood instead of adding
       addedMoods.some((x) => x.key === item.key)
         ? modifyMoods(moodSrc, moodValue)
         : addMoods(moodSrc, moodValue);
@@ -205,19 +230,7 @@ const MoodSelector = ({ navigation, route }) => {
     );
   };
 
-  const unlockTheme = (themeObject) => {
-    if (logPoints >= themeObject.cost) {
-      spendPoints(themeObject.cost, selectedValue);
-      setContent([...content, selectedValue]);
-    } else {
-      console.log(themeObject);
-      Alert.alert(
-        "Insufficient points",
-        "You do not have enough points to unlock this series yet. Track your mood daily to earn points!"
-      );
-    }
-  };
-
+  // Logic for a locked theme
   const LockedItem = ({ imageSrc, moodName }) => {
     const _onPress = () => {
       customAlert(
@@ -243,6 +256,7 @@ const MoodSelector = ({ navigation, route }) => {
     );
   };
 
+  // The actual rendering of each item
   const renderItem = ({ item }) => {
     return (
       <Item
@@ -253,6 +267,7 @@ const MoodSelector = ({ navigation, route }) => {
     );
   };
 
+  // The actual rendering of each locked item
   const renderLockedItem = ({ item }) => {
     return (
       <LockedItem
@@ -263,12 +278,15 @@ const MoodSelector = ({ navigation, route }) => {
     );
   };
 
+  // Rendering the items within the picker. Picker is used to select the themes
   const renderPicker = all_content.map((item) => {
     return <Picker.Item value={item} label={item} />;
   });
 
-  let themeObject = "";
+
   // when adding themes, add to here (3)
+  // We have to retrieve the correct object from possible_themes, based on the selected theme.
+  let themeObject = "";
   switch (selectedValue) {
     case "normal":
       themeObject = possible_themes.normal;
@@ -300,7 +318,7 @@ const MoodSelector = ({ navigation, route }) => {
         <Picker
           style={{ height: 25, width: 150, alignItems: "center" }}
           selectedValue={selectedValue}
-          onValueChange={(itemValue, itemIndex) => setSelectedValue(itemValue)}
+          onValueChange={(itemValue) => setSelectedValue(itemValue)}
         >
           {renderPicker}
         </Picker>
@@ -313,7 +331,7 @@ const MoodSelector = ({ navigation, route }) => {
           alignItems: "center",
         }}
         data={themeObject.theme}
-        numColumns={4}
+        numColumns={4} // Render only 4 columns per row
         renderItem={
           content.some((x) => x === selectedValue)
             ? renderItem
