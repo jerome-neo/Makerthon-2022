@@ -43,8 +43,6 @@ import {
 } from "./screens";
 
 
-import { useIsFocused } from '@react-navigation/native';
-
 const icons = require("./icons/icons.js"); // use icons['name'] to get the icon!
 
 // Function that takes a route and returns a screen name
@@ -64,7 +62,6 @@ const setNameFromRouteName = (route) => {
 // we make all the Navigation Screens in App for easy referencing
 const Stack = createNativeStackNavigator();
 const BottomTabs = createBottomTabNavigator();
-const dailyReset = false; // change to redux state later on
 
 const MoodTestingStack = () => {
   return (
@@ -119,8 +116,6 @@ const CONTENT_KEY = "@content_key";
 // contains the mood stuff
 const SubMoodStack = () => {
   const [content, setContent] = useState(["normal"]);
-  const isFocused = useIsFocused();
-  console.log(isFocused);
 
   const saveContent = async () => {
     try {
@@ -229,7 +224,12 @@ const Bottoms = () => {
 
   if (loading) {
     // just a dummy. Set a loading screen so that nothing is rendered while fetching from AsyncStorage
-    return <SafeAreaView></SafeAreaView>;
+    // This step can take quite long depending on the user's device (I guess), so best to have a loading page.
+    return (
+    <SafeAreaView style={{flex: 1, height: '100%', width: '100%'}}>
+      <Image source={icons["loading_screen"]}></Image>
+    </SafeAreaView>
+    );
   } else {
     return (
       <Provider store={store}>
