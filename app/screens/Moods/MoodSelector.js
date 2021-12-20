@@ -19,6 +19,8 @@ import {
 import contentContext from "../../contexts/contentContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
+import { useIsFocused } from '@react-navigation/native';
+
 const icons = require("../../icons/icons.js");
 
 const normal = [
@@ -78,6 +80,10 @@ const MoodSelector = ({ navigation, route }) => {
   const addedMoods = user_state.data; // get the array of added moods, aka our state array
   const logPoints = user_state.logPoints;
   // just store the content, additional icons as an array, and just read from the array if we want to check if user has access to it
+  const isFocused = useIsFocused();
+  if (!isFocused) {
+    navigation.goBack();
+  }
 
   const dispatch = useDispatch();
 
@@ -293,10 +299,6 @@ const MoodSelector = ({ navigation, route }) => {
             : renderLockedItem
         }
         keyExtractor={(item) => item.id}
-      />
-      <Button
-        title="Unlock"
-        onPress={() => setContent([...content, "sunglasses"])}
       />
     </SafeAreaView>
   );

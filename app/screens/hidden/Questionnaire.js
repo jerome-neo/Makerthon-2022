@@ -175,7 +175,7 @@ const Questionnaire = ({ navigation }) => {
         style: "default",
       },
       {
-        text: "Clinical",
+        text: "UHC",
         onPress: () =>
           referToPsych(
             () => navigation.navigate("FormDetails"),

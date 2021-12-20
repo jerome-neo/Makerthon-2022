@@ -17,7 +17,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 // need this so easy handling of icons
 const icons = require("../../icons/icons.js");
-let x = 0;
+
 // custom alert
 const customAlert = (title, msg, accept, decline) => {
   Alert.alert(title, msg, [
@@ -35,7 +35,7 @@ const customAlert = (title, msg, accept, decline) => {
 };
 
 const todayDate = new Date(); // to be used for handling calendar back/front
-
+let x = 0;
 // AsyncStorage keys
 const PROMPT_KEY = "@prompt_key";
 // Main body
@@ -45,17 +45,18 @@ const Mood = ({ navigation, route, props }) => {
   const [promptedDays, addPromptedDays] = useState([]);
   const [persistentItem, setPersistentItem] = useState("");
 
+
   // addedMoods stores all the moods that have been added
   const user_state = useSelector((state) => state);
   const addedMoods = user_state.data;
-
+  // console.log(addedMoods);
   useEffect(() => {
     readPromptedDays();
   }, []);
 
   useEffect(() => {
     savePromptedDays();
-  }, [promptedDays]);
+  }, [promptedDays, persistentItem]);
 
   // <-------------------------------- AsyncStorage Stuff -------------------------------->
   const savePromptedDays = async () => {
@@ -234,13 +235,7 @@ const Mood = ({ navigation, route, props }) => {
     navigation.navigate("Questionnaire");
   };
 
-  // To check if we've been prompted
-  // console.log(
-  //   "Have we been prompted today?" +
-  //     promptedDays.some(
-  //       (someDate) => someDate === dateFn.lightFormat(todayDate, "yyyy-MM-dd")
-  //     )
-  // );
+
   // <-------------------------------- Prompt Handling Stuff --------------------------------->
   let shouldPrompt = moodyDays >= 5;
   // console.log(moodyDays);
@@ -318,7 +313,7 @@ const Mood = ({ navigation, route, props }) => {
             textAlign: "center",
             alignItems: "center",
             // Highlight header
-            backgroundColor: rowIndex === 0 ? "#ddd" : "#F8DE7E", // if days of week, grey bg
+            backgroundColor: rowIndex === 0 ? "#ddd" : "#FBF8D6", // if days of week, grey bg
             // Highlight Sundays
             // Highlight current date
             fontSize: 18,
@@ -388,10 +383,13 @@ const Mood = ({ navigation, route, props }) => {
   };
 
   if (x === 0) {
+    console.log("aa");
     setPersistentItem(retrieveItem());
     x++;
   }
-  // console.log(persistentItem);
+  // console.log("aaaaaaaa");
+  console.log("Item is: ")
+  console.log(persistentItem);
 
   const { done, setDone } = useContext(dailyContext);
   const todayItem = retrieveItem();
@@ -418,7 +416,7 @@ const Mood = ({ navigation, route, props }) => {
     const month_difference = todayDate.getMonth() - date.getMonth();
     // console.log("year: " + year_difference + ", month: " + month_difference);
     if (month_difference === 0 && year_difference === 0) {
-      navigation.navigate("MoodSelector", { item: retrieveItem() });
+      navigation.navigate("MoodSelector", { item: persistentItem });
     } else {
       changeMonth(12 * year_difference + month_difference);
       navigation.navigate("MoodSelector", {
@@ -482,7 +480,7 @@ const Mood = ({ navigation, route, props }) => {
 
 const styles = StyleSheet.create({
   moodCalendar: {
-    backgroundColor: "#F8DE7E",
+    backgroundColor: "#FBF8D6",
     flex: 1,
   },
 

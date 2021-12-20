@@ -42,6 +42,9 @@ import {
   FormDetails,
 } from "./screens";
 
+
+import { useIsFocused } from '@react-navigation/native';
+
 const icons = require("./icons/icons.js"); // use icons['name'] to get the icon!
 
 // Function that takes a route and returns a screen name
@@ -116,6 +119,8 @@ const CONTENT_KEY = "@content_key";
 // contains the mood stuff
 const SubMoodStack = () => {
   const [content, setContent] = useState(["normal"]);
+  const isFocused = useIsFocused();
+  console.log(isFocused);
 
   const saveContent = async () => {
     try {
@@ -150,12 +155,12 @@ const SubMoodStack = () => {
         <Stack.Screen
           component={Mood}
           name="Mood"
-          options={{ title: "Mood Journal" }}
+          options={{ title: "Mood Journal"}}
         />
         <Stack.Screen
           component={MoodSelector}
           name="MoodSelector"
-          options={{ title: "Select mood" }}
+          options={{ title: "Select mood"}}
         />
       </Stack.Navigator>
     </contentContext.Provider>
@@ -345,7 +350,6 @@ const screenStyles = {
 
   subMoodOptions: {
     title: "Mood Journal",
-    unmountOnBlur: true,
     headerShown: false,
     tabBarIcon: ({ size, focused, color }) => {
       if (focused) {
@@ -367,6 +371,7 @@ const screenStyles = {
   },
 
   dashboardOptions: {
+    unmountOnBlur: true,
     tabBarIcon: ({ size, focused, color }) => {
       if (focused) {
         return (
