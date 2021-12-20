@@ -9,6 +9,7 @@ import {
   Button,
   Alert,
   Picker,
+  ImageBackground,
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -19,7 +20,7 @@ import {
 import contentContext from "../../contexts/contentContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-import { useIsFocused } from '@react-navigation/native';
+import { useIsFocused } from "@react-navigation/native";
 
 const icons = require("../../icons/icons.js");
 
@@ -54,7 +55,6 @@ const moustache = [
 ];
 
 // when adding themes, add to here (0) --> add array of objects
-
 
 // when adding themes, add to here (1)
 // possible_themes is an object of objects
@@ -94,7 +94,6 @@ const customAlert = (title, msg, accept, decline) => {
     },
   ]);
 };
-
 
 const SELECTION_KEY = "@selection_key";
 const MoodSelector = ({ navigation, route }) => {
@@ -250,8 +249,13 @@ const MoodSelector = ({ navigation, route }) => {
         }}
         onPress={() => _onPress()}
       >
-        <Image style={styles.imageStyle} source={imageSrc} />
-        <Text>{moodName}</Text>
+        <ImageBackground style={styles.imageStyle} source={imageSrc}>
+          <Image
+            style={{ height: 62.5, width: 50, opacity: 0.8 }}
+            source={icons["lock"]}
+          />
+          <Text>{moodName}</Text>
+        </ImageBackground>
       </TouchableOpacity>
     );
   };
@@ -283,7 +287,6 @@ const MoodSelector = ({ navigation, route }) => {
     return <Picker.Item value={item} label={item} />;
   });
 
-
   // when adding themes, add to here (3)
   // We have to retrieve the correct object from possible_themes, based on the selected theme.
   let themeObject = "";
@@ -296,7 +299,7 @@ const MoodSelector = ({ navigation, route }) => {
       break;
     case "moustache":
       themeObject = possible_themes.moustache;
-        break;
+      break;
     default:
       themeObject = possible_themes.normal;
       break;
@@ -306,7 +309,6 @@ const MoodSelector = ({ navigation, route }) => {
   } else {
     console.log("User does not have access to " + selectedValue);
   }
-
   return (
     <SafeAreaView style={styles.container}>
       <SafeAreaView
@@ -323,13 +325,17 @@ const MoodSelector = ({ navigation, route }) => {
           {renderPicker}
         </Picker>
       </SafeAreaView>
-      <Text>Select moods</Text>
+      <SafeAreaView style={styles.headerView}>
+        <Text style={{ fontSize: 24, marginBottom: 10 }}>
+          Select your mood!
+        </Text>
+        <Image
+          style={styles.headerImageStyle}
+          source={icons[themeObject.theme[0].src]}
+        />
+      </SafeAreaView>
       <FlatList
-        contentContainerStyle={{
-          flex: 1,
-          justifyContent: "center",
-          alignItems: "center",
-        }}
+        contentContainerStyle={styles.flatListStyle}
         data={themeObject.theme}
         numColumns={4} // Render only 4 columns per row
         renderItem={
@@ -369,6 +375,25 @@ const styles = StyleSheet.create({
     width: 50,
     marginLeft: 10,
     marginRight: 10,
+  },
+
+  flatListStyle: {
+    flex: 1,
+    marginTop: 50,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+
+  headerView: {
+    position: "absolute",
+    top: 80,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+
+  headerImageStyle: {
+    height: 150,
+    width: 120,
   },
 });
 

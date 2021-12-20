@@ -6,8 +6,8 @@ const icons = {
   pic2: require("./pic2.png"),
   pic3: require("./pic3.png"),
   // background pic
-  BG_pic: require('./BG2.png'),
-  loading_pic: require('./loading_screen.png'),
+  BG_pic: require("./BG2.png"),
+  loading_pic: require("./loading_screen.png"),
   // moods, for selection
   mood_empty: require("./Moods/mood_empty.png"),
   mood_sad: require("./Moods/mood_sad.png"),
@@ -31,8 +31,11 @@ const icons = {
   dashboard_u: require("./dashboard_u.png"),
   // floating action button
   float_button: require("./float_button.png"),
+  // back-forth arrows for calendar
   arrow_L: require("./arrow_L.png"),
   arrow_R: require("./arrow_R.png"),
+  // lock
+  lock: require("./lock.png"),
 
   // the alternates!
   mood_sad_sunglasses: require("./Moods2/mood_sad_sunglasses.png"),

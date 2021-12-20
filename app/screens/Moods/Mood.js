@@ -158,7 +158,7 @@ const Mood = ({ navigation, route, props }) => {
             year: year,
             img: "mood_empty",
             dayString: weekDays[col].day,
-            key: (counter - 1) + "-" + month + "-" + year,
+            key: counter - 1 + "-" + month + "-" + year,
           };
         } else if (row > 1 && counter <= maxDays) {
           // Fill in rows only if the counter's not greater than
