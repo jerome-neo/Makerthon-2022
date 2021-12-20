@@ -12,7 +12,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 // Dashboard screen
 
 // image is just a placeholder for now
-const image = { uri: "https://reactjs.org/logo-og.png" };
+const icons = require("../icons/icons.js");
 const clearAll = async () => {
   try {
     await AsyncStorage.clear();
@@ -33,7 +33,7 @@ const Dashboard = ({ navigation }) => {
 
   return (
     <SafeAreaView>
-      <ImageBackground source={image} style={styles.image}>
+      <ImageBackground source={icons["BG_pic"]} style={styles.image}>
         <SafeAreaView
           style={{ alignItems: "center", justifyContent: "center", flex: 0.2 }}
         >
@@ -61,7 +61,7 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 24,
-    color: "white",
+    color: "black",
   },
   button: {
     // default button, change later?

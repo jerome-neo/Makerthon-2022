@@ -5,6 +5,9 @@ const icons = {
   pic1: require("./pic1.png"),
   pic2: require("./pic2.png"),
   pic3: require("./pic3.png"),
+  // background pic
+  BG_pic: require('./BG2.png'),
+  loading_pic: require('./loading_screen.png'),
   // moods, for selection
   mood_empty: require("./Moods/mood_empty.png"),
   mood_sad: require("./Moods/mood_sad.png"),
@@ -39,6 +42,14 @@ const icons = {
   mood_calm_sunglasses: require("./Moods2/mood_calm_sunglasses.png"),
   mood_anxious_sunglasses: require("./Moods2/mood_anxious_sunglasses.png"),
   mood_angry_sunglasses: require("./Moods2/mood_angry_sunglasses.png"),
+
+  mood_sad_moustache: require("./Moods3/mood_sad_moustache.png"),
+  mood_stressed_moustache: require("./Moods3/mood_stressed_moustache.png"),
+  mood_okay_moustache: require("./Moods3/mood_okay_moustache.png"),
+  mood_happy_moustache: require("./Moods3/mood_happy_moustache.png"),
+  mood_calm_moustache: require("./Moods3/mood_calm_moustache.png"),
+  mood_anxious_moustache: require("./Moods3/mood_anxious_moustache.png"),
+  mood_angry_moustache: require("./Moods3/mood_angry_moustache.png"),
 };
 
 module.exports = icons;
