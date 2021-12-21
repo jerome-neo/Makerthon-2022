@@ -27,6 +27,7 @@ const clearAll = async () => {
 // navigation may be used later so we keep it here for now.
 const Dashboard = ({ navigation }) => {
   // Note that if we want to update anything related to the state, we have to directly call user_state.(dataType) = ....
+  // However, this will not be saved in AsyncStorage as no explicit call to Reducer was made.
   const user_state = useSelector((state) => state);
   const moodsData = user_state.data;
   const logPoints = user_state.logPoints;
