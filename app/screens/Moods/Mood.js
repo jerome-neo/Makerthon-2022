@@ -396,7 +396,7 @@ const Mood = ({ navigation, route, props }) => {
         if (!loading && done) {
           prompter();
         }
-      }, 2000);
+      }, 1500);
     } else if (formatted === formattedCurr && todayItem.img === "mood_empty") {
       console.log("Mood for today not put in yet.");
       setDone(false);
