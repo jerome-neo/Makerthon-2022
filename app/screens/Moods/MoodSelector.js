@@ -251,11 +251,19 @@ const MoodSelector = ({ navigation, route }) => {
       >
         <ImageBackground style={styles.imageStyle} source={imageSrc}>
           <Image
-            style={{ height: 62.5, width: 50, opacity: 0.8 }}
+            style={{
+              height: 31.25,
+              width: 25,
+              opacity: 1,
+              position: "absolute",
+              marginLeft: 12,
+              marginTop: 20,
+              // backgroundColor: "hsl(360, 100%, 100%)",
+            }}
             source={icons["lock"]}
           />
-          <Text>{moodName}</Text>
         </ImageBackground>
+        <Text>{moodName}</Text>
       </TouchableOpacity>
     );
   };
