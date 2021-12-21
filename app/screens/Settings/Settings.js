@@ -14,7 +14,7 @@ import {
 import { SetNotifications } from "../../CustomComponents";
 
 // importing cloud functions
-
+import { sendFeedback } from "../../firebase"; // sendFeedback(msg)
 /*
 - Send feedback links to an email. Note that this does not work in a simulator, so try on actual device.
 - About Us gives a brief overview of who we are, and what this app is for!
@@ -43,7 +43,7 @@ const Settings = ({ navigation }) => {
       return false;
     }
 
-    if (feedback.length < 50) {
+    if (feedback.length < 30) {
       Alert.alert("Too short", "Please elaborate more");
       return false;
     }
@@ -56,13 +56,13 @@ const Settings = ({ navigation }) => {
     return true;
   };
 
-  const sendFeedback = () => {
+  const feedbackSender = () => {
     // First, check validity of feedback
     if (!checkFeedback()) {
       return;
     }
     // If it is valid, then we continue execution. This is where the actual sending occurs
-    console.log("No log");
+    sendFeedback(feedback);
     // We also need to close the modal
     setVisible(false);
   };
@@ -109,7 +109,7 @@ const Settings = ({ navigation }) => {
                   </TouchableOpacity>
                   <TouchableOpacity
                     style={[styles.button, styles.buttonClose, { left: 75 }]}
-                    onPress={() => sendFeedback()}
+                    onPress={() => feedbackSender()}
                   >
                     <Text style={styles.textStyle}>Submit</Text>
                   </TouchableOpacity>
