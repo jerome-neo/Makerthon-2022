@@ -1,17 +1,27 @@
-import React from 'react';
-import { StyleSheet, Text, SafeAreaView, ScrollView, Switch, Linking, View } from 'react-native';
-import { Button } from 'react-native-elements'
+import React, { useState } from "react";
+import {
+  StyleSheet,
+  Text,
+  SafeAreaView,
+  Alert,
+  TouchableOpacity,
+  ImageBackground,
+  Modal,
+  TextInput,
+} from "react-native";
 
 // local imports
-import { SetNotifications } from '../../CustomComponents'
+import { SetNotifications } from "../../CustomComponents";
 
-// Needs react-native-email-link
+// importing cloud functions
+
 /*
 - Send feedback links to an email. Note that this does not work in a simulator, so try on actual device.
 - About Us gives a brief overview of who we are, and what this app is for!
 */
 
-import * as Notifications from 'expo-notifications';
+const icons = require("../../icons/icons.js");
+import * as Notifications from "expo-notifications";
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -24,30 +34,207 @@ Notifications.setNotificationHandler({
 // find a way to call notifications daily from here
 
 const Settings = ({ navigation }) => {
+  const [isVisible, setVisible] = useState(false);
+  const [feedback, setFeedback] = useState("");
+  const checkFeedback = () => {
+    // First, check if feedback is empty
+    if (feedback === "") {
+      Alert.alert("Empty form", "Feedback form cannot be empty");
+      return false;
+    }
+
+    if (feedback.length < 50) {
+      Alert.alert("Too short", "Please elaborate more");
+      return false;
+    }
+
+    if (feedback.length > 500) {
+      Alert.alert("Too long", "Please use less characters!");
+      return false;
+    }
+
+    return true;
+  };
+
+  const sendFeedback = () => {
+    // First, check validity of feedback
+    if (!checkFeedback()) {
+      return;
+    }
+    // If it is valid, then we continue execution. This is where the actual sending occurs
+    console.log("No log");
+    // We also need to close the modal
+    setVisible(false);
+  };
+
+  const feedbackForm = () => {
     return (
-        <SafeAreaView style={styles.container}>
-            <SetNotifications/>
-            <View style={{marginBottom: 10,}}>
-              <Button 
-                title="Send feedback" 
-                onPress={() => { 
-                  Linking.openURL('mailto:MK15@makerthon2022.com?subject=Feedback&body=Feedback regarding the app')
-                }}
-              />
-            </View>
-            <Button title="About Us" onPress={() => navigation.navigate('About')}/> 
-        </SafeAreaView>
-      );
-}
+      <SafeAreaView>
+        <Modal
+          animationType="fade"
+          transparent={true}
+          visible={isVisible}
+          onRequestClose={() => {
+            Alert.alert("Modal has been closed.");
+            setModalVisible(!isVisible);
+          }}
+        >
+          <SafeAreaView style={styles.centeredView}>
+            <SafeAreaView style={styles.modalView}>
+              <Text style={styles.modalText}>Tell us more!</Text>
+              <SafeAreaView style={styles.feedbackContainer}>
+                <TextInput
+                  placeholder="Do note that there is a 500 character limit"
+                  placerholderTextColor="grey"
+                  multiline={true}
+                  onChangeText={(text) => {
+                    setFeedback(text);
+                    console.log(feedback);
+                  }}
+                  style={styles.inputText}
+                />
+              </SafeAreaView>
+
+              <SafeAreaView style={{ position: "absolute", bottom: 20 }}>
+                <SafeAreaView
+                  style={{
+                    flexDirection: "row",
+                  }}
+                >
+                  <TouchableOpacity
+                    style={[styles.button, styles.buttonClose, { right: 75 }]}
+                    onPress={() => setVisible(!isVisible)}
+                  >
+                    <Text style={styles.textStyle}>Cancel</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={[styles.button, styles.buttonClose, { left: 75 }]}
+                    onPress={() => sendFeedback()}
+                  >
+                    <Text style={styles.textStyle}>Submit</Text>
+                  </TouchableOpacity>
+                </SafeAreaView>
+              </SafeAreaView>
+            </SafeAreaView>
+          </SafeAreaView>
+        </Modal>
+      </SafeAreaView>
+    );
+  };
+
+  return (
+    <ImageBackground style={styles.container} source={icons["BG_pic"]}>
+      <SetNotifications />
+      <TouchableOpacity
+        onPress={() => setVisible(true)}
+        style={styles.touchableContainer}
+      >
+        <Text style={styles.text}>Send Feedback</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        onPress={() => navigation.navigate("About")}
+        style={styles.touchableContainer}
+      >
+        <Text style={styles.text}>About Us</Text>
+      </TouchableOpacity>
+      {feedbackForm()}
+    </ImageBackground>
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: "#fff",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+
+  text: {
+    fontFamily: "Itim",
+    fontSize: 18,
+  },
+
+  inputText: {
+    marginTop: 10,
+    fontFamily: "Itim",
+    color: "black",
+    fontSize: 18,
+  },
+
+  touchableContainer: {
+    borderWidth: 2,
+    color: "black",
+    borderColor: "black",
+    borderRadius: 15,
+    backgroundColor: "#FBF8D6",
+    marginTop: 10,
+    marginBottom: 20,
+    height: 50,
+    width: 200,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+
+  feedbackContainer: {
+    borderRadius: 10,
+    borderWidth: 2,
+    paddingLeft: 10,
+    paddingRight: 10,
+    borderColor: "black",
+    color: "black",
+    width: "100%",
+    height: "84%",
+  },
+
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 22,
+  },
+
+  modalView: {
+    margin: 20,
+    backgroundColor: "#FBF8D6",
+    borderRadius: 20,
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    height: "70%",
+    width: "90%",
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  button: {
+    borderRadius: 10,
+    width: 100,
+    padding: 10,
+    elevation: 3,
+  },
+  buttonOpen: {
+    backgroundColor: "#F194FF",
+  },
+  buttonClose: {
+    backgroundColor: "#ffbf00",
+  },
+  textStyle: {
+    color: "white",
+    fontSize: 16,
+    fontFamily: "Itim",
+    textAlign: "center",
+  },
+  modalText: {
+    bottom: 15,
+    fontSize: 24,
+    fontFamily: "Itim",
+    textAlign: "center",
   },
 });
-
 
 export default Settings;
