@@ -106,6 +106,7 @@ const declineHandler = (submit) => {
 };
 // because navigation hook is failing. Although code is less clean, no serious repurcussions
 let navigator = "";
+let user_score = 0;
 
 // i is the number of questions
 // handles the submit button. Handle navigation/alerts later
@@ -139,6 +140,7 @@ const handleSubmit = (list) => {
     }
   }
   console.log(score);
+  user_score = score; // set user score to the the current score before resetting it.
   score = 0; // reset!!
 };
 
@@ -178,7 +180,10 @@ const Questionnaire = ({ navigation }) => {
         text: "UHC",
         onPress: () =>
           referToPsych(
-            () => navigation.navigate("FormDetails"),
+            () =>
+              navigation.navigate("FormDetails", {
+                K_SCORE: user_score,
+              }),
             () => declineHandler(navigation.navigate("Resources"))
           ), // done.
         style: "default",
