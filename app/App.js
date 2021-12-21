@@ -155,7 +155,7 @@ const SubMoodStack = () => {
         <Stack.Screen
           component={Mood}
           name="Mood"
-          options={{ title: "Mood Journal" }}
+          options={{ title: "My Moodal" }}
         />
         <Stack.Screen
           component={MoodSelector}
@@ -354,7 +354,7 @@ const screenStyles = {
   },
 
   subMoodOptions: {
-    title: "Mood Journal",
+    title: "My Moodal",
     headerShown: false,
     tabBarIcon: ({ size, focused, color }) => {
       if (focused) {

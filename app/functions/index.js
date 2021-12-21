@@ -26,7 +26,7 @@ exports.sendMail = functions.https.onCall((data, context) => {
     from: "MK15 Emailing Service <makerthon15.2022@gmail.com>",
     to: dest,
     subject: "New Appointment",
-    text: `Craft your own message here:${msg}`,
+    text: `To whom it may concern,\n${msg}`,
   };
 
   return transporter.sendMail(mailOptions, (error, info) => {
