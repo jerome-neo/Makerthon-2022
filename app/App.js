@@ -345,6 +345,7 @@ const styles = StyleSheet.create({
 // all the screen styles' options
 const screenStyles = {
   resourcesOptions: {
+    headerShown: false,
     tabBarLabel: ({ focused, color }) => {
       if (focused) {
         return (

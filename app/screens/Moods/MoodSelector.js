@@ -318,10 +318,10 @@ const MoodSelector = ({ navigation, route }) => {
     console.log("User does not have access to " + selectedValue);
   }
   return (
-    <SafeAreaView style={styles.container}>
+    <ImageBackground style={styles.container} source={icons["BG_pic"]}>
       <SafeAreaView
         style={{
-          marginTop: 10,
+          marginTop: 50,
           backgroundColor: "white",
         }}
       >
@@ -353,7 +353,7 @@ const MoodSelector = ({ navigation, route }) => {
         }
         keyExtractor={(item) => item.id}
       />
-    </SafeAreaView>
+    </ImageBackground>
   );
 };
 

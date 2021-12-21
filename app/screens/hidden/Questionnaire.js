@@ -250,7 +250,9 @@ const Questionnaire = ({ navigation }) => {
               }
             }}
           >
-            <Text style={{ fontSize: 24, fontFamily: "Itim" }}>Submit</Text>
+            <Text style={{ fontSize: 24, fontFamily: "Itim", color: "black" }}>
+              Submit
+            </Text>
           </TouchableOpacity>
         </SafeAreaView>
       </SafeAreaView>

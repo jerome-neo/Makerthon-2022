@@ -16,6 +16,7 @@ import {
 // Import from Firebase to utilise cloud functions
 import { functions as x } from "../../firebase";
 import { httpsCallable, getFunctions } from "firebase/functions";
+import { sendMail } from "../../firebase";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Button } from "react-native-elements";
@@ -327,7 +328,7 @@ const FormDetails = ({ navigation, route }) => {
   const modal = () => {
     return (
       <View style={styles.touchableContainer}>
-        <Modal animationType="slide" transparent={true} visible={modalVisible}>
+        <Modal animationType="fade" transparent={true} visible={modalVisible}>
           <View>
             <View style={styles.modalView}>
               <Text
@@ -366,7 +367,7 @@ const FormDetails = ({ navigation, route }) => {
           >
             {apptDate === "Please choose a date" ||
             time === "Please choose a time"
-              ? "Choose your appointment date & time"
+              ? "Book your appointment"
               : apptDate + " at " + time}
           </Text>
         </TouchableOpacity>
@@ -564,7 +565,7 @@ const FormDetails = ({ navigation, route }) => {
   };
 
   // Method to call the cloud function.
-  const sendMail = httpsCallable(getFunctions(), "sendMail");
+  // const sendMail = httpsCallable(getFunctions(), "sendMail");
 
   // Contains all the functions necessary to handle submit
   // These are:
@@ -617,19 +618,14 @@ const FormDetails = ({ navigation, route }) => {
             {
               text: "OK",
               onPress: () => {
-                sendMail({
-                  dest: "98lawweijie@gmail.com",
-                  msg: `Name of student: ${name}, K-10 score: ${K_SCORE}\n
+                // sendMail(msg, dest)
+                sendMail(
+                  `\nName of student: ${name}, K-10 score: ${K_SCORE}\n
                   Student number: ${stud_num}\n
-                  Email: ${email}\n
-                  has requested for an appointment on ${apptDate}, at ${time}`,
-                })
-                  .then((s) => {
-                    console.log("Successfully sent");
-                  })
-                  .catch((e) => {
-                    console.log(`Error occured: ${e}`);
-                  });
+                  Email: ${email}
+                  \nhas requested for an appointment on ${apptDate} at ${time}`,
+                  "98lawweijie@gmail.com"
+                );
                 action();
               },
             },
@@ -673,21 +669,18 @@ const FormDetails = ({ navigation, route }) => {
       >
         <TextInput
           onChangeText={(text) => updateArray(NAME, text)}
-          // value={details[0]}
           placeholder="Name"
           placeholderTextColor="grey"
           style={styles.inputContainer}
         />
         <TextInput
           onChangeText={(text) => updateArray(NUM, text)}
-          // value={details[1]}
           placeholder="Student Number"
           placeholderTextColor="grey"
           style={styles.inputContainer}
         />
         <TextInput
           onChangeText={(text) => updateArray(EMAIL, text)}
-          // value={details[2]}
           placeholder="NUSNET email"
           placeholderTextColor="grey"
           style={styles.inputContainer}
@@ -801,10 +794,10 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     backgroundColor: "white",
     marginBottom: 20,
+    paddingLeft: 20,
     height: 50,
     width: 280,
     textAlign: "left",
-    alignItems: "center",
     justifyContent: "center",
   },
 
