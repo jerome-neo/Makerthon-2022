@@ -46,6 +46,12 @@ const TestingScreen = ({ navigation }) => {
         >
           <Text> FlatListMoods</Text>
         </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => navigation.navigate("EmailTest")}
+        >
+          <Text> Email Test</Text>
+        </TouchableOpacity>
       </ImageBackground>
     </SafeAreaView>
   );

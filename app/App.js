@@ -10,6 +10,7 @@ import {
   MoodTest,
   BookingTest,
   FlatListMoods,
+  EmailTest,
 } from "./screens"; // this entire line will be used for testing components and other functionalities
 
 // Navigation stuff
@@ -41,7 +42,6 @@ import {
   Questionnaire,
   FormDetails,
 } from "./screens";
-
 
 const icons = require("./icons/icons.js"); // use icons['name'] to get the icon!
 
@@ -108,6 +108,11 @@ const TestingStack = () => {
         name="FlatListMoods"
         options={{ headerShown: false }}
       />
+      <Stack.Screen
+        component={EmailTest}
+        name="EmailTest"
+        options={{ headerShown: false }}
+      />
     </Stack.Navigator>
   );
 };
@@ -150,12 +155,12 @@ const SubMoodStack = () => {
         <Stack.Screen
           component={Mood}
           name="Mood"
-          options={{ title: "Mood Journal"}}
+          options={{ title: "Mood Journal" }}
         />
         <Stack.Screen
           component={MoodSelector}
           name="MoodSelector"
-          options={{ title: "Select mood"}}
+          options={{ title: "Select mood" }}
         />
       </Stack.Navigator>
     </contentContext.Provider>
@@ -226,9 +231,9 @@ const Bottoms = () => {
     // just a dummy. Set a loading screen so that nothing is rendered while fetching from AsyncStorage
     // This step can take quite long depending on the user's device (I guess), so best to have a loading page.
     return (
-    <SafeAreaView style={{flex: 1, height: '100%', width: '100%'}}>
-      <Image source={icons["loading_screen"]}></Image>
-    </SafeAreaView>
+      <SafeAreaView style={{ flex: 1, height: "100%", width: "100%" }}>
+        <Image source={icons["loading_screen"]}></Image>
+      </SafeAreaView>
     );
   } else {
     return (
