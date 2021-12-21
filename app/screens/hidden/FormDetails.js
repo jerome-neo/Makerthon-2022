@@ -10,13 +10,10 @@ import {
   View,
   TouchableOpacity,
   Image,
-  Linking,
 } from "react-native";
 
 // Import from Firebase to utilise cloud functions
-import { functions as x } from "../../firebase";
-import { httpsCallable, getFunctions } from "firebase/functions";
-import { sendMail } from "../../firebase";
+import { sendMail } from "../../firebase"; // sendMail is of the form sendMail(msg, dest)
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Button } from "react-native-elements";
@@ -441,9 +438,9 @@ const FormDetails = ({ navigation, route }) => {
   };
 
   const [details, setDetails] = useState([
-    "Name", // NAME
-    "Student Number", // NUM
-    "NUSNET email", // EMAIL
+    "", // NAME
+    "", // NUM
+    "", // EMAIL
   ]);
 
   /* AsyncStorage stuff now */
@@ -564,9 +561,6 @@ const FormDetails = ({ navigation, route }) => {
     ]);
   };
 
-  // Method to call the cloud function.
-  // const sendMail = httpsCallable(getFunctions(), "sendMail");
-
   // Contains all the functions necessary to handle submit
   // These are:
   // 1) Check if name is empty
@@ -618,7 +612,6 @@ const FormDetails = ({ navigation, route }) => {
             {
               text: "OK",
               onPress: () => {
-                // sendMail(msg, dest)
                 sendMail(
                   `\nName of student: ${name}, K-10 score: ${K_SCORE}\n
                   Student number: ${stud_num}\n
@@ -668,18 +661,21 @@ const FormDetails = ({ navigation, route }) => {
         style={{ flex: 1, alignItems: "center", position: "absolute" }}
       >
         <TextInput
+          value={details[NAME] === "" ? "" : details[NAME]}
           onChangeText={(text) => updateArray(NAME, text)}
           placeholder="Name"
           placeholderTextColor="grey"
           style={styles.inputContainer}
         />
         <TextInput
+          value={details[NAME] === "" ? "" : details[NUM]}
           onChangeText={(text) => updateArray(NUM, text)}
           placeholder="Student Number"
           placeholderTextColor="grey"
           style={styles.inputContainer}
         />
         <TextInput
+          value={details[NAME] === "" ? "" : details[EMAIL]}
           onChangeText={(text) => updateArray(EMAIL, text)}
           placeholder="NUSNET email"
           placeholderTextColor="grey"
