@@ -12,12 +12,15 @@ import {
   Image,
   Linking,
 } from "react-native";
+
+// Import from Firebase to utilise cloud functions
+import { functions as x } from "../../firebase";
+import { httpsCallable, getFunctions } from "firebase/functions";
+
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Button } from "react-native-elements";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import * as dateFn from "date-fns";
-// import nodemailer from "nodemailer";
-// import { USER, PASS } from "react-native-dotenv";
 
 // function to check char is indeed a character
 function isCharacterALetter(char) {
@@ -43,8 +46,9 @@ const NAME = 0;
 const NUM = 1;
 const EMAIL = 2;
 // We also need to disable the hardware back press to discourage users from backing out.
-const FormDetails = ({ navigation }) => {
+const FormDetails = ({ navigation, route }) => {
   // // <------------------------------------ Calendar stuff ------------------------------------->
+  const { K_SCORE } = route.params;
   const [apptDate, setApptDate] = useState("Please choose a date");
   const [item, setItem] = useState("");
   const [calDate, setCalDate] = useState(new Date());
@@ -240,6 +244,10 @@ const FormDetails = ({ navigation }) => {
           "Only able to book appointments from tomorrow onwards"
         );
       } else {
+        if (item.isWeekend) {
+          Alert.alert("Unavailable", "Sorry, unable to book on weekends");
+          return;
+        }
         setChosen(item.value);
         const year = calDate.getFullYear();
         const month = calDate.getMonth() + 1;
@@ -371,7 +379,7 @@ const FormDetails = ({ navigation }) => {
       selectedDate.getMinutes() < 10
         ? "0" + selectedDate.getMinutes()
         : selectedDate.getMinutes();
-    const AM_PM = selectedDate.getHours() > 12 ? " PM" : " AM";
+    const AM_PM = selectedDate.getHours() >= 12 ? " PM" : " AM";
     if (curr_hr === 0) {
       curr_hr = 12;
     }
@@ -417,9 +425,9 @@ const FormDetails = ({ navigation }) => {
   };
 
   const [details, setDetails] = useState([
-    "Rick Astley",
-    "A0123456B",
-    "nusnet@u.nus.edu",
+    "Rick Astley", // NAME
+    "A0123456B", // NUM
+    "nusnet@u.nus.edu", // EMAIL
   ]);
 
   /* AsyncStorage stuff now */
@@ -512,13 +520,18 @@ const FormDetails = ({ navigation }) => {
     saveBookings();
   }, [details, booked]);
 
+  // Function that checks if the email given is a valid NUS net email.
   const checkMail = () => {
     let split_string = details[2].split("@");
     let nusnet = split_string[0];
     let back = split_string[1];
+    if (nusnet.charAt(0) !== "e") {
+      return false;
+    }
     return nusnet.length === 8 ? back === "u.nus.edu" : false;
   };
 
+  // Custom alert function
   const customAlert = (title, msg, accept, decline) => {
     Alert.alert(title, msg, [
       {
@@ -534,6 +547,9 @@ const FormDetails = ({ navigation }) => {
     ]);
   };
 
+  // Method to call the cloud function.
+  const sendMail = httpsCallable(getFunctions(), "sendMail");
+
   // Contains all the functions necessary to handle submit
   // These are:
   // 1) Check if name is empty
@@ -545,13 +561,16 @@ const FormDetails = ({ navigation }) => {
   // 1) Send an email
   // 2) Navigate to home screen (dashboard)
   const handleSubmit = (action) => {
+    const name = details[NAME];
+    const stud_num = details[NUM];
+    const email = details[EMAIL];
     // Student number is only 9 characters long
     const checkStudentNumber = () => {
-      if (details[1].length !== 9) {
+      if (stud_num.length !== 9) {
         return false;
       }
-      let start = details[1].charAt(0);
-      let end = details[1].charAt(8);
+      let start = stud_num.charAt(0);
+      let end = stud_num.charAt(8);
       if (start !== "A") {
         return false;
       }
@@ -560,9 +579,9 @@ const FormDetails = ({ navigation }) => {
         return false;
       }
 
-      let middle = details[1].substring(1, 8); // get 2nd letter to 8th letter.
+      let rem = details[1].substring(1, 8); // get 2nd letter to 8th letter.
 
-      return !Number.isNaN(Number(middle));
+      return !Number.isNaN(Number(rem));
     };
 
     const checkName = () => {
@@ -572,17 +591,35 @@ const FormDetails = ({ navigation }) => {
     let isMailOK = checkMail();
     let isNumberOK = checkStudentNumber();
     let isNameOK = checkName();
+
     if (isMailOK && isNumberOK && isNameOK) {
-      Alert.alert(
-        "Request sent",
-        `Requested for an appointment on ${apptDate}, at ${time}`,
-        [
-          {
-            text: "OK",
-            onPress: action, // action should be more robust.
-          },
-        ]
-      );
+      if (handlePickerConfirm(apptDate, time, item)) {
+        Alert.alert(
+          "Request sent",
+          `Requested for an appointment on ${apptDate}, at ${time}`,
+          [
+            {
+              text: "OK",
+              onPress: () => {
+                sendMail({
+                  dest: "98lawweijie@gmail.com",
+                  msg: `Name of student: ${name}, K-10 score: ${K_SCORE}\n
+                  Student number: ${stud_num}\n
+                  Email: ${email}\n
+                  has requested for an appointment on ${apptDate}, at ${time}`,
+                })
+                  .then((s) => {
+                    console.log("Successfully sent");
+                  })
+                  .catch((e) => {
+                    console.log(`Error occured: ${e}`);
+                  });
+                action();
+              },
+            },
+          ]
+        );
+      }
     } else if (!isMailOK) {
       Alert.alert("Wrong format", "Check your email");
       return;
@@ -593,7 +630,6 @@ const FormDetails = ({ navigation }) => {
       Alert.alert("Empty name", "Please fill in your name");
       return;
     }
-    handlePickerConfirm(apptDate, time, item);
   };
 
   const declineHandler = (submit) => {
@@ -613,33 +649,6 @@ const FormDetails = ({ navigation }) => {
       ""
     );
   };
-
-  // // Nodemailer + Mailtrap for sending test emails
-  // let transport = nodemailer.createTransport({
-  //   host: "smtp.mailtrap.io",
-  //   port: 2525,
-  //   auth: {
-  //     user: USER,
-  //     pass: PASS
-  //   }
-  // });
-
-  // let mailOptions = {
-  //   from: '"Example Team" <from@example.com>',
-  //   to: 'user1@example.com, user2@example.com',
-  //   subject: 'Nice Nodemailer test',
-  //   text: 'Hey there, it’s our first message sent with Nodemailer ;) ',
-  //   html: '<b>Hey there! </b><br> This is our first message sent with Nodemailer'
-  // };
-
-  // transport.sendMail(mailOptions, (error, info) => {
-  //   if (error) {
-  //     console.log(error);
-  //     return ;
-  //   }
-
-  //   console.log('Message sent: %s', info.messageId);
-  // });
 
   // Rendering the rest of the things
   return (
@@ -717,7 +726,6 @@ const FormDetails = ({ navigation }) => {
                 // Will actually need to implement email sender.
                 // Firebase Cloud + Gmail + Nodemailer should be sufficient, but need to find out how to do it.
                 // email sending
-                console.log("Email sent");
                 // return back to dashboard
                 navigation.navigate("Dashboard");
               })
