@@ -15,16 +15,8 @@ const QuestionnaireBox = (props) => {
   const updateAnswer = (answerIndex) =>
     dispatch({ type: UPDATE_ANSWER, payload: { answerIndex, num } });
   return (
-    <SafeAreaView style={{ backgroundColor: "grey" }}>
-      <Text
-        style={{
-          fontSize: 15,
-          fontWeight: "bold",
-          marginBottom: 10,
-          marginTop: 50,
-          marginLeft: 20,
-        }}
-      >
+    <SafeAreaView style={{ backgroundColor: "#FBF8D6" }}>
+      <Text style={styles.text}>
         {num + 1}) {props.question}
       </Text>
       <SafeAreaView style={{ justifyContent: "center", alignItems: "center" }}>
@@ -35,6 +27,7 @@ const QuestionnaireBox = (props) => {
             checkedIcon=""
             uncheckedIcon=""
             checked={answer[2]}
+            textStyle={{ fontSize: 16 }}
             containerStyle={
               answer[2] === true
                 ? styles.containerChosen
@@ -58,27 +51,25 @@ const styles = StyleSheet.create({
   containerChosen: {
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "lightgreen",
+    backgroundColor: "#fde086",
     marginBottom: 10,
-    width: "90%",
+    width: "75%",
   },
   containerNotChosen: {
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: "white",
     marginBottom: 10,
-    width: "90%",
+    width: "75%",
   },
-  slide: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-    height: "100%",
-    backgroundColor: "#febe29",
-  },
+
   text: {
-    fontSize: 24,
-    fontWeight: "bold",
+    fontSize: 20,
+    fontFamily: "Itim",
+    left: 15,
+    marginBottom: 10,
+    marginTop: 40,
+    marginLeft: 20,
   },
 });
 

@@ -33,23 +33,19 @@ const Dashboard = ({ navigation }) => {
   const logPoints = user_state.logPoints;
 
   return (
-    <SafeAreaView>
-      <ImageBackground source={icons["BG_pic"]} style={styles.image}>
-        <SafeAreaView
-          style={{ alignItems: "center", justifyContent: "center", flex: 0.2 }}
-        >
-          <Text style={styles.text}>
-            Points accumulated so far: {logPoints}
-          </Text>
-          <Text style={styles.text}>Dashboard Screen</Text>
-          <Button
-            title="Show data on console"
-            onPress={() => console.log(user_state)}
-          />
-          <Button title="Clear whole AsyncStorage" onPress={() => clearAll()} />
-        </SafeAreaView>
-      </ImageBackground>
-    </SafeAreaView>
+    <ImageBackground source={icons["BG_pic"]} style={styles.imageBg}>
+      <SafeAreaView
+        style={{ alignItems: "center", justifyContent: "center", flex: 0.2 }}
+      >
+        <Text style={styles.text}>Points accumulated so far: {logPoints}</Text>
+        <Text style={styles.text}>Dashboard Screen</Text>
+        <Button
+          title="Show data on console"
+          onPress={() => console.log(user_state)}
+        />
+        <Button title="Clear whole AsyncStorage" onPress={() => clearAll()} />
+      </SafeAreaView>
+    </ImageBackground>
   );
 };
 
@@ -71,7 +67,10 @@ const styles = StyleSheet.create({
     padding: 10,
     marginTop: 15,
   },
-  image: {
+  imageBg: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
     width: "100%",
     height: "100%",
   },

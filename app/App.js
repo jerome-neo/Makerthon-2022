@@ -1,7 +1,8 @@
-// Normal stuff
 import React, { useState, useEffect } from "react";
-import { StyleSheet, Image, SafeAreaView } from "react-native";
+import { StyleSheet, Image, SafeAreaView, Text } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import AppLoading from "expo-app-loading";
+import { useFonts } from "expo-font";
 
 // To be removed
 import {
@@ -155,12 +156,12 @@ const SubMoodStack = () => {
         <Stack.Screen
           component={Mood}
           name="Mood"
-          options={{ title: "My Moodal" }}
+          options={{ title: "My Moodal", headerShown: false }}
         />
         <Stack.Screen
           component={MoodSelector}
           name="MoodSelector"
-          options={{ title: "Select mood" }}
+          options={{ title: "Select mood", headerShown: false }}
         />
       </Stack.Navigator>
     </contentContext.Provider>
@@ -184,8 +185,16 @@ const Resources = () => {
 const ServicesStack = () => {
   return (
     <Stack.Navigator initialRouteName="ServicesScreen">
-      <Stack.Screen component={Services} name="Services" />
-      <Stack.Screen component={Helplines} name="Helplines" />
+      <Stack.Screen
+        component={Services}
+        name="Services"
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        component={Helplines}
+        name="Helplines"
+        options={{ headerShown: true }}
+      />
     </Stack.Navigator>
   );
 };
@@ -196,6 +205,9 @@ const Bottoms = () => {
   const [done, setDone] = useState(false);
   const [todayMood, setTodayMood] = useState(false);
   const [loading, setLoading] = useState(true);
+  let [fontsLoaded] = useFonts({
+    Itim: require("./assets/fonts/Itim.ttf"),
+  });
 
   const saveDone = async () => {
     try {
@@ -226,15 +238,13 @@ const Bottoms = () => {
   }, [done]);
 
   // console.log("From app: " + done);
-
+  if (!fontsLoaded) {
+    return <AppLoading />;
+  }
   if (loading) {
     // just a dummy. Set a loading screen so that nothing is rendered while fetching from AsyncStorage
     // This step can take quite long depending on the user's device (I guess), so best to have a loading page.
-    return (
-      <SafeAreaView style={{ flex: 1, height: "100%", width: "100%" }}>
-        <Image source={icons["loading_screen"]}></Image>
-      </SafeAreaView>
-    );
+    return <AppLoading />;
   } else {
     return (
       <Provider store={store}>
@@ -289,7 +299,10 @@ const Bottoms = () => {
 const App = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator barStyle={{ backgroundColor: "#694fad" }}>
+      <Stack.Navigator
+        barStyle={{ backgroundColor: "#694fad" }}
+        options={{ headerShown: false }}
+      >
         <Stack.Screen
           component={Bottoms}
           name="Bottoms"
@@ -302,8 +315,8 @@ const App = () => {
           component={Questionnaire}
           name="Questionnaire"
           options={{
-            headerShown: true,
-          }} /*  Set to false later, because users should not be able to go back from this. */
+            headerShown: false,
+          }}
         />
         <Stack.Screen
           component={About}
@@ -332,7 +345,21 @@ const styles = StyleSheet.create({
 // all the screen styles' options
 const screenStyles = {
   resourcesOptions: {
-    title: "Resources",
+    tabBarLabel: ({ focused, color }) => {
+      if (focused) {
+        return (
+          <Text style={{ fontSize: 10, fontFamily: "Itim", color: "#e09000" }}>
+            Resources
+          </Text>
+        );
+      } else {
+        return (
+          <Text style={{ fontSize: 10, fontFamily: "Itim", color: "grey" }}>
+            Resources
+          </Text>
+        );
+      }
+    },
     unmountOnBlur: true,
     tabBarIcon: ({ size, focused, color }) => {
       if (focused) {
@@ -354,7 +381,21 @@ const screenStyles = {
   },
 
   subMoodOptions: {
-    title: "My Moodal",
+    tabBarLabel: ({ focused, color }) => {
+      if (focused) {
+        return (
+          <Text style={{ fontSize: 10, fontFamily: "Itim", color: "#e09000" }}>
+            My Moodal
+          </Text>
+        );
+      } else {
+        return (
+          <Text style={{ fontSize: 10, fontFamily: "Itim", color: "grey" }}>
+            My Moodal
+          </Text>
+        );
+      }
+    },
     headerShown: false,
     tabBarIcon: ({ size, focused, color }) => {
       if (focused) {
@@ -377,6 +418,22 @@ const screenStyles = {
 
   dashboardOptions: {
     unmountOnBlur: true,
+    headerShown: false,
+    tabBarLabel: ({ focused, color }) => {
+      if (focused) {
+        return (
+          <Text style={{ fontSize: 10, fontFamily: "Itim", color: "#e09000" }}>
+            Dashboard
+          </Text>
+        );
+      } else {
+        return (
+          <Text style={{ fontSize: 10, fontFamily: "Itim", color: "grey" }}>
+            Dashboard
+          </Text>
+        );
+      }
+    },
     tabBarIcon: ({ size, focused, color }) => {
       if (focused) {
         return (
@@ -397,7 +454,21 @@ const screenStyles = {
   },
 
   servicesOptions: {
-    title: "Services",
+    tabBarLabel: ({ focused, color }) => {
+      if (focused) {
+        return (
+          <Text style={{ fontSize: 10, fontFamily: "Itim", color: "#e09000" }}>
+            Services
+          </Text>
+        );
+      } else {
+        return (
+          <Text style={{ fontSize: 10, fontFamily: "Itim", color: "grey" }}>
+            Services
+          </Text>
+        );
+      }
+    },
     unmountOnBlur: true,
     headerShown: false,
     tabBarIcon: ({ size, focused, color }) => {
@@ -420,7 +491,21 @@ const screenStyles = {
   },
 
   settingsOptions: {
-    title: "Settings",
+    tabBarLabel: ({ focused, color }) => {
+      if (focused) {
+        return (
+          <Text style={{ fontSize: 10, fontFamily: "Itim", color: "#e09000" }}>
+            Settings
+          </Text>
+        );
+      } else {
+        return (
+          <Text style={{ fontSize: 10, fontFamily: "Itim", color: "grey" }}>
+            Settings
+          </Text>
+        );
+      }
+    },
     unmountOnBlur: true,
     headerShown: false,
     tabBarIcon: ({ size, focused, color }) => {

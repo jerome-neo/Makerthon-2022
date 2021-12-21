@@ -291,12 +291,12 @@ const Mood = ({ navigation, route, props }) => {
             // needs to use ternary ops, so no choice but to do inline styling
             // note, change the background colour to be different in order to see the size of pressable box.
             flex: 1,
-            height: rowIndex === 0 ? 20 : 60, // conditionally rendering the height. If it is the days of the week, then lower.
+            height: rowIndex === 0 ? 20 : 40, // conditionally rendering the height. If it is the days of the week, then lower.
             justifyContent: "center",
             textAlign: "center",
             alignItems: "center",
             // Highlight header
-            backgroundColor: rowIndex === 0 ? "#ddd" : "#FBF8D6", // if days of week, grey bg
+            // backgroundColor: rowIndex === 0 ? "#ddd" : "#FBF8D6", // if days of week, grey bg
             // Highlight Sundays
             // Highlight current date
             fontSize: 18,
@@ -317,7 +317,11 @@ const Mood = ({ navigation, route, props }) => {
           {_renderIcons(item, rowIndex)}
           <Text
             style={{
-              color: colIndex === 0 && rowIndex === 0 ? "#a00" : "#000",
+              fontFamily: "Itim",
+              color:
+                (colIndex === 0 || colIndex === 6) && rowIndex === 0
+                  ? "#e09000"
+                  : "#000",
             }}
           >
             {rowIndex === 0 // if its row 0, which are the days
@@ -425,8 +429,8 @@ const Mood = ({ navigation, route, props }) => {
         </TouchableOpacity>
         <Text
           style={{
-            fontWeight: "bold",
-            fontSize: 30,
+            fontSize: 25,
+            fontFamily: "Itim",
             textAlign: "center",
           }}
         >
@@ -455,7 +459,7 @@ const Mood = ({ navigation, route, props }) => {
           <Image source={icons["float_button"]} style={styles.floatButton} />
         </TouchableOpacity>
       </View>
-      {/* <Button title="Manual prompt" onPress={() => manualPrompt()} /> */}
+      <Button title="Manual prompt" onPress={() => manualPrompt()} />
       {/* <Button
         title="Get state"
         onPress={() => {
@@ -480,32 +484,32 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    marginTop: 25,
+    marginTop: 50,
+    marginBottom: 10,
   },
 
   arrowImage: {
-    marginTop: 2.5,
     height: 25,
     width: 50,
   },
 
   rowItems: {
     flexDirection: "row",
-    padding: 15,
+    padding: 20,
     justifyContent: "space-around",
     alignItems: "center",
   },
 
   floatButton: {
-    height: 100,
-    width: 100,
+    height: 90,
+    width: 90,
   },
 
   floatView: {
     flex: 1,
     position: "absolute",
     right: 25,
-    bottom: 25,
+    bottom: 20,
   },
 });
 

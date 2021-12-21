@@ -3,10 +3,12 @@
 import React, { useEffect } from "react";
 import {
   ScrollView,
-  Button,
+  TouchableOpacity,
   StyleSheet,
   BackHandler,
   Alert,
+  Text,
+  SafeAreaView,
 } from "react-native";
 import { Provider } from "react-redux";
 
@@ -18,13 +20,13 @@ import store from "../../redux/questionnaire/store";
 const questions = [
   ["Did you feel tired out for no good reason?", 0],
   ["Did you feel nervous?", 1],
-  ["Did you feel so nervous that nothing could calm you down?", 2],
+  ["Did you feel so nervous that nothing\n     could calm you down?", 2],
   ["Did you feel hopeless?", 3],
   ["Did you feel restless or fidgety?", 4],
-  ["Did you feel so restless that you could not sit still?", 5],
+  ["Did you feel so restless that you could not\n     sit still?", 5],
   ["Did you feel depressed?", 6],
   ["Did you feel that everything was an effort?", 7],
-  ["Did you feel so sad that nothing could cheer you up?", 8],
+  ["Did you feel so sad that nothing could cheer\n     you up?", 8],
   ["Did you feel worthless?", 9],
 ];
 
@@ -216,40 +218,68 @@ const Questionnaire = ({ navigation }) => {
 
   return (
     <ScrollView>
-      {qnsList}
-      <Button
-        title="Submit"
-        onPress={() => {
-          handleSubmit(qnsList);
-          switch (navigator) {
-            case "Resources":
-              console.log(navigator);
-              giveResources(() => navigation.navigate("Resources"));
-              break;
-            case "PFA":
-              console.log(navigator);
-              msg("PFA");
-              break;
-            case "Counsel":
-              console.log(navigator);
-              msg("Counsel");
-              break;
-            case "Psych":
-              console.log(navigator);
-              msg("Psych");
-              break;
-            default:
-              break;
-          }
-        }}
-      />
+      <SafeAreaView style={{ backgroundColor: "#FBF8D6" }}>
+        <Text style={styles.text}>In the last 30 days: </Text>
+        {qnsList}
+        <SafeAreaView
+          style={{ alignItems: "center", justifyContent: "center" }}
+        >
+          <TouchableOpacity
+            style={styles.touchableContainer}
+            onPress={() => {
+              handleSubmit(qnsList);
+              switch (navigator) {
+                case "Resources":
+                  console.log(navigator);
+                  giveResources(() => navigation.navigate("Resources"));
+                  break;
+                case "PFA":
+                  console.log(navigator);
+                  msg("PFA");
+                  break;
+                case "Counsel":
+                  console.log(navigator);
+                  msg("Counsel");
+                  break;
+                case "Psych":
+                  console.log(navigator);
+                  msg("Psych");
+                  break;
+                default:
+                  break;
+              }
+            }}
+          >
+            <Text style={{ fontSize: 24, fontFamily: "Itim" }}>Submit</Text>
+          </TouchableOpacity>
+        </SafeAreaView>
+      </SafeAreaView>
     </ScrollView>
   );
 };
 
 // do button styling next time :)
 const styles = StyleSheet.create({
-  button: {},
+  touchableContainer: {
+    fontFamily: "Itim",
+    borderWidth: 1.5,
+    color: "white",
+    borderColor: "black",
+    borderRadius: 15,
+    backgroundColor: "#ffbf00",
+    height: 50,
+    width: 200,
+    marginTop: 20,
+    marginBottom: 30,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  text: {
+    fontSize: 24,
+    fontFamily: "Itim",
+    textAlign: "center",
+    marginTop: 50,
+  },
 });
 
 export default Questionnaire;

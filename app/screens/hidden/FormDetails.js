@@ -326,14 +326,14 @@ const FormDetails = ({ navigation, route }) => {
   // Calendar is used in Modal, to show the calendar for the booking system
   const modal = () => {
     return (
-      <View style={styles.inputContainer}>
+      <View style={styles.touchableContainer}>
         <Modal animationType="slide" transparent={true} visible={modalVisible}>
           <View>
             <View style={styles.modalView}>
               <Text
                 style={{
-                  fontSize: 30,
-                  fontWeight: "bold",
+                  fontSize: 32,
+                  fontFamily: "Itim",
                   textDecorationLine: "underline",
                 }}
               >
@@ -353,7 +353,22 @@ const FormDetails = ({ navigation, route }) => {
           </View>
         </Modal>
         <TouchableOpacity onPress={() => setModalVisible(true)}>
-          <Text style={styles.text}>Choose appointment date</Text>
+          <Text
+            style={{
+              fontSize: 16,
+              fontFamily: "Itim",
+              color:
+                apptDate === "Please choose a date" ||
+                time === "Please choose a time"
+                  ? "grey"
+                  : "black",
+            }}
+          >
+            {apptDate === "Please choose a date" ||
+            time === "Please choose a time"
+              ? "Choose your appointment date & time"
+              : apptDate + " at " + time}
+          </Text>
         </TouchableOpacity>
       </View>
     );
@@ -425,9 +440,9 @@ const FormDetails = ({ navigation, route }) => {
   };
 
   const [details, setDetails] = useState([
-    "Rick Astley", // NAME
-    "A0123456B", // NUM
-    "nusnet@u.nus.edu", // EMAIL
+    "Name", // NAME
+    "Student Number", // NUM
+    "NUSNET email", // EMAIL
   ]);
 
   /* AsyncStorage stuff now */
@@ -525,10 +540,11 @@ const FormDetails = ({ navigation, route }) => {
     let split_string = details[2].split("@");
     let nusnet = split_string[0];
     let back = split_string[1];
-    if (nusnet.charAt(0) !== "e") {
-      return false;
+    if (nusnet.charAt(0) === "e" || nusnet.charAt(0) === "E") {
+      return nusnet.length === 8 ? back === "u.nus.edu" : false;
     }
-    return nusnet.length === 8 ? back === "u.nus.edu" : false;
+
+    return false;
   };
 
   // Custom alert function
@@ -650,63 +666,39 @@ const FormDetails = ({ navigation, route }) => {
     );
   };
 
-  // Rendering the rest of the things
-  return (
-    <SafeAreaView style={styles.container}>
-      <SafeAreaView style={{ position: "absolute", top: 50 }}>
-        <Text style={styles.apptTextHeader}>Current Appointment Details</Text>
-        <SafeAreaView style={styles.apptDateTime}>
-          <Text style={styles.apptText}>Date: {apptDate}</Text>
-          <Text style={styles.apptText}>Time: {time}</Text>
-        </SafeAreaView>
-      </SafeAreaView>
+  const renderSelections = () => {
+    return (
       <SafeAreaView
-        style={{
-          flex: 1,
-          justifyContent: "center",
-          alignItems: "center",
-        }}
+        style={{ flex: 1, alignItems: "center", position: "absolute" }}
       >
-        <Text> Fill in your name: </Text>
         <TextInput
           onChangeText={(text) => updateArray(NAME, text)}
-          value={details[0]}
+          // value={details[0]}
+          placeholder="Name"
+          placeholderTextColor="grey"
           style={styles.inputContainer}
         />
-        <Text> Fill in your student number: </Text>
         <TextInput
           onChangeText={(text) => updateArray(NUM, text)}
-          value={details[1]}
+          // value={details[1]}
+          placeholder="Student Number"
+          placeholderTextColor="grey"
           style={styles.inputContainer}
         />
-        <Text> Fill in your NUSNET email: </Text>
         <TextInput
           onChangeText={(text) => updateArray(EMAIL, text)}
-          value={details[2]}
+          // value={details[2]}
+          placeholder="NUSNET email"
+          placeholderTextColor="grey"
           style={styles.inputContainer}
         />
-        <Text>Select an appointment</Text>
         {modal()}
-        <Button
-          title="Clear bookings from AsyncStorage"
-          onPress={() => clearBookings()}
-        />
-        <View>
-          {
-            show && (
-              <DateTimePicker
-                testID="dateTimePicker"
-                value={date}
-                mode={mode}
-                is24Hour={false}
-                display="default"
-                onChange={onChange}
-              />
-            ) /* Can just ignore this entire thing. It's simply used to help open up the time picker*/
-          }
-        </View>
       </SafeAreaView>
+    );
+  };
 
+  const renderButtons = () => {
+    return (
       <SafeAreaView style={{ marginBottom: 20, flexDirection: "row" }}>
         <SafeAreaView style={{ marginRight: 90, width: "25%" }}>
           <Button
@@ -727,12 +719,44 @@ const FormDetails = ({ navigation, route }) => {
                 // Firebase Cloud + Gmail + Nodemailer should be sufficient, but need to find out how to do it.
                 // email sending
                 // return back to dashboard
-                navigation.navigate("Dashboard");
+                navigation.navigate("Mood");
               })
             }
           />
         </SafeAreaView>
       </SafeAreaView>
+    );
+  };
+
+  // Rendering the rest of the things
+  return (
+    <SafeAreaView
+      style={{
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: "#FBF8D6",
+      }}
+    >
+      <SafeAreaView style={{ flex: 1, top: 70 }}>
+        <Text style={styles.apptTextHeader}>Appointment Form</Text>
+      </SafeAreaView>
+      {renderSelections()}
+      {renderButtons()}
+      <View>
+        {
+          show && (
+            <DateTimePicker
+              testID="dateTimePicker"
+              value={date}
+              mode={mode}
+              is24Hour={false}
+              display="default"
+              onChange={onChange}
+            />
+          ) /* Can just ignore this entire thing. It's simply used to help open up the time picker*/
+        }
+      </View>
     </SafeAreaView>
   );
 };
@@ -748,18 +772,38 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "white",
+    backgroundColor: "black",
   },
 
   inputContainer: {
+    fontFamily: "Itim",
+    fontSize: 18,
     borderWidth: 2,
     color: "black",
-    borderColor: "black",
-    borderRadius: 20,
-    backgroundColor: "#99EDC3",
-    height: 40,
-    width: 220,
-    textAlign: "center",
+    borderColor: "grey",
+    borderRadius: 10,
+    backgroundColor: "white",
+    marginBottom: 20,
+    paddingLeft: 20,
+    height: 50,
+    width: 280,
+    textAlign: "left",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+
+  touchableContainer: {
+    fontFamily: "Itim",
+    fontSize: 18,
+    borderWidth: 2,
+    color: "black",
+    borderColor: "grey",
+    borderRadius: 10,
+    backgroundColor: "white",
+    marginBottom: 20,
+    height: 50,
+    width: 280,
+    textAlign: "left",
     alignItems: "center",
     justifyContent: "center",
   },
@@ -775,40 +819,23 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
 
-  timeContainer: {
-    borderWidth: 2,
-    borderColor: "black",
-    borderRadius: 20,
-    backgroundColor: "#99EDC3",
-    height: 40,
-    width: 200,
-    alignItems: "center",
-    justifyContent: "center",
-    marginLeft: 15,
-    marginRight: 15,
-  },
   confirm: {
     textAlign: "center",
-    color: "red",
-    fontSize: 25,
+    fontFamily: "Itim",
+    color: "#e09000",
+    fontSize: 30,
   },
 
   text: {
-    fontSize: 14,
-    color: "#4169e1",
-    fontWeight: "bold",
-  },
-
-  apptText: {
-    fontSize: 20,
-    color: "black",
-    fontWeight: "bold",
+    fontSize: 16,
+    fontFamily: "Itim",
+    color: "grey",
   },
 
   apptTextHeader: {
-    fontSize: 24,
-    color: "grey",
-    fontWeight: "bold",
+    fontSize: 34,
+    fontFamily: "Itim",
+    color: "black",
     textDecorationLine: "underline",
   },
 
@@ -834,24 +861,21 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 5,
   },
+
   button: {
     borderRadius: 20,
     padding: 10,
     elevation: 2,
   },
-  buttonOpen: {
-    backgroundColor: "#F194FF",
-  },
-  buttonClose: {
-    backgroundColor: "#2196F3",
-  },
+
   textStyle: {
     color: "white",
-    fontWeight: "bold",
+    fontFamily: "Itim",
     textAlign: "center",
   },
   modalText: {
     marginBottom: 15,
+    fontFamily: "Itim",
     textAlign: "center",
   },
 });
