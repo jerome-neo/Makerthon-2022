@@ -312,11 +312,13 @@ const MoodSelector = ({ navigation, route }) => {
       themeObject = possible_themes.normal;
       break;
   }
-  if (content.some((x) => x === selectedValue)) {
-    console.log("User has access to " + selectedValue);
-  } else {
-    console.log("User does not have access to " + selectedValue);
-  }
+
+  // if (content.some((x) => x === selectedValue)) {
+  //   console.log("User has access to " + selectedValue);
+  // } else {
+  //   console.log("User does not have access to " + selectedValue);
+  // }
+
   return (
     <ImageBackground style={styles.container} source={icons["BG_pic"]}>
       <SafeAreaView
