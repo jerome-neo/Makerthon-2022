@@ -4,20 +4,75 @@ import {
   StyleSheet,
   Text,
   SafeAreaView,
+  Image,
   ImageBackground,
+  Alert,
+  Linking,
 } from "react-native";
 
+// Each of the containers should be changed into an image instead.
+
 const icons = require("../../icons/icons.js");
+
+const customAlert = (title, msg, accept, decline) => {
+  Alert.alert(title, msg, [
+    {
+      text: "Cancel",
+      onPress: decline, // for this purpose, we don't need to do anything.
+      style: "cancel",
+    },
+    {
+      text: "Accept",
+      onPress: accept,
+      style: "default",
+    },
+  ]);
+};
+
 // Services screen should navigate to other screens related to services
 const Services = ({ navigation }) => {
   return (
     <ImageBackground source={icons["BG_pic"]} style={styles.imageBg}>
-      <Text>Services screen</Text>
+      <SafeAreaView style={{ flexDirection: "row" }}>
+        <TouchableOpacity
+          style={styles.touchableContainer}
+          onPress={() => navigation.navigate("Helplines")}
+        >
+          <Image
+            style={styles.touchableContainerImage}
+            source={icons["placeholder"]}
+          />
+          <Text style={styles.touchableContainerText}> Helplines </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.touchableContainer}
+          onPress={() =>
+            customAlert(
+              "Acknowledgement",
+              "By clicking, 'Accept', you will be brought to your calling app. Click call to connect with one of our PFAs!",
+              () => Linking.openURL(`tel: ${+6512345678}`),
+              console.log("User declined")
+            )
+          }
+        >
+          <Image
+            style={styles.touchableContainerImage}
+            source={icons["placeholder"]}
+          />
+          <Text style={styles.touchableContainerText}>
+            Talk to a PFA Personnel
+          </Text>
+        </TouchableOpacity>
+      </SafeAreaView>
       <TouchableOpacity
-        style={styles.button}
-        onPress={() => navigation.navigate("Helplines")}
+        style={styles.touchableContainer}
+        onPress={() => navigation.navigate("Questionnaire")}
       >
-        <Text> Helplines </Text>
+        <Image
+          style={styles.touchableContainerImage}
+          source={icons["placeholder"]}
+        />
+        <Text style={styles.touchableContainerText}>Mental Health Survey</Text>
       </TouchableOpacity>
     </ImageBackground>
   );
@@ -31,6 +86,32 @@ const styles = StyleSheet.create({
     padding: 10,
     marginTop: 15,
   },
+
+  touchableContainer: {
+    borderWidth: 2,
+    color: "black",
+    borderColor: "black",
+    borderRadius: 15,
+    backgroundColor: "#FBF8D6",
+    margin: 20,
+    height: 150,
+    width: 150,
+    alignItems: "center",
+    justifyContent: "center",
+    elevation: 3,
+  },
+
+  touchableContainerText: {
+    fontSize: 16,
+    textAlign: "center",
+    fontFamily: "Itim",
+  },
+
+  touchableContainerImage: {
+    height: "70%",
+    width: "70%",
+  },
+
   imageBg: {
     flex: 1,
     alignItems: "center",
