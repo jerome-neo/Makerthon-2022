@@ -42,7 +42,7 @@ const PROMPT_KEY = "@prompt_key";
 const Mood = ({ navigation, route, props }) => {
   const [date, setDate] = useState(new Date());
   const [loading, setLoading] = useState(true);
-  const [promptedDays, addPromptedDays] = useState([]);
+  const [lastPromptedDay, setLastPromptedDay] = useState("");
   const [persistentItem, setPersistentItem] = useState("");
 
   // addedMoods stores all the moods that have been added
@@ -50,27 +50,27 @@ const Mood = ({ navigation, route, props }) => {
   const addedMoods = user_state.data;
   // console.log(addedMoods);
   useEffect(() => {
-    readPromptedDays();
+    readLastPromptedDay();
   }, []);
 
   useEffect(() => {
-    savePromptedDays();
-  }, [promptedDays, persistentItem]);
+    saveLastPromptedDay();
+  }, [lastPromptedDay, persistentItem]);
 
   // <-------------------------------- AsyncStorage Stuff -------------------------------->
-  const savePromptedDays = async () => {
+  const saveLastPromptedDay = async () => {
     try {
-      await AsyncStorage.setItem(PROMPT_KEY, JSON.stringify(promptedDays));
+      await AsyncStorage.setItem(PROMPT_KEY, JSON.stringify(lastPromptedDay));
     } catch (e) {
       console.log(e);
     }
   };
 
-  const readPromptedDays = async () => {
+  const readLastPromptedDay = async () => {
     try {
       const res = await AsyncStorage.getItem(PROMPT_KEY);
       if (res !== null) {
-        addPromptedDays(JSON.parse(res));
+        setLastPromptedDay(JSON.parse(res));
       }
     } catch (e) {
       console.log(e);
@@ -97,7 +97,6 @@ const Mood = ({ navigation, route, props }) => {
   const weekDays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
   const nDays = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-  // console.log(iconState);
   // function to populate your array with the dates
   const generateMatrix = () => {
     let matrix = [];
@@ -186,6 +185,8 @@ const Mood = ({ navigation, route, props }) => {
   // from Redux state, we know which dates are occupied.
   // so, we use that information to update our calendar on every render
   const updateMatrix = (moods, matrix) => {
+    const daysToSkip = moods.length - 7;
+    let i = 0;
     moods.forEach((moodObject) => {
       const row = moodObject.row;
       const col = moodObject.col;
@@ -193,18 +194,19 @@ const Mood = ({ navigation, route, props }) => {
       const year = moodObject.year;
       const month = moodObject.month;
       const moodValue = moodObject.moodValue;
-      if (month === todayDate.getMonth() && moodValue >= 4) {
-        moodyDays++;
-      } else {
-        moodyDays = 0;
+      if (i >= daysToSkip) {
+        if (month === todayDate.getMonth() && moodValue >= 4) {
+          moodyDays++;
+        }
       }
       if (matrix[row][col].year === year && matrix[row][col].month === month) {
         matrix[row][col].img = mood; // now a string
       }
+      i++;
     });
   };
 
-  console.log(moodyDays);
+  // console.log(moodyDays);
 
   // update matrix before each re-render
   updateMatrix(addedMoods, matrix);
@@ -223,16 +225,18 @@ const Mood = ({ navigation, route, props }) => {
 
   // <-------------------------------- Prompt Handling Stuff --------------------------------->
   let shouldPrompt = moodyDays >= 5;
-  // console.log(moodyDays);
-
+  console.log(shouldPrompt);
   // needs to add more logic here.
   const prompter = () => {
-    const formatted = dateFn.lightFormat(todayDate, "yyyy-MM-dd");
+    const differenceInDays =
+      lastPromptedDay === "" // edge case, because when user starts for the very first time, lastPromptedDay === "", we have to do this until they have been prompted at least once throughout the app's lifetime
+        ? 2
+        : dateFn.differenceInCalendarDays(todayDate, lastPromptedDay);
     if (
       shouldPrompt &&
-      !promptedDays.some((someDate) => someDate === formatted)
+      differenceInDays === 2 // so if the last prompt was 2 days ago, then prompt again
     ) {
-      addPromptedDays([...promptedDays, formatted]);
+      setLastPromptedDay(todayDate);
       customAlert(
         "Important",
         "Hey, we noticed you haven't been feeling the best lately, please help us to answer some questions so we know how we can help :)",
@@ -337,7 +341,6 @@ const Mood = ({ navigation, route, props }) => {
   });
 
   const changeMonth = (n) => {
-    // console.log("Change month start: " + date);
     const curr = dateFn.addMonths(date, n);
     const days_over = todayDate.getDate() - 1;
     const comparator = dateFn.subDays(
@@ -352,7 +355,6 @@ const Mood = ({ navigation, route, props }) => {
       return;
     }
     setDate(curr);
-    // console.log("Change month end: " + curr);
     return curr;
   };
 
@@ -369,11 +371,10 @@ const Mood = ({ navigation, route, props }) => {
   };
 
   if (x === 0) {
-    // console.log("aa");
     setPersistentItem(retrieveItem());
     x++;
   }
-  // console.log("Item is: ");
+
   // console.log(persistentItem);
 
   const { done, setDone } = useContext(dailyContext);
@@ -408,7 +409,6 @@ const Mood = ({ navigation, route, props }) => {
   const handleRetrieval = () => {
     const year_difference = todayDate.getFullYear() - date.getFullYear();
     const month_difference = todayDate.getMonth() - date.getMonth();
-    // console.log("year: " + year_difference + ", month: " + month_difference);
     if (month_difference === 0 && year_difference === 0) {
       navigation.navigate("MoodSelector", { item: persistentItem });
     } else {
