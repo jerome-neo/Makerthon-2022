@@ -127,7 +127,7 @@ const SubMoodStack = () => {
     try {
       await AsyncStorage.setItem(CONTENT_KEY, JSON.stringify(content));
     } catch (e) {
-      console.log(e);
+      // console.log(e);
     }
   };
 
@@ -138,7 +138,7 @@ const SubMoodStack = () => {
         setContent(JSON.parse(res));
       }
     } catch (e) {
-      console.log("Error caught: " + e);
+      // console.log("Error caught: " + e);
     }
   };
 
@@ -213,7 +213,7 @@ const Bottoms = () => {
     try {
       await AsyncStorage.setItem(DAILY_KEY, JSON.stringify(done));
     } catch (e) {
-      console.log(e);
+      // console.log(e);
     }
   };
 
@@ -224,7 +224,7 @@ const Bottoms = () => {
         setDone(JSON.parse(res));
       }
     } catch (e) {
-      console.log(e);
+      // console.log(e);
     }
     setLoading(false);
   };
