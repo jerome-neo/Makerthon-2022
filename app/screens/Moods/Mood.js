@@ -212,7 +212,7 @@ const Mood = ({ navigation, route, props }) => {
   const declineHandler = (submit) => {
     Alert.alert(
       "Declined", // title
-      "That's OK! Meanwhile, here's some resources which may help you to feel better", // message
+      "That's OK. You can choose to take it anytime, under the Services tab.\nMeanwhile, here's some resources which may help you to feel better", // message
       submit // on accept
     );
   };
@@ -295,10 +295,6 @@ const Mood = ({ navigation, route, props }) => {
             justifyContent: "center",
             textAlign: "center",
             alignItems: "center",
-            // Highlight header
-            // backgroundColor: rowIndex === 0 ? "#ddd" : "#FBF8D6", // if days of week, grey bg
-            // Highlight Sundays
-            // Highlight current date
             fontSize: 18,
           }}
           onPress={() =>
@@ -307,7 +303,7 @@ const Mood = ({ navigation, route, props }) => {
             (item.day > todayDate.getDate() &&
               item.month === todayDate.getMonth() &&
               item.year === todayDate.getFullYear())
-              ? console.log(todayDate.getDate())
+              ? ""
               : navigation.navigate("MoodSelector", {
                   item: item,
                 })
@@ -356,7 +352,7 @@ const Mood = ({ navigation, route, props }) => {
       return;
     }
     setDate(curr);
-    console.log("Change month end: " + curr);
+    // console.log("Change month end: " + curr);
     return curr;
   };
 
@@ -373,13 +369,12 @@ const Mood = ({ navigation, route, props }) => {
   };
 
   if (x === 0) {
-    console.log("aa");
+    // console.log("aa");
     setPersistentItem(retrieveItem());
     x++;
   }
-  // console.log("aaaaaaaa");
-  console.log("Item is: ");
-  console.log(persistentItem);
+  // console.log("Item is: ");
+  // console.log(persistentItem);
 
   const { done, setDone } = useContext(dailyContext);
   const todayItem = retrieveItem();
@@ -394,15 +389,18 @@ const Mood = ({ navigation, route, props }) => {
         );
         x++;
       }
+
       setDone(true);
-      // force prompter to wait for fetched data from AsyncStorage
+
+      // Wait for AsyncStorage to load. If mood for today has been inputted, then we check if we need to prompt user.
+      // Prompter logic can be improved upon next time.
       setTimeout(() => {
         if (!loading && done) {
           prompter();
         }
       }, 1500);
     } else if (formatted === formattedCurr && todayItem.img === "mood_empty") {
-      console.log("Mood for today not put in yet.");
+      // console.log("Mood for today not put in yet.");
       setDone(false);
     }
   }
@@ -460,16 +458,6 @@ const Mood = ({ navigation, route, props }) => {
         </TouchableOpacity>
       </View>
       <Button title="Manual prompt" onPress={() => manualPrompt()} />
-      {/* <Button
-        title="Get state"
-        onPress={() => {
-          console.log(state);
-        }}
-      /> */}
-      {/* <Button
-        title="Get added dates"
-        onPress={() => console.log(promptedDays)}
-      /> */}
     </SafeAreaView>
   );
 };
