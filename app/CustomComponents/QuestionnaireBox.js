@@ -54,6 +54,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#fde086",
     marginBottom: 10,
     width: "75%",
+    elevation: 2,
   },
   containerNotChosen: {
     alignItems: "center",
@@ -61,6 +62,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     marginBottom: 10,
     width: "75%",
+    elevation: 2,
   },
 
   text: {

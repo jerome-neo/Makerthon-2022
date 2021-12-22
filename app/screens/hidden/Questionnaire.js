@@ -171,7 +171,7 @@ const Questionnaire = ({ navigation }) => {
         style: "cancel",
       },
       {
-        text: "Talk to a counsellor",
+        text: "Anonymously talk to counsellor",
         onPress: () =>
           choice === "PFA"
             ? referToPFA(() => navigation.goBack()) // takes an action
@@ -179,7 +179,7 @@ const Questionnaire = ({ navigation }) => {
         style: "default",
       },
       {
-        text: "UHC",
+        text: "Booking with UHC",
         onPress: () =>
           referToPsych(
             () =>
@@ -260,21 +260,21 @@ const Questionnaire = ({ navigation }) => {
   );
 };
 
-// do button styling next time :)
 const styles = StyleSheet.create({
   touchableContainer: {
     fontFamily: "Itim",
     borderWidth: 1.5,
     color: "white",
-    borderColor: "black",
+    borderColor: "#e09000",
     borderRadius: 15,
-    backgroundColor: "#ffbf00",
+    backgroundColor: "#fde086",
     height: 50,
     width: 200,
     marginTop: 20,
     marginBottom: 30,
     alignItems: "center",
     justifyContent: "center",
+    elevation: 5,
   },
   text: {
     fontSize: 24,

@@ -193,7 +193,7 @@ const ServicesStack = () => {
       <Stack.Screen
         component={Helplines}
         name="Helplines"
-        options={{ headerShown: true }}
+        options={{ headerShown: false }}
       />
     </Stack.Navigator>
   );

@@ -1,7 +1,7 @@
 // Component that allows users to select a time for their daily notifications.
 // Need to add an option to turn off notifications
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
   Button,
   TouchableOpacity,
@@ -10,6 +10,7 @@ import {
   View,
   Switch,
 } from "react-native";
+import dailyContext from "../contexts/dailyContext";
 import * as Notifications from "expo-notifications"; // REQUIRED. Need this for all things related to Notifications from Expo
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import DateTimePicker from "@react-native-community/datetimepicker";
@@ -24,6 +25,9 @@ const SetNotifications = () => {
 
   // Switch's hook
   const [toggle, setToggle] = useState(false);
+
+  // Getting dailyContext
+  const { done } = useContext(dailyContext);
 
   // <------------------------------------ DateTimePicker stuff ------------------------------------->
   const [date, setDate] = useState(new Date(1598051730000));
@@ -118,28 +122,6 @@ const SetNotifications = () => {
 
   // <------------------------------------ Toggle stuff ------------------------------------->
 
-  let displayText = "";
-  if (toggle) {
-    // toggle is TRUE. So it is on
-    displayText = "Current reminder: " + time;
-    // Settings for notifications
-    Notifications.setNotificationHandler({
-      handleNotification: async () => ({
-        shouldShowAlert: true,
-        shouldPlaySound: false,
-        shouldSetBadge: false,
-      }),
-    });
-  } else {
-    displayText = "Notifications are turned off";
-    Notifications.setNotificationHandler({
-      handleNotification: async () => ({
-        shouldShowAlert: false,
-        shouldPlaySound: false,
-        shouldSetBadge: false,
-      }),
-    });
-  }
   const toggleSwitch = () => {
     setToggle((prevState) => !prevState);
   };
@@ -170,22 +152,40 @@ const SetNotifications = () => {
         body: "Remember to do your mood tracking for today!",
       },
       trigger: {
-        hour: AM_PM === "PM" ? hrs + 12 : hrs, // converting to the correct 24h time, since Notifications does by hours
+        hour: AM_PM === "PM" ? (hrs === 12 ? 12 : hrs + 12) : hrs, // converting to the correct 24h time, since Notifications does by hours
         minute: mins,
         repeats: true,
       },
     });
   };
+
+  // if (!done) {
+  //   console.log("Rescheduling...");
+  //   cancelBeforeAndSchedule();
+  // }
+
   // remove comment if you want to do some debugging
   // console.log(time);
   return (
-    <View style={{ flexDirection: "row" }}>
-      <View style={styles.timeContainer}>
-        <TouchableOpacity onPress={showTimepicker}>
-          <Text style={styles.text}> {displayText} </Text>
-        </TouchableOpacity>
+    <View>
+      <View style={styles.touchableContainer}>
+        <Text style={[styles.text, { paddingLeft: 10 }]}>
+          Notifications OFF/ON
+        </Text>
+        <View style={{ flexDirection: "row", alignItems: "center" }}>
+          <View
+            style={[
+              styles.smallContainer,
+              { backgroundColor: toggle ? "#FFFFFF" : "#BCBCBC" },
+            ]}
+          >
+            <TouchableOpacity onPress={showTimepicker}>
+              <Text style={styles.text}>{time}</Text>
+            </TouchableOpacity>
+          </View>
+          <Switch onValueChange={toggleSwitch} value={toggle} />
+        </View>
       </View>
-      <Switch onValueChange={toggleSwitch} value={toggle} />
       <View>
         {
           show && (
@@ -212,21 +212,34 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
 
-  timeContainer: {
+  touchableContainer: {
     borderWidth: 2,
     borderColor: "black",
-    borderRadius: 20,
-    backgroundColor: "#99EDC3",
-    height: 40,
-    width: 220,
+    justifyContent: "center",
+    borderRadius: 15,
+    backgroundColor: "#FBF8D6",
+    marginTop: 10,
+    marginBottom: 20,
+    height: 90,
+    width: 250,
     alignItems: "center",
     justifyContent: "center",
   },
 
+  smallContainer: {
+    bottom: 0,
+    borderWidth: 2,
+    borderRadius: 15,
+    width: 100,
+    borderColor: "black",
+    elevation: 3,
+  },
+
   text: {
-    fontSize: 14,
-    color: "#4169e1",
-    fontWeight: "bold",
+    fontSize: 18,
+    fontFamily: "Itim",
+    textAlign: "center",
+    color: "black",
   },
 });
 
