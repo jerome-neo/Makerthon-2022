@@ -75,13 +75,12 @@ const Settings = ({ navigation }) => {
           transparent={true}
           visible={isVisible}
           onRequestClose={() => {
-            Alert.alert("Modal has been closed.");
             setModalVisible(!isVisible);
           }}
         >
           <SafeAreaView style={styles.centeredView}>
             <SafeAreaView style={styles.modalView}>
-              <Text style={styles.modalText}>Tell us more!</Text>
+              <Text style={styles.modalText}>Let us know more!</Text>
               <SafeAreaView style={styles.feedbackContainer}>
                 <TextInput
                   placeholder="Do note that there is a 500 character limit"
@@ -102,13 +101,21 @@ const Settings = ({ navigation }) => {
                   }}
                 >
                   <TouchableOpacity
-                    style={[styles.button, styles.buttonClose, { right: 75 }]}
+                    style={[
+                      styles.button,
+                      styles.buttonClose,
+                      { marginRight: 50 },
+                    ]}
                     onPress={() => setVisible(!isVisible)}
                   >
                     <Text style={styles.textStyle}>Cancel</Text>
                   </TouchableOpacity>
                   <TouchableOpacity
-                    style={[styles.button, styles.buttonClose, { left: 75 }]}
+                    style={[
+                      styles.button,
+                      styles.buttonClose,
+                      { marginLeft: 50 },
+                    ]}
                     onPress={() => feedbackSender()}
                   >
                     <Text style={styles.textStyle}>Submit</Text>
@@ -157,7 +164,6 @@ const styles = StyleSheet.create({
 
   inputText: {
     marginTop: 10,
-    fontFamily: "Itim",
     color: "black",
     fontSize: 18,
   },
@@ -174,6 +180,7 @@ const styles = StyleSheet.create({
     width: 200,
     alignItems: "center",
     justifyContent: "center",
+    elevation: 3,
   },
 
   feedbackContainer: {
@@ -183,7 +190,7 @@ const styles = StyleSheet.create({
     paddingRight: 10,
     borderColor: "black",
     color: "black",
-    width: "100%",
+    width: "110%",
     height: "84%",
   },
 
@@ -213,7 +220,7 @@ const styles = StyleSheet.create({
   },
   button: {
     borderRadius: 10,
-    width: 100,
+    width: 90,
     padding: 10,
     elevation: 3,
   },
