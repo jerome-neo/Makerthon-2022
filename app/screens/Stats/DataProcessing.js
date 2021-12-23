@@ -2,6 +2,7 @@
 import React from 'react';
 import { Image } from 'react-native';
 import * as dateFn from 'date-fns';
+import { mood_empty } from '../../icons/icons';
 
  
 
@@ -26,14 +27,23 @@ function getProgress(dictionary) {
   const now = new Date();
   const currMonth = dateFn.getMonth(now);
   const currYear = dateFn.getYear(now);
+  const currWeek = dateFn.getWeek(now);
+  
+  if (dictionary == -1 
+      || dictionary[currYear] == undefined
+      || dictionary[currYear][currMonth] == undefined) {
+      return 0; 
+  }
   const maxDays = dateFn.getDate(dateFn.lastDayOfMonth(now));
-     // Array
-
+  
   return ( Object.values(dictionary[currYear][currMonth]).length / maxDays )
 }
 
 function getTrend(array, n) {
   //assumes that array is already sorted in chronological order.
+  if (array.length == 0) { 
+    return 'requires mood journaling.';
+  }
   const score = { 
     mood_sad: -1,
     mood_stressed: -1,
@@ -74,20 +84,27 @@ function getModeMood(array, n) {
     mood_angry: 'angry',
   }
   if (result.length > 1) {
-    return 'a lot of emotions lately';
+    return 'these emotions';
+  } else if (result.length == 0) {
+    return 'like you need to log your mood today'
   }
   return result.map(x => english[x])[0];
 }
 
 function displayModeMood(array) {
   const icons = require("../../icons/icons");
+  if (array.length == 0) {
+    array = ['mood_empty']
+  }
   const result = array.map((x) => { return <Image style={{ width: 45, height: 45 }} source={icons[x]} />})
-
   return ( result )
 }
 
 function getModeMoodArray(array, n) {
   // takes in a sorted array and returns the most common mood in the last n days.
+  if (array.length == 0) { 
+    return array;
+  }
   const subArray = array.slice(-n);
   const moodCount = {
     mood_sad: 0,
@@ -152,7 +169,8 @@ function toDict(array) {
         dict[year][month][getWeek(curr.key)][curr.day] = curr.mood;
       }
     }
-    return dict;
+    // Use -1 to indicate that blankslate else return dictionary
+    return array.length == 0 ? -1 : dict
 }
   
   // function that flattens {k1: v1, k2:v2, ...} -> [v1, v2, ...]
