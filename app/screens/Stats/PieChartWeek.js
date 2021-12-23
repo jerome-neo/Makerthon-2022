@@ -9,6 +9,21 @@ function PieChartWeek(dictionary) {
     const currMonth = dateFn.getMonth(now);
     const currYear = dateFn.getYear(now);
     const currWeek = dateFn.getWeek(now);
+    if (dictionary == -1 
+        || dictionary[currYear] == undefined
+        || dictionary[currYear][currMonth] == undefined
+        || dictionary[currYear][currMonth][currWeek] == undefined) {
+        return (
+            <PieChart
+                style={{ height: 150, width: 150 }}
+                valueAccessor={({ item }) => item.amount}
+                data={[{key: 'mood_empty', amount: 1, svg: { fill: '#c0c0c0' }}]}
+                spacing={0}
+                outerRadius={'95%'}
+            >
+            </PieChart>
+        )
+    }
     
     // Array
     const moodOnly = Object.values(Object.values(dictionary[currYear][currMonth][currWeek]))
